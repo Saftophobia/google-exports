@@ -1,16 +1,19 @@
-package aima.core.logic.fol;
+package unifier;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import aima.core.logic.fol.domain.FOLDomain;
-import aima.core.logic.fol.parsing.ast.FOLNode;
-import aima.core.logic.fol.parsing.ast.Function;
-import aima.core.logic.fol.parsing.ast.Term;
-import aima.core.logic.fol.parsing.ast.Variable;
-import aima.core.logic.fol.parsing.ast.Sentence;
-import aima.core.logic.fol.parsing.*;
+import parser.FOLDomain;
+import parser.FOLNode;
+import parser.FOLParser;
+import parser.Function;
+import parser.Sentence;
+import parser.Term;
+import parser.Variable;
+
+
+
 
 /**
  * Artificial Intelligence A Modern Approach (3rd Edition): Figure 9.1, page

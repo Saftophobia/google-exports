@@ -1,17 +1,22 @@
-package aima.core.logic.fol;
+package unifier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import aima.core.logic.fol.kb.data.Literal;
-import aima.core.logic.fol.parsing.AbstractFOLVisitor;
-import aima.core.logic.fol.parsing.ast.AtomicSentence;
-import aima.core.logic.fol.parsing.ast.Function;
-import aima.core.logic.fol.parsing.ast.QuantifiedSentence;
-import aima.core.logic.fol.parsing.ast.Sentence;
-import aima.core.logic.fol.parsing.ast.Term;
-import aima.core.logic.fol.parsing.ast.Variable;
+import parser.AbstractFOLVisitor;
+import parser.AtomicSentence;
+import parser.Function;
+import parser.Literal;
+import parser.QuantifiedSentence;
+import parser.Sentence;
+import parser.Term;
+import parser.Variable;
+
+
+
+
+
 
 /**
  * @author Ravi Mohan
