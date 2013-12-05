@@ -7,10 +7,12 @@ import java.util.Map;
 import parser.FOLDomain;
 import parser.FOLNode;
 import parser.FOLParser;
-import parser.Function;
-import parser.Sentence;
-import parser.Term;
-import parser.Variable;
+import util.AtomicSentence;
+import util.Function;
+import util.Literal;
+import util.Sentence;
+import util.Term;
+import util.Variable;
 
 
 
@@ -59,8 +61,6 @@ import parser.Variable;
  * 
  */
 public class Unifier {
-	//
-	private static SubstVisitor _substVisitor = new SubstVisitor();
 
 	public Unifier() {
 
@@ -255,18 +255,38 @@ public class Unifier {
 			Variable var, Term x) {
 		theta.put(var, x);
 		for (Variable v : theta.keySet()) {
-			theta.put(v, _substVisitor.subst(theta, theta.get(v)));
+			theta.put(v, subst(theta, theta.get(v)));
 		}
 		// Ensure Function Terms are correctly updates by passing over them
 		// again. Fix for testBadCascadeSubstitution_LCL418_1()
 		for (Variable v : theta.keySet()) {
 			Term t = theta.get(v);
 			if (t instanceof Function) {
-				theta.put(v, _substVisitor.subst(theta, t));
+				theta.put(v, subst(theta, t));
 			}
 		}
 		return theta;
 	}
+	
+	
+	
+	public Sentence subst(Map<Variable, Term> theta, Sentence sentence) {
+		return (Sentence) sentence.accept(theta);
+	}
+
+	public Term subst(Map<Variable, Term> theta, Term aTerm) {
+		return (Term) aTerm.accept(theta);
+	}
+
+	public Function subst(Map<Variable, Term> theta, Function function) {
+		return (Function) function.accept(theta);
+	}
+
+	public Literal subst(Map<Variable, Term> theta, Literal literal) {
+		return literal.newInstance((AtomicSentence) literal
+				.getAtomicSentence().accept(theta));
+	}
+	
 
 	public static void main(String[] args) {
 
