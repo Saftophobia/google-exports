@@ -1,4 +1,6 @@
-package util;
+package term;
+
+import sentence.AtomicSentence;
 
 
 public class Literal {

@@ -1,4 +1,4 @@
-package util;
+package term;
 
 import java.util.List;
 import java.util.Map;
