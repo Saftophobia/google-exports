@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import parser.FOLVisitor;
+
 import term.Term;
 
 
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
 public class Predicate implements AtomicSentence {
 	private String predicateName;
 	private List<Term> terms = new ArrayList<Term>();
@@ -40,16 +46,8 @@ public class Predicate implements AtomicSentence {
 		return getTerms();
 	}
 
-	public Object accept(Object arg) {
-		List<Term> terms = this.getTerms();
-		List<Term> newTerms = new ArrayList<Term>();
-		for (int i = 0; i < terms.size(); i++) {
-			Term t = terms.get(i);
-			Term subsTerm = (Term) t.accept(arg);
-			newTerms.add(subsTerm);
-		}
-		return new Predicate(this.getPredicateName(), newTerms);
-
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitPredicate(this, arg);
 	}
 
 	public Predicate copy() {

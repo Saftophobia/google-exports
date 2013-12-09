@@ -3,12 +3,17 @@ package sentence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import parser.FOLNode;
-import term.Term;
+import parser.FOLVisitor;
+
 import term.Variable;
 
+
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
 public class QuantifiedSentence implements Sentence {
 	private String quantifier;
 	private List<Variable> variables = new ArrayList<Variable>();
@@ -52,44 +57,9 @@ public class QuantifiedSentence implements Sentence {
 		return Collections.unmodifiableList(args);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object accept(Object arg) {
-//		List<Variable> variables = new ArrayList<Variable>();
-//		for (Variable var : this.getVariables()) {
-//			variables.add((Variable) var.accept(arg));
-//		}
-//
-//		return new QuantifiedSentence(this.getQuantifier(), variables,
-//				(Sentence) this.getQuantified().accept(arg));
-		Map<Variable, Term> substitution = (Map<Variable, Term>) arg;
-
-		Sentence quantified = this.getQuantified();
-		Sentence quantifiedAfterSubs = (Sentence) quantified.accept(arg);
-
-		List<Variable> variables = new ArrayList<Variable>();
-		for (Variable v : this.getVariables()) {
-			Term st = substitution.get(v);
-			if (null != st) {
-				if (st instanceof Variable) {
-					// Only if it is a variable to I replace it, otherwise
-					// I drop it.
-					variables.add((Variable) st.copy());
-				}
-			} else {
-				// No substitution for the quantified variable, so
-				// keep it.
-				variables.add(v.copy());
-			}
-		}
-
-		// If not variables remaining on the quantifier, then drop it
-		if (variables.size() == 0) {
-			return quantifiedAfterSubs;
-		}
-
-		return new QuantifiedSentence(this.getQuantifier(), variables,
-				quantifiedAfterSubs);
-		}
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitQuantifiedSentence(this, arg);
+	}
 
 	public QuantifiedSentence copy() {
 		List<Variable> copyVars = new ArrayList<Variable>();

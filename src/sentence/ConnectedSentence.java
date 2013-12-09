@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import parser.FOLVisitor;
+
+
+
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
 public class ConnectedSentence implements Sentence {
 	private String connector;
 	private Sentence first, second;
@@ -45,12 +53,8 @@ public class ConnectedSentence implements Sentence {
 		return Collections.unmodifiableList(args);
 	}
 
-	public Object accept( Object arg) {
-		Sentence substFirst = (Sentence) this.getFirst().accept(arg);
-		Sentence substSecond = (Sentence) this.getSecond()
-				.accept(arg);
-		return new ConnectedSentence(this.getConnector(), substFirst,
-				substSecond);
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitConnectedSentence(this, arg);
 	}
 
 	public ConnectedSentence copy() {

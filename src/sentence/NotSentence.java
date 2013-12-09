@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import parser.FOLVisitor;
 import utility.SyncategorematicSymbols;
 
 
-public class NegatedSentence implements Sentence {
+
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
+public class NotSentence implements Sentence {
 	private Sentence negated;
 	private List<Sentence> args = new ArrayList<Sentence>();
 	private String stringRep = null;
 	private int hashCode = 0;
 
-	public NegatedSentence(Sentence negated) {
+	public NotSentence(Sentence negated) {
 		this.negated = negated;
 		args.add(negated);
 	}
@@ -36,12 +42,12 @@ public class NegatedSentence implements Sentence {
 		return Collections.unmodifiableList(args);
 	}
 
-	public Object accept(Object arg) {
-		return new NegatedSentence((Sentence) this.getNegated().accept(arg));
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitNotSentence(this, arg);
 	}
 
-	public NegatedSentence copy() {
-		return new NegatedSentence(negated.copy());
+	public NotSentence copy() {
+		return new NotSentence(negated.copy());
 	}
 
 	// END-Sentence
@@ -56,7 +62,7 @@ public class NegatedSentence implements Sentence {
 		if ((o == null) || (this.getClass() != o.getClass())) {
 			return false;
 		}
-		NegatedSentence ns = (NegatedSentence) o;
+		NotSentence ns = (NotSentence) o;
 		return (ns.negated.equals(negated));
 	}
 

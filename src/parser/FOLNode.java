@@ -10,7 +10,7 @@ public interface FOLNode {
 	
 	List<? extends FOLNode> getArgs();
 
-	Object accept(Object arg);
+	Object accept(FOLVisitor v,Object arg);
 
 	FOLNode copy();
 }

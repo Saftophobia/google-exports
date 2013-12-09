@@ -14,7 +14,8 @@ import utility.SyncategorematicSymbols;
 // in addition to the Domain defined by the problem
 // LEXER = Domain + Syncategorematics Symbols
 // Its main role is to determine the symbols 
-//of the Domain and Syncategorematics Symbols in any String
+//of the Domain and Syncategorematics Symbols in any String and return 
+//the corresponding tokens for that String
 
 public class FOLLexer {
 	// The Domain
@@ -66,7 +67,7 @@ public class FOLLexer {
 
 	
 	// This method is used to return a new instance of the Token object
-	// The returned value is next char in a given a String that was buffred inside the lookAheadBuffer
+	// The returned value is next char in a given a String that was buffered inside the lookAheadBuffer
 	// EX: P(x,y) assuming that we are at the x to that the next token is the ","
 	public Token nextToken() {
 		// checking the next character inside the lookAheadBuffer if it is a '('
@@ -107,7 +108,7 @@ public class FOLLexer {
 			// return the EOI token
 			return new Token(Token.EOI, "EOI");
 		} else {
-			// if any token is received other than the speified above just return an exception 
+			// if any token is received other than the specified above just return an exception 
 			throw new RuntimeException("Lexing error on character "
 					+ lookAhead(1));
 		}
@@ -116,29 +117,50 @@ public class FOLLexer {
 	// This method is responsible of returning a token instance 
 	//in case of the identifier check succeeded
 	private Token identifier() {
+		// Creating new StringBuffer to append to it the identifier chars
 		StringBuffer sbuf = new StringBuffer();
+		// this line says that append till you find a space or a non part of connector or javaIdentifierPart
+		// in normal cases the only thing that stops this loop is the empty space
 		while ((Character.isJavaIdentifierPart(lookAhead(1)))
 				|| partOfConnector()) {
+			// append this character to the buffer
 			sbuf.append(lookAhead(1));
+			// delete the current charcter and load an new one.
 			consume();
 		}
+		// convert the buffer into a String to be used.
 		String readString = new String(sbuf);
 		// System.out.println(readString);
+		// if the connectors contains the readString
 		if (connectors.contains(readString)) {
+			// return a new corresponding connector token
 			return new Token(Token.CONNECTOR, readString);
+			// if the quantifiers contains the readString
 		} else if (quantifiers.contains(readString)) {
+			// return a new corresponding Quantifier token
 			return new Token(Token.QUANTIFIER, readString);
+			// if the domain predicates contains the readString
 		} else if (domain.getPredicates().contains(readString)) {
+			// return a new corresponding predicate token
 			return new Token(Token.PREDICATE, readString);
+			// if the domain functions contains the readString
 		} else if (domain.getFunctions().contains(readString)) {
+			// return a new corresponding function token
 			return new Token(Token.FUNCTION, readString);
+			// if the domain constants contains the readString
 		} else if (domain.getConstants().contains(readString)) {
+			// return a new corresponding constant token
 			return new Token(Token.CONSTANT, readString);
+			// if readString is a variable
 		} else if (isVariable(readString)) {
+			// return a new corresponding variable token
 			return new Token(Token.VARIABLE, readString);
+			// if readString is the = sign
 		} else if (readString.equals("=")) {
+			// return a new corresponding equals token
 			return new Token(Token.EQUALS, readString);
 		} else {
+			// in case if no matching case this mean that there is something wrong
 			throw new RuntimeException("Lexing error on character "
 					+ lookAhead(1));
 		}
@@ -154,7 +176,6 @@ public class FOLLexer {
 	// This method is used to differenciate between the symbols like "(,) and ," 
 	//and normal letters on addition to part of connectors like "=>"
 	private boolean identifierDetected() {
-		// a JavaIdentifierStart 
 		return (Character.isJavaIdentifierStart((char) lookAheadBuffer[0]))
 				|| partOfConnector();
 	}

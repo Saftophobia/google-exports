@@ -1,8 +1,15 @@
 package term;
 
 import java.util.List;
-import java.util.Map;
 
+import parser.FOLVisitor;
+
+
+
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
 public class Variable implements Term {
 	private String value;
 	private int hashCode = 0;
@@ -37,14 +44,8 @@ public class Variable implements Term {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object accept(Object arg) {
-		 //return this.copy();	
-		Map<Variable, Term> substitution = (Map<Variable, Term>) arg;
-		if (substitution.containsKey(this)) {
-			return substitution.get(this).copy();
-		}
-		return this.copy();
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitVariable(this, arg);
 	}
 
 	public Variable copy() {
@@ -97,4 +98,5 @@ public class Variable implements Term {
 	public String toString() {
 		return value;
 	}
+
 }

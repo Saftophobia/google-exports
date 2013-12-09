@@ -2,6 +2,13 @@ package term;
 
 import java.util.List;
 
+import parser.FOLVisitor;
+
+
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
 public class Constant implements Term {
 	private String value;
 	private int hashCode = 0;
@@ -30,8 +37,8 @@ public class Constant implements Term {
 		return null;
 	}
 
-	public Object accept(Object arg) {
-		return this;
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitConstant(this, arg);
 	}
 
 	public Constant copy() {

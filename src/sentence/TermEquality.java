@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import parser.FOLVisitor;
 import term.Term;
 
 
-public class EqualitySentence implements AtomicSentence {
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
+public class TermEquality implements AtomicSentence {
 	private Term term1, term2;
 	private List<Term> terms = new ArrayList<Term>();
 	private String stringRep = null;
@@ -17,7 +22,7 @@ public class EqualitySentence implements AtomicSentence {
 		return "=";
 	}
 
-	public EqualitySentence(Term term1, Term term2) {
+	public TermEquality(Term term1, Term term2) {
 		this.term1 = term1;
 		this.term2 = term2;
 		terms.add(term1);
@@ -46,14 +51,12 @@ public class EqualitySentence implements AtomicSentence {
 		return Collections.unmodifiableList(terms);
 	}
 
-	public Object accept (Object arg) {
-		Term newTerm1 = (Term) this.getTerm1().accept(arg);
-		Term newTerm2 = (Term) this.getTerm2().accept(arg);
-		return new EqualitySentence(newTerm1, newTerm2);
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitTermEquality(this, arg);
 	}
 
-	public EqualitySentence copy() {
-		return new EqualitySentence(term1.copy(), term2.copy());
+	public TermEquality copy() {
+		return new TermEquality(term1.copy(), term2.copy());
 	}
 
 	// END-AtomicSentence
@@ -68,7 +71,7 @@ public class EqualitySentence implements AtomicSentence {
 		if ((o == null) || (this.getClass() != o.getClass())) {
 			return false;
 		}
-		EqualitySentence te = (EqualitySentence) o;
+		TermEquality te = (TermEquality) o;
 
 		return te.getTerm1().equals(term1) && te.getTerm2().equals(term2);
 	}

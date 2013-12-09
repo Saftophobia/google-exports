@@ -3,14 +3,11 @@ package unifier;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import sentence.AtomicSentence;
-import sentence.Sentence;
 import parser.FOLNode;
 import term.Function;
-import term.Literal;
 import term.Term;
 import term.Variable;
+import utility.SubstVisitor;
 
 
 
@@ -60,8 +57,10 @@ import term.Variable;
  */
 public class Unifier {
 
+	SubstVisitor substVisitor;
+	
 	public Unifier() {
-
+		substVisitor = new  SubstVisitor();
 	}
 
 	/**
@@ -253,37 +252,21 @@ public class Unifier {
 			Variable var, Term x) {
 		theta.put(var, x);
 		for (Variable v : theta.keySet()) {
-			theta.put(v, subst(theta, theta.get(v)));
+			theta.put(v, substVisitor.subst(theta, theta.get(v)));
 		}
 		// Ensure Function Terms are correctly updates by passing over them
 		// again. Fix for testBadCascadeSubstitution_LCL418_1()
 		for (Variable v : theta.keySet()) {
 			Term t = theta.get(v);
 			if (t instanceof Function) {
-				theta.put(v, subst(theta, t));
+				theta.put(v, substVisitor.subst(theta, t));
 			}
 		}
 		return theta;
 	}
 	
 	
-	
-	public Sentence subst(Map<Variable, Term> theta, Sentence sentence) {
-		return (Sentence) sentence.accept(theta);
-	}
 
-	public Term subst(Map<Variable, Term> theta, Term aTerm) {
-		return (Term) aTerm.accept(theta);
-	}
-
-	public Function subst(Map<Variable, Term> theta, Function function) {
-		return (Function) function.accept(theta);
-	}
-
-	public Literal subst(Map<Variable, Term> theta, Literal literal) {
-		return literal.newInstance((AtomicSentence) literal
-				.getAtomicSentence().accept(theta));
-	}
 	
 
 

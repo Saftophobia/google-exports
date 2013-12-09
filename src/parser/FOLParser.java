@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sentence.ConnectedSentence;
-import sentence.EqualitySentence;
-import sentence.NegatedSentence;
+import sentence.NotSentence;
 import sentence.Predicate;
 import sentence.QuantifiedSentence;
 import sentence.Sentence;
+import sentence.TermEquality;
 
 import term.Constant;
 import term.Function;
@@ -16,31 +16,44 @@ import term.Term;
 import term.Variable;
 
 
+// The parser is the class responsible for reading a string 
+// from the user then transforms it into a set of java objects.
 public class FOLParser {
+	// it has a lexer for all the symbols in FOL
 	private FOLLexer lexer;
-
+	// a lookAheadBuffer used to buffer the char to be parsed
 	protected Token[] lookAheadBuffer;
-
+	// buffer size of the lookAheadBuffer
 	protected int lookAhead = 1;
 
+	
+	// a constructor for the parser taking only a lexer
 	public FOLParser(FOLLexer lexer) {
+		// setting the lexer
 		this.lexer = lexer;
+		// creating a new buffer with size 1
 		lookAheadBuffer = new Token[lookAhead];
 	}
 
+	// a constructor for the parser taking only a domain
 	public FOLParser(FOLDomain domain) {
+		// calling the above constructor with a new lexer instance created using the domain
 		this(new FOLLexer(domain));
 	}
 
+	// a domain getter
 	public FOLDomain getFOLDomain() {
 		return lexer.getFOLDomain();
 	}
 
+	// This method is used for parsing a String into a sentence
 	public Sentence parse(String s) {
+		// it calls 
 		setUpToParse(s);
 		return parseSentence();
 	}
-
+	
+	//
 	public void setUpToParse(String s) {
 		lexer.clear();
 		lookAheadBuffer = new Token[1];
@@ -114,12 +127,12 @@ public class FOLParser {
 		match("=");
 		// System.out.println("=");
 		Term term2 = parseTerm();
-		return new EqualitySentence(term1, term2);
+		return new TermEquality(term1, term2);
 	}
 
 	public Sentence parseNotSentence() {
 		match("NOT");
-		return new NegatedSentence(parseSentence());
+		return new NotSentence(parseSentence());
 	}
 
 	//

@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import parser.FOLVisitor;
 
+
+/**
+ * @author Ravi Mohan
+ * @author Ciaran O'Reilly
+ */
 public class Function implements Term {
 	private String functionName;
 	private List<Term> terms = new ArrayList<Term>();
@@ -38,15 +44,8 @@ public class Function implements Term {
 		return getTerms();
 	}
 
-	public Object accept(Object arg) {
-		List<Term> terms = this.getTerms();
-		List<Term> newTerms = new ArrayList<Term>();
-		for (int i = 0; i < terms.size(); i++) {
-			Term t = terms.get(i);
-			Term subsTerm = (Term) t.accept(arg);
-			newTerms.add(subsTerm);
-		}
-		return new Function(this.getFunctionName(), newTerms);
+	public Object accept(FOLVisitor v, Object arg) {
+		return v.visitFunction(this, arg);
 	}
 
 	public Function copy() {

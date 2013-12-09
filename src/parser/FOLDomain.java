@@ -11,6 +11,10 @@ public class FOLDomain {
 	//anything else is just a variable. the use of Set here was chosen 
 	//to remove the duplicates symbols in each type of sets
 	private Set<String> constants, functions, predicates;
+	// Index of skolem Functions
+	private int skolemFunctionIndexical;
+	// Index of skolem Constants
+	private int skolemConstantIndexical;
 
 	// This constructor of the class just initialize the 3 sets and taking 0 params
 	public FOLDomain() {
@@ -73,6 +77,41 @@ public class FOLDomain {
 	public void addPredicate(String predicate) {
 		predicates.add(predicate);
 	}
+	
+	// adding skolem function : introducing a new function name that had never shown before
+	public String addSkolemConstant() {
+		// creating a new variable
+		String sc = null;
+		// searching for a value that does not exist in the whole domain
+		do {
+			// naming the variable based on the last skolem constant
+			sc = "SC" + (skolemConstantIndexical++);
+		} while (constants.contains(sc) || functions.contains(sc)
+				|| predicates.contains(sc));
+		// adding it to the domain
+		addConstant(sc);
+		
+		// return the skolem constant
+		return sc;
+	}
+	
+	// adding skolem function : introducing a new function name that had never shown before
+	public String addSkolemFunction() {
+		// creating a new variable
+		String sf = null;
+		// searching for a value that does not exist in the whole domain
+		do {
+			// naming the variable based on the last skolem function
+			sf = "SF" + (skolemFunctionIndexical++);
+		} while (constants.contains(sf) || functions.contains(sf)
+				|| predicates.contains(sf));
+		// adding it to the domain
+		addFunction(sf);
+		
+		// return the skolem function
+		return sf;
+	}
+
 
 
 }
