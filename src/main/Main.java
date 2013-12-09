@@ -2,9 +2,10 @@ package main;
 
 import java.util.Map;
 
+import sentence.Sentence;
+
 import parser.FOLDomain;
 import parser.FOLParser;
-import sentence.Sentence;
 import term.Term;
 import term.Variable;
 import unifier.Unifier;
