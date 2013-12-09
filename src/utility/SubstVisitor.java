@@ -15,10 +15,6 @@ import term.Term;
 import term.Variable;
 
 
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
 public class SubstVisitor extends AbstractFOLVisitor {
 
 	public SubstVisitor() {

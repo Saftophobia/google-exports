@@ -19,7 +19,7 @@ import proofs.ProofStepPremise;
  *      href="http://logic.stanford.edu/classes/cs157/2008/lectures/lecture13.pdf"
  *      >Chain</a>
  * 
- * @author Ciaran O'Reilly
+ *
  * 
  */
 public class Chain {

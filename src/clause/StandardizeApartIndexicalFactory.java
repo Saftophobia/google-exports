@@ -6,7 +6,6 @@ import java.util.Map;
 /**
  * This class ensures unique standardize apart indexicals are created.
  * 
- * @author Ciaran O'Reilly
  * 
  */
 public class StandardizeApartIndexicalFactory {

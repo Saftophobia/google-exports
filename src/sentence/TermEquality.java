@@ -7,11 +7,6 @@ import java.util.List;
 import parser.FOLVisitor;
 import term.Term;
 
-
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
 public class TermEquality implements AtomicSentence {
 	private Term term1, term2;
 	private List<Term> terms = new ArrayList<Term>();

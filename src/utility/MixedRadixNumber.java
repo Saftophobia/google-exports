@@ -7,8 +7,6 @@ import java.util.List;
  * href="http://demonstrations.wolfram.com/MixedRadixNumberRepresentations/"
  * >Mixed Radix Number Representations.</a>
  * 
- * @author Ciaran O'Reilly
- * @author Mike Stampone
  */
 public class MixedRadixNumber extends Number {
 	//

@@ -7,10 +7,7 @@ import java.util.List;
 import parser.FOLVisitor;
 
 
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
+
 public class Function implements Term {
 	private String functionName;
 	private List<Term> terms = new ArrayList<Term>();

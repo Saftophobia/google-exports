@@ -8,10 +8,6 @@ import parser.FOLVisitor;
 
 
 
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
 public class ConnectedSentence implements Sentence {
 	private String connector;
 	private Sentence first, second;

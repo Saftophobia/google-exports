@@ -9,10 +9,7 @@ import parser.FOLVisitor;
 import term.Term;
 
 
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
+
 public class Predicate implements AtomicSentence {
 	private String predicateName;
 	private List<Term> terms = new ArrayList<Term>();

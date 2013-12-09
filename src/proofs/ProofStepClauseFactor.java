@@ -13,10 +13,7 @@ import abstracts.Literal;
 
 
 
-/**
- * @author Ciaran O'Reilly
- * 
- */
+
 public class ProofStepClauseFactor extends AbstractProofStep {
 	private List<ProofStep> predecessors = new ArrayList<ProofStep>();
 	private Clause factor = null;

@@ -19,10 +19,6 @@ import abstracts.Literal;
 
 
 
-/**
- * @author Ciaran O'Reilly
- * 
- */
 public class StandardizeApart {
 	private VariableCollector variableCollector = null;
 	private SubstVisitor substVisitor = null;

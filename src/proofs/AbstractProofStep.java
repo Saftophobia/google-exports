@@ -2,10 +2,7 @@ package proofs;
 
 import java.util.List;
 
-/**
- * @author Ciaran O'Reilly
- * 
- */
+
 public abstract class AbstractProofStep implements ProofStep {
 	private int step = 0;
 

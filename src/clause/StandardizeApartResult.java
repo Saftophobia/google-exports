@@ -7,11 +7,6 @@ import term.Term;
 import term.Variable;
 
 
-
-/**
- * @author Ciaran O'Reilly
- * 
- */
 public class StandardizeApartResult {
 	private Sentence originalSentence = null;
 	private Sentence standardized = null;

@@ -10,10 +10,6 @@ import parser.FOLVisitor;
 import term.Variable;
 
 
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
 public class QuantifiedSentence implements Sentence {
 	private String quantifier;
 	private List<Variable> variables = new ArrayList<Variable>();

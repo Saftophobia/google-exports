@@ -39,7 +39,7 @@ import clause.VariableCollector;
  * A Clause: A disjunction of literals.
  * 
  * 
- * @author Ciaran O'Reilly
+ * 
  * 
  */
 public class Clause {

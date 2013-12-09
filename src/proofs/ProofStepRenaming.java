@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author Ciaran O'Reilly
- * 
- */
+
 public class ProofStepRenaming extends AbstractProofStep {
 	private List<ProofStep> predecessors = new ArrayList<ProofStep>();
 	private Object proof = "";

@@ -8,10 +8,6 @@ import abstracts.Chain;
 
 
 
-/**
- * @author Ciaran O'Reilly
- * 
- */
 public class ProofStepChainContrapositive extends AbstractProofStep {
 	private List<ProofStep> predecessors = new ArrayList<ProofStep>();
 	private Chain contrapositive = null;

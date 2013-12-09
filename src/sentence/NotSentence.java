@@ -8,11 +8,6 @@ import parser.FOLVisitor;
 import utility.SyncategorematicSymbols;
 
 
-
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
 public class NotSentence implements Sentence {
 	private Sentence negated;
 	private List<Sentence> args = new ArrayList<Sentence>();

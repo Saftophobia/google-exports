@@ -18,10 +18,6 @@ import abstracts.Chain;
 import abstracts.Clause;
 import abstracts.Literal;
 
-/**
- * @author Ravi Mohan
- * @author Ciaran O'Reilly
- */
 public class VariableCollector implements FOLVisitor {
 
 	public VariableCollector() {

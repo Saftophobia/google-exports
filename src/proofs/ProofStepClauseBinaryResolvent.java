@@ -13,10 +13,7 @@ import abstracts.Literal;
 
 
 
-/**
- * @author Ciaran O'Reilly
- * 
- */
+
 public class ProofStepClauseBinaryResolvent extends AbstractProofStep {
 	private List<ProofStep> predecessors = new ArrayList<ProofStep>();
 	private Clause resolvent = null;
