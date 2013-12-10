@@ -66,10 +66,10 @@ public class Main {
 
 		// using the parser to parse the second example of the sample
 		// s1 holds the parsed version of (f(x, g(x), x))
-		s1 = parser.parse("P(f(x, g(x), x))");
+		Term t1 = parser.parseTerm("f(x, g(x), x)");
 		// s2 holds the parsed version of (f(g(u), g(g(z)), z))
-		s2 = parser.parse("P(f(g(u), g(g(z)), z))");
-		result = unifier.unify(s1, s2);
+		Term t2 = parser.parseTerm("f(g(u), g(g(z)), z)");
+		result = unifier.unify(t1, t2);
 		// printing the results.
 		System.out.println(result);
 

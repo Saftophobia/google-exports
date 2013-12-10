@@ -53,6 +53,15 @@ public class FOLParser {
 		// call the actual parsing method.
 		return parseSentence();
 	}
+	
+	// This method is used for parsing a String into a term
+	public Term parseTerm(String s) {
+		// it calls a helper method setUpToParse
+		// to initialize the parsing enviroment
+		setUpToParse(s);
+		// call the actual parsing method.
+		return parseTerm();
+	}
 
 	// Initializing the parsing environment
 	public void setUpToParse(String s) {
@@ -252,8 +261,8 @@ public class FOLParser {
 	protected boolean isEndOfInput(Token t) {
 		return (t.getType() == Token.EOI);
 	}
-	
-	// filling the whole buffer with tokens  
+
+	// filling the whole buffer with tokens
 	protected void fillLookAheadBuffer() {
 		// fill the buffer in a for loop
 		for (int i = 0; i < lookAhead; i++) {
@@ -261,7 +270,7 @@ public class FOLParser {
 			lookAheadBuffer[i] = lexer.nextToken();
 		}
 	}
-	
+
 	//
 	protected void match(String terminalSymbol) {
 		if (lookAhead(1).getText().equals(terminalSymbol)) {
@@ -281,21 +290,21 @@ public class FOLParser {
 
 	// this method is used to parse a sentence
 	private Sentence parseSentence() {
-		// first a token is load 
+		// first a token is load
 		Token t = lookAhead(1);
-		// if the token  = ")" then call parse paranthizedSentence
+		// if the token = ")" then call parse paranthizedSentence
 		if (lParen(t)) {
 			return parseParanthizedSentence();
-		// if the token is of type Quantifier then call parseQuantified
+			// if the token is of type Quantifier then call parseQuantified
 		} else if ((lookAhead(1).getType() == Token.QUANTIFIER)) {
 			return parseQuantifiedSentence();
-		// if the token is the negation token then call parse not Sentence
+			// if the token is the negation token then call parse not Sentence
 		} else if (notToken(t)) {
 			return parseNotSentence();
-		// if the token is a predicate Symbol then call parse predicate
+			// if the token is a predicate Symbol then call parse predicate
 		} else if (predicate(t)) {
 			return parsePredicate();
-		// if the token is a generic term  then just call parse term equality
+			// if the token is a generic term then just call parse term equality
 		} else if (term(t)) {
 			return parseTermEquality();
 		}
@@ -306,7 +315,7 @@ public class FOLParser {
 	// parsing a quantified sentence
 	private Sentence parseQuantifiedSentence() {
 		// EX: FORALL x,y,z
-		// get the  token on the top of the buffer and get its value
+		// get the token on the top of the buffer and get its value
 		String quantifier = lookAhead(1).getText();
 		// delete the token from the buffer
 		consume();
@@ -336,27 +345,27 @@ public class FOLParser {
 
 	// parsing a paranthized sentence
 	private Sentence parseParanthizedSentence() {
-		//EX : (A AND B)
+		// EX : (A AND B)
 		// delete the left bracket
 		match("(");
-		//EX : A AND B)
+		// EX : A AND B)
 		// then parse a normal sentence
 		Sentence sen = parseSentence();
-		// check for binary connector 
-		//EX : AND B)
+		// check for binary connector
+		// EX : AND B)
 		while (binaryConnector(lookAhead(1))) {
 			// extract the connector
 			String connector = lookAhead(1).getText();
 			// then delete it from the buffer
 			consume();
-			//EX : B)
+			// EX : B)
 			// parse the other sentence
 			Sentence other = parseSentence();
 			// then crate a new sentence using sen and the other sentence
 			sen = new ConnectedSentence(connector, sen, other);
-			//EX : )
+			// EX : )
 		}
-		//just remove the right bracket 
+		// just remove the right bracket
 		match(")");
 		// return the connected sentence
 		return sen; /* new ParanthizedSentence */
@@ -395,7 +404,7 @@ public class FOLParser {
 
 	}
 
-	//check if this token is a predicate
+	// check if this token is a predicate
 	private boolean predicate(Token t) {
 		// if the token type is predicate then return true
 		if ((t.getType() == Token.PREDICATE)) {
@@ -408,7 +417,7 @@ public class FOLParser {
 	// check if this token is the not sign the oposite of binaryConnector
 	private boolean notToken(Token t) {
 		// if the type of the token is connector and its value is a "NOT"
-				// then return true
+		// then return true
 		if ((t.getType() == Token.CONNECTOR) && (t.getText().equals("NOT"))) {
 			return true;
 		} else {
