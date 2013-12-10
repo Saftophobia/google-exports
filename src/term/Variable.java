@@ -34,7 +34,7 @@ public class Variable implements Term {
 
 	//
 	// START-Term
-	// a method usec to return the symbolic name forced by the interface of FOLNode
+	// a method used to return the symbolic name forced by the interface of FOLNode
 	public String getSymbolicName() {
 		return getValue();
 	}

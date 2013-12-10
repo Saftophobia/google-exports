@@ -50,16 +50,16 @@ import utility.SubstVisitor;
  * In a compound expression, such as F(A, B), the OP field picks out the
  * function symbol F and the ARGS field picks out the argument list (A, B).
  * 
- * @author Ciaran O'Reilly
- * @author Ravi Mohan
- * @author Mike Stampone
  * 
  */
 public class Unifier {
 
+	// it has an instance of the substVisitor to
+	// determine the behavior of the variables when visited with substitutions
 	SubstVisitor substVisitor;
 	
 	public Unifier() {
+		// creating a new instance of the substvisitor 
 		substVisitor = new  SubstVisitor();
 	}
 
@@ -141,15 +141,21 @@ public class Unifier {
 	// return UNIFY(x.REST, y.REST, UNIFY(x.FIRST, y.FIRST, theta))
 	public Map<Variable, Term> unify(List<? extends FOLNode> x,
 			List<? extends FOLNode> y, Map<Variable, Term> theta) {
+		// substitutions are = null
 		if (theta == null) {
 			return null;
+		// if the size of the x list != to size of the  list
 		} else if (x.size() != y.size()) {
 			return null;
+		// if the size of both is =0 
 		} else if (x.size() == 0 && y.size() == 0) {
 			return theta;
+		// if the size of both is = 1
 		} else if (x.size() == 1 && y.size() == 1) {
 			return unify(x.get(0), y.get(0), theta);
 		} else {
+			// just unify on the tail of the list and unify on the 
+			//head of the list getting a new list of substitutions
 			return unify(x.subList(1, x.size()), y.subList(1, y.size()),
 					unify(x.get(0), y.get(0), theta));
 		}
@@ -203,7 +209,7 @@ public class Unifier {
 	 */
 	private Map<Variable, Term> unifyVar(Variable var, FOLNode x,
 			Map<Variable, Term> theta) {
-
+		// an instance of term
 		if (!Term.class.isInstance(x)) {
 			return null;
 		} else if (theta.keySet().contains(var)) {
@@ -222,40 +228,46 @@ public class Unifier {
 		}
 	}
 
+	// unify the symbolic name of a FOLNode
 	private Map<Variable, Term> unifyOps(String x, String y,
 			Map<Variable, Term> theta) {
+		// if theta is not null
 		if (theta == null) {
 			return null;
+			// then if x = y return theta
 		} else if (x.equals(y)) {
 			return theta;
-		} else {
+		} else {// else return null
 			return null;
 		}
 	}
 
+	// extracting the args of a FOLNode (Look at the interface of FOLNode and the terms and sentences)
 	private List<? extends FOLNode> args(FOLNode x) {
 		return x.getArgs();
 	}
 
+	// extracting the symbolic name of the FOLNode to be unified in unifyOps (Look at the interface of FOLNode and the terms and sentences)
 	private String op(FOLNode x) {
 		return x.getSymbolicName();
 	}
 
+	// check if a FOLNode compound or not (Look at the interface of FOLNode and the terms and sentences)
 	private boolean isCompound(FOLNode x) {
 		return x.isCompound();
 	}
 
-	// See:
-	// http://logic.stanford.edu/classes/cs157/2008/miscellaneous/faq.html#jump165
-	// for need for this.
+	// this method
 	private Map<Variable, Term> cascadeSubstitution(Map<Variable, Term> theta,
 			Variable var, Term x) {
+		// add a substitution (a unification for a variable)
 		theta.put(var, x);
+		// loop on all variables to update the substitution of the variable
 		for (Variable v : theta.keySet()) {
 			theta.put(v, substVisitor.subst(theta, theta.get(v)));
 		}
 		// Ensure Function Terms are correctly updates by passing over them
-		// again. Fix for testBadCascadeSubstitution_LCL418_1()
+		// and apply the substitution on the functions too.
 		for (Variable v : theta.keySet()) {
 			Term t = theta.get(v);
 			if (t instanceof Function) {
