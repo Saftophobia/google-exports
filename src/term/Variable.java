@@ -49,13 +49,13 @@ public class Variable implements Term {
 		return null;
 	}
 	// this method forced by the FOLNode interface 
-	//to define the behavior when ineracting with this variable
+	//to define the behavior when interaction with this variable
 	public Object accept(FOLVisitor v, Object arg) {
 		return v.visitVariable(this, arg);
 	}
 	// copy a variable
 	public Variable copy() {
-		//returning a new instrance
+		//returning a new instance
 		return new Variable(value, indexical);
 	}
 
