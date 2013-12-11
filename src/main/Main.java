@@ -23,7 +23,7 @@ public class Main {
 
 		// Creating a new instance of the unifier class
 		// using this class the unification is done
-		Unifier unifier = new Unifier();
+		Unifier unifier = new Unifier(true);
 
 		// Creating a domain instance for the sample
 		// using this class the Symbols are defined so that the parser know
@@ -50,8 +50,8 @@ public class Main {
 		// its unification
 		Map<Variable, Term> result = unifier.unify(s1, s2);
 		// printing the results.
-		System.out.println(result);
-
+		System.out.println("Unification :"+ result);
+		System.out.println();
 		// using the parser to parse the second example of the sample
 		// s1 holds the parsed version of (P(a, y ,f(y)))
 		s1 = parser.parse("P(a, y ,f(y))");
@@ -62,8 +62,8 @@ public class Main {
 		// its unification
 		result = unifier.unify(s1, s2);
 		// printing the results.
-		System.out.println(result);
-
+		System.out.println("Unification :"+ result);
+		System.out.println();
 		// using the parser to parse the second example of the sample
 		// s1 holds the parsed version of (f(x, g(x), x))
 		Term t1 = parser.parseTerm("f(x, g(x), x)");
@@ -71,8 +71,8 @@ public class Main {
 		Term t2 = parser.parseTerm("f(g(u), g(g(z)), z)");
 		result = unifier.unify(t1, t2);
 		// printing the results.
-		System.out.println(result);
-
+		System.out.println("Unification :"+ result);
+		System.out.println();
 		// CNF converter
 		// creating a new domain
 		domain = new FOLDomain();
@@ -95,6 +95,7 @@ public class Main {
 		CNF cnf = cnfConv.convertToCNF(s1);
 		// printing the results
 		System.out.println(cnf.toString());
+		System.out.println();
 	}
 
 }

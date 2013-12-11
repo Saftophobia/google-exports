@@ -70,14 +70,14 @@ public class SubstVisitor extends AbstractFOLVisitor {
 	}
 
 	
-	// here is where the real substition is happening
+	// here is where the real substitution is happening
 	@SuppressWarnings("unchecked")
 	@Override
 	// in case of calling visit on a variable a substitution of the variable is returned
 	public Object visitVariable(Variable variable, Object arg) {
 		// we cast the input to Map<Variable, Term> 
 		Map<Variable, Term> substitution = (Map<Variable, Term>) arg;
-		// check if the variable exists inside the map if yes then return aaa copy of the term corresponding to it
+		// check if the variable exists inside the map if yes then return a copy of the term corresponding to it
 		if (substitution.containsKey(variable)) {
 			return substitution.get(variable).copy();
 		}

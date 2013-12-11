@@ -46,7 +46,7 @@ public class Clause {
 	//
 	private static StandardizeApartIndexical _saIndexical = StandardizeApartIndexicalFactory
 			.newStandardizeApartIndexical('c');
-	private static Unifier _unifier = new Unifier();
+	private static Unifier _unifier = new Unifier(false);
 	private static SubstVisitor _substVisitor = new SubstVisitor();
 	private static VariableCollector _variableCollector = new VariableCollector();
 	private static StandardizeApart _standardizeApart = new StandardizeApart();

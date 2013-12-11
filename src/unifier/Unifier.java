@@ -57,9 +57,11 @@ public class Unifier {
 	// it has an instance of the substVisitor to
 	// determine the behavior of the variables when visited with substitutions
 	SubstVisitor substVisitor;
+	boolean tracer;
 	
-	public Unifier() {
+	public Unifier(boolean tracer) {
 		// creating a new instance of the substvisitor 
+		this.tracer = tracer;
 		substVisitor = new  SubstVisitor();
 	}
 
@@ -99,6 +101,8 @@ public class Unifier {
 	 */
 	public Map<Variable, Term> unify(FOLNode x, FOLNode y,
 			Map<Variable, Term> theta) {
+		if(tracer)
+		System.out.println("Unifying  for : "+x+" and "+y+" with "+theta);
 		// if theta = failure then return failure
 		if (theta == null) {
 			return null;
@@ -260,11 +264,21 @@ public class Unifier {
 	// this method
 	private Map<Variable, Term> cascadeSubstitution(Map<Variable, Term> theta,
 			Variable var, Term x) {
+		if(tracer)
+		System.out.println("Checking in theta for : "+ var +" and "+ x);
 		// add a substitution (a unification for a variable)
 		theta.put(var, x);
+		String trace =  theta+"";
+		if(tracer)
+		System.out.println("Added in theta: "+trace);
 		// loop on all variables to update the substitution of the variable
 		for (Variable v : theta.keySet()) {
 			theta.put(v, substVisitor.subst(theta, theta.get(v)));
+		}
+		if(!trace.equals(theta.toString())){
+			trace = theta +"";
+			if(tracer)
+			System.out.println("Updated in theta: "+trace);
 		}
 		// Ensure Function Terms are correctly updates by passing over them
 		// and apply the substitution on the functions too.
@@ -273,6 +287,11 @@ public class Unifier {
 			if (t instanceof Function) {
 				theta.put(v, substVisitor.subst(theta, t));
 			}
+		}
+		if(!trace.equals(theta.toString())){
+			trace =  theta +"";
+			if(tracer)
+			System.out.println("Updated in theta: "+trace);
 		}
 		return theta;
 	}
