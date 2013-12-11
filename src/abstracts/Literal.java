@@ -1,7 +1,6 @@
 package abstracts;
 
 import sentence.AtomicSentence;
-import term.Term;
 
 
 public class Literal {
