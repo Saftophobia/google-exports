@@ -34,41 +34,43 @@ import clause.StandardizeApartIndexical;
 import clause.StandardizeApartIndexicalFactory;
 import clause.VariableCollector;
 
-
 /**
  * A Clause: A disjunction of literals.
- * 
- * 
- * 
- * 
  */
 public class Clause {
 	//
 	private static StandardizeApartIndexical _saIndexical = StandardizeApartIndexicalFactory
 			.newStandardizeApartIndexical('c');
-	private static Unifier _unifier = new Unifier(false);
+	private static Unifier _unifier = new Unifier();
 	private static SubstVisitor _substVisitor = new SubstVisitor();
 	private static VariableCollector _variableCollector = new VariableCollector();
 	private static StandardizeApart _standardizeApart = new StandardizeApart();
 	private static LiteralsSorter _literalSorter = new LiteralsSorter();
 	//
+	// literals,+ve and -ve placeholders
 	private final Set<Literal> literals = new LinkedHashSet<Literal>();
 	private final List<Literal> positiveLiterals = new ArrayList<Literal>();
 	private final List<Literal> negativeLiterals = new ArrayList<Literal>();
+	// clause is immutable or not
 	private boolean immutable = false;
 	private boolean saCheckRequired = true;
 	private String equalityIdentity = "";
 	private Set<Clause> factors = null;
 	private Set<Clause> nonTrivialFactors = null;
-	private String stringRep = null;
+	private String stringRep = null; // for toString()
+	// proofstep of the given clause, for tracing and printing
 	private ProofStep proofStep = null;
 
+	// constructor for empty cluase.
 	public Clause() {
-		// i.e. the empty clause
+
 	}
 
+	// constructor with +/-ve literals setters.
 	public Clause(List<Literal> lits) {
+		// add to this.literals
 		this.literals.addAll(lits);
+		// classify according to +/-ve
 		for (Literal l : literals) {
 			if (l.isPositiveLiteral()) {
 				this.positiveLiterals.add(l);
@@ -76,12 +78,17 @@ public class Clause {
 				this.negativeLiterals.add(l);
 			}
 		}
+		// Sort the literals first based on negation, atomic sentence,
+		// constant, function and variable.
 		recalculateIdentity();
 	}
 
+	// constructor with two lists of literals.
 	public Clause(List<Literal> lits1, List<Literal> lits2) {
+		// add both to the literals
 		literals.addAll(lits1);
 		literals.addAll(lits2);
+		// classify according to +/- ve
 		for (Literal l : literals) {
 			if (l.isPositiveLiteral()) {
 				this.positiveLiterals.add(l);
@@ -89,9 +96,12 @@ public class Clause {
 				this.negativeLiterals.add(l);
 			}
 		}
+		// Sort the literals first based on negation, atomic sentence,
+		// constant, function and variable.
 		recalculateIdentity();
 	}
 
+	// get proof step for printing/tracing
 	public ProofStep getProofStep() {
 		if (null == proofStep) {
 			// Assume was a premise
@@ -100,61 +110,69 @@ public class Clause {
 		return proofStep;
 	}
 
+	// proof step setter
 	public void setProofStep(ProofStep proofStep) {
 		this.proofStep = proofStep;
 	}
 
+	// return true of immutable
 	public boolean isImmutable() {
 		return immutable;
 	}
 
+	// set immutability
 	public void setImmutable() {
 		immutable = true;
 	}
 
+	// saCheckRequired getter
 	public boolean isStandardizedApartCheckRequired() {
 		return saCheckRequired;
 	}
 
+	// saCheckRequired setter
 	public void setStandardizedApartCheckNotRequired() {
 		saCheckRequired = false;
 	}
 
+	// check if clause is empty
 	public boolean isEmpty() {
 		return literals.size() == 0;
 	}
 
+	// return true if size of the clause is 1
 	public boolean isUnitClause() {
 		return literals.size() == 1;
 	}
 
+	// A Definite Clause is a disjunction of literals of which exactly 1 is
+	// positive.
 	public boolean isDefiniteClause() {
-		// A Definite Clause is a disjunction of literals of which exactly 1 is
-		// positive.
+
 		return !isEmpty() && positiveLiterals.size() == 1;
 	}
 
+	// An Implication Definite Clause is a disjunction of literals of
+	// which exactly 1 is positive and there is 1 or more negative
+	// literals.
 	public boolean isImplicationDefiniteClause() {
-		// An Implication Definite Clause is a disjunction of literals of
-		// which exactly 1 is positive and there is 1 or more negative
-		// literals.
+
 		return isDefiniteClause() && negativeLiterals.size() >= 1;
 	}
 
+	// A Horn clause is a disjunction of literals of which at most one is
+	// positive.
 	public boolean isHornClause() {
-		// A Horn clause is a disjunction of literals of which at most one is
-		// positive.
 		return !isEmpty() && positiveLiterals.size() <= 1;
 	}
 
+	// Literals in a clause must be exact complements
+	// for tautology elimination to apply. Do not
+	// remove non-identical literals just because
+	// they are complements under unification
 	public boolean isTautology() {
 
 		for (Literal pl : positiveLiterals) {
-			// Literals in a clause must be exact complements
-			// for tautology elimination to apply. Do not
-			// remove non-identical literals just because
-			// they are complements under unification, see pg16:
-			// http://logic.stanford.edu/classes/cs157/2008/notes/chap09.pdf
 			for (Literal nl : negativeLiterals) {
 				if (pl.getAtomicSentence().equals(nl.getAtomicSentence())) {
 					return true;
@@ -165,11 +183,14 @@ public class Clause {
 		return false;
 	}
 
+	// add literal to the this.listofliterals according to their +/-ve
 	public void addLiteral(Literal literal) {
+		// can't add literal to immutable
 		if (isImmutable()) {
 			throw new IllegalStateException(
 					"Clause is immutable, cannot be updated.");
 		}
+		// classify literals
 		int origSize = literals.size();
 		literals.add(literal);
 		if (literals.size() > origSize) {
@@ -179,41 +200,51 @@ public class Clause {
 				negativeLiterals.add(literal);
 			}
 		}
+
 		recalculateIdentity();
 	}
 
+	// add the atomicsentence to the list of positive literals
 	public void addPositiveLiteral(AtomicSentence atom) {
 		addLiteral(new Literal(atom));
 	}
 
+	// add the atomicsentence to the list of -ve literals
 	public void addNegativeLiteral(AtomicSentence atom) {
 		addLiteral(new Literal(atom, true));
 	}
 
+	// get size of literals
 	public int getNumberLiterals() {
 		return literals.size();
 	}
 
+	// get size of positive literals
 	public int getNumberPositiveLiterals() {
 		return positiveLiterals.size();
 	}
 
+	// get size of negative literals
 	public int getNumberNegativeLiterals() {
 		return negativeLiterals.size();
 	}
 
+	// Literals getter ( returns a set).
 	public Set<Literal> getLiterals() {
 		return Collections.unmodifiableSet(literals);
 	}
 
+	// +ve literals getter
 	public List<Literal> getPositiveLiterals() {
 		return Collections.unmodifiableList(positiveLiterals);
 	}
 
+	// -ve literals getter
 	public List<Literal> getNegativeLiterals() {
 		return Collections.unmodifiableList(negativeLiterals);
 	}
 
+	// Factors getter ( returns a set)
 	public Set<Clause> getFactors() {
 		if (null == factors) {
 			calculateFactors(null);
@@ -221,6 +252,7 @@ public class Clause {
 		return Collections.unmodifiableSet(factors);
 	}
 
+	// nontrivialfactor getter ( returns a set)
 	public Set<Clause> getNonTrivialFactors() {
 		if (null == nonTrivialFactors) {
 			calculateFactors(null);
@@ -269,8 +301,8 @@ public class Clause {
 		return subsumes;
 	}
 
-	// Note: Applies binary resolution rule
-	// Note: returns a set with an empty clause if both clauses
+	// Applies binary resolution rule
+	// returns a set with an empty clause if both clauses
 	// are empty, otherwise returns a set of binary resolvents.
 	public Set<Clause> binaryResolvents(Clause othC) {
 		Set<Clause> resolvents = new LinkedHashSet<Clause>();
@@ -285,6 +317,7 @@ public class Clause {
 		// Before attempting binary resolution
 		othC = saIfRequired(othC);
 
+		// classify +/-ve
 		List<Literal> allPosLits = new ArrayList<Literal>();
 		List<Literal> allNegLits = new ArrayList<Literal>();
 		allPosLits.addAll(this.positiveLiterals);
@@ -315,54 +348,68 @@ public class Clause {
 
 			// Now check to see if they resolve
 			Map<Variable, Term> copyRBindings = new LinkedHashMap<Variable, Term>();
+			// check all literals
 			for (Literal pl : trPosLits) {
 				for (Literal nl : trNegLits) {
 					copyRBindings.clear();
+					// unification check
 					if (null != _unifier.unify(pl.getAtomicSentence(),
 							nl.getAtomicSentence(), copyRBindings)) {
 						copyRPosLits.clear();
 						copyRNegLits.clear();
 						boolean found = false;
+						// check if pl in allPosLits
 						for (Literal l : allPosLits) {
 							if (!found && pl.equals(l)) {
-								found = true;
+								found = true; // continue if found
 								continue;
 							}
 							copyRPosLits.add(_substVisitor.subst(copyRBindings,
-									l));
+									l)); // add if not found
 						}
 						found = false;
+						// check negative list if not found in positive
 						for (Literal l : allNegLits) {
 							if (!found && nl.equals(l)) {
 								found = true;
 								continue;
 							}
 							copyRNegLits.add(_substVisitor.subst(copyRBindings,
-									l));
+									l)); // add if not found
 						}
 						// Ensure the resolvents are standardized apart
 						Map<Variable, Term> renameSubstitituon = _standardizeApart
 								.standardizeApart(copyRPosLits, copyRNegLits,
-										_saIndexical);
-						Clause c = new Clause(copyRPosLits, copyRNegLits);
+										_saIndexical); // standardized hashmaps
+						Clause c = new Clause(copyRPosLits, copyRNegLits); // new
+																			// clause
+																			// with
+																			// +/-ve
+																			// literals
 						c.setProofStep(new ProofStepClauseBinaryResolvent(c,
 								pl, nl, this, othC, copyRBindings,
-								renameSubstitituon));
-						if (isImmutable()) {
+								renameSubstitituon)); // create the proof step
+														// for tracing
+						if (isImmutable()) { // set immutability
 							c.setImmutable();
 						}
-						if (!isStandardizedApartCheckRequired()) {
+						if (!isStandardizedApartCheckRequired()) { // test
+																	// setter if
+																	// it isn't
+																	// to avoid
+																	// duplicates
 							c.setStandardizedApartCheckNotRequired();
 						}
+						// add the clause
 						resolvents.add(c);
 					}
 				}
 			}
 		}
-
 		return resolvents;
 	}
 
+	// return the literals in clause
 	@Override
 	public String toString() {
 		if (null == stringRep) {
@@ -374,11 +421,13 @@ public class Clause {
 		return stringRep;
 	}
 
+	// return the hashcode value of the object
 	@Override
 	public int hashCode() {
 		return equalityIdentity.hashCode();
 	}
 
+	// clause comparator
 	@Override
 	public boolean equals(Object othObj) {
 		if (null == othObj) {
@@ -431,6 +480,7 @@ public class Clause {
 		}
 	}
 
+	// return nontrivial factors
 	private void calculateFactors(Set<Clause> parentFactors) {
 		nonTrivialFactors = new LinkedHashSet<Clause>();
 
@@ -445,18 +495,22 @@ public class Clause {
 				// Look at the negative literals
 				lits.addAll(negativeLiterals);
 			}
+			// for all literals
 			for (int x = 0; x < lits.size(); x++) {
 				for (int y = x + 1; y < lits.size(); y++) {
 					Literal litX = lits.get(x);
 					Literal litY = lits.get(y);
 
 					theta.clear();
+					// unify x and x+1
 					Map<Variable, Term> substitution = _unifier.unify(
 							litX.getAtomicSentence(), litY.getAtomicSentence(),
 							theta);
 					if (null != substitution) {
 						List<Literal> posLits = new ArrayList<Literal>();
 						List<Literal> negLits = new ArrayList<Literal>();
+						// add the substituted literal to the corresponding list
+						// according to sign
 						if (i == 0) {
 							posLits.add(_substVisitor.subst(substitution, litX));
 						} else {
@@ -466,32 +520,41 @@ public class Clause {
 							if (pl == litX || pl == litY) {
 								continue;
 							}
+							// makes sure its not already there
 							posLits.add(_substVisitor.subst(substitution, pl));
 						}
 						for (Literal nl : negativeLiterals) {
 							if (nl == litX || nl == litY) {
 								continue;
 							}
+							// makes sure its not already there
 							negLits.add(_substVisitor.subst(substitution, nl));
 						}
 						// Ensure the non trivial factor is standardized apart
 						Map<Variable, Term> renameSubst = _standardizeApart
 								.standardizeApart(posLits, negLits,
 										_saIndexical);
+						// creates new clause for output
 						Clause c = new Clause(posLits, negLits);
+						// set proof step for tracing
 						c.setProofStep(new ProofStepClauseFactor(c, this, litX,
 								litY, substitution, renameSubst));
+						// set immutability and uniqueness checks
 						if (isImmutable()) {
 							c.setImmutable();
 						}
 						if (!isStandardizedApartCheckRequired()) {
 							c.setStandardizedApartCheckNotRequired();
 						}
+						// add factors to the list if no parents found or c is
+						// not a parent
 						if (null == parentFactors) {
+
 							c.calculateFactors(nonTrivialFactors);
 							nonTrivialFactors.addAll(c.getFactors());
 						} else {
 							if (!parentFactors.contains(c)) {
+
 								c.calculateFactors(nonTrivialFactors);
 								nonTrivialFactors.addAll(c.getFactors());
 							}
@@ -500,22 +563,17 @@ public class Clause {
 				}
 			}
 		}
-
+		// add the nontrivialfactors for output
 		factors = new LinkedHashSet<Clause>();
-		// Need to add self, even though a non-trivial
-		// factor. See: slide 30
-		// http://logic.stanford.edu/classes/cs157/2008/lectures/lecture10.pdf
-		// for example of incompleteness when
-		// trivial factor not included.
 		factors.add(this);
 		factors.addAll(nonTrivialFactors);
 	}
 
+	// If performing resolution with self
+	// then need to standardize apart in
+	// order to work correctly.
 	private Clause saIfRequired(Clause othClause) {
 
-		// If performing resolution with self
-		// then need to standardize apart in
-		// order to work correctly.
 		if (isStandardizedApartCheckRequired() || this == othClause) {
 			Set<Variable> mVariables = _variableCollector
 					.collectAllVariables(this);
@@ -534,7 +592,7 @@ public class Clause {
 
 		return othClause;
 	}
-
+	//return literals with similar literal names
 	private Map<String, List<Literal>> collectLikeLiterals(Set<Literal> literals) {
 		Map<String, List<Literal>> likeLiterals = new HashMap<String, List<Literal>>();
 		for (Literal l : literals) {
@@ -553,6 +611,8 @@ public class Clause {
 		return likeLiterals;
 	}
 
+	// check whether literal are a subset of the
+	// other clauses literal
 	private boolean checkSubsumes(Clause othC,
 			Map<String, List<Literal>> thisToTry,
 			Map<String, List<Literal>> othCToTry) {
@@ -670,6 +730,7 @@ public class Clause {
 	}
 }
 
+// comparator for literals to sort them
 class LiteralsSorter implements Comparator<Literal> {
 	public int compare(Literal o1, Literal o2) {
 		int rVal = 0;
@@ -699,6 +760,7 @@ class LiteralsSorter implements Comparator<Literal> {
 		return rVal;
 	}
 
+	// term comparator
 	private int compareArgs(List<Term> args1, List<Term> args2) {
 		int rVal = 0;
 
@@ -751,25 +813,40 @@ class LiteralsSorter implements Comparator<Literal> {
 	}
 }
 
+// to determine if two clauses
+// are equivalent you need to determine
+// the no. of unique variables they contain and
+// there positions across the clauses
 class ClauseEqualityIdentityConstructor implements FOLVisitor {
-	private StringBuilder identity = new StringBuilder();
-	private int noVarPositions = 0;
-	private int[] clauseVarCounts = null;
+	private StringBuilder identity = new StringBuilder(); // the final form
+															// output
+	private int noVarPositions = 0; // the max width
+	private int[] clauseVarCounts = null; // literals array
 	private int currentLiteral = 0;
-	private Map<String, List<Integer>> varPositions = new HashMap<String, List<Integer>>();
+	private Map<String, List<Integer>> varPositions = new HashMap<String, List<Integer>>(); // variable
+																							// positions
+																							// hashmaps
+																							// to
+																							// be
+																							// checked
 
+	// constructor with IV setters and sorter
 	public ClauseEqualityIdentityConstructor(List<Literal> literals,
 			LiteralsSorter sorter) {
-
+		//set variablecount
 		clauseVarCounts = new int[literals.size()];
-
+		
 		for (Literal l : literals) {
+			// add ~ if literal is negated
 			if (l.isNegativeLiteral()) {
 				identity.append("~");
 			}
+			//add the atomic sentence
 			identity.append(l.getAtomicSentence().getSymbolicName());
+			//add the parenthesis 
 			identity.append("(");
 			boolean firstTerm = true;
+			//fill the parenthesis  with the terms 
 			for (Term t : l.getAtomicSentence().getArgs()) {
 				if (firstTerm) {
 					firstTerm = false;
@@ -778,6 +855,7 @@ class ClauseEqualityIdentityConstructor implements FOLVisitor {
 				}
 				t.accept(this, null);
 			}
+			//close parenthesis 
 			identity.append(")");
 			currentLiteral++;
 		}
@@ -788,6 +866,7 @@ class ClauseEqualityIdentityConstructor implements FOLVisitor {
 			int incITo = i;
 			int next = i + 1;
 			max += clauseVarCounts[i];
+			//compare literals x and x+1
 			while (next < literals.size()) {
 				if (0 != sorter.compare(literals.get(i), literals.get(next))) {
 					break;
@@ -869,7 +948,7 @@ class ClauseEqualityIdentityConstructor implements FOLVisitor {
 			}
 		}
 	}
-
+	//return output
 	public String getIdentity() {
 		return identity.toString();
 	}
@@ -882,6 +961,7 @@ class ClauseEqualityIdentityConstructor implements FOLVisitor {
 
 		List<Integer> positions = varPositions.get(var.getValue());
 		if (null == positions) {
+			//add variables if its null
 			positions = new ArrayList<Integer>();
 			varPositions.put(var.getValue(), positions);
 		}
@@ -891,12 +971,12 @@ class ClauseEqualityIdentityConstructor implements FOLVisitor {
 		clauseVarCounts[currentLiteral]++;
 		return var;
 	}
-
+	//append constant to the output identity
 	public Object visitConstant(Constant constant, Object arg) {
 		identity.append(constant.getValue());
 		return constant;
 	}
-
+	//append parenthesis to the identity while filling it with the terms 
 	public Object visitFunction(Function function, Object arg) {
 		boolean firstTerm = true;
 		identity.append(function.getFunctionName());
@@ -913,7 +993,9 @@ class ClauseEqualityIdentityConstructor implements FOLVisitor {
 
 		return function;
 	}
-
+	
+	//exceptions 
+	
 	public Object visitPredicate(Predicate predicate, Object arg) {
 		throw new IllegalStateException("Should not be called");
 	}

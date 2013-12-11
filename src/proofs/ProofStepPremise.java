@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
- 
+/**
+ * proof by a claim
+ * 
+ */
 public class ProofStepPremise extends AbstractProofStep {
 	//
-	private static final List<ProofStep> _noPredecessors = new ArrayList<ProofStep>();
+	private static final List<ProofStep> _noPredecessors = new ArrayList<ProofStep>(); //no predecessors
 	//
 	private Object proof = "";
 
+	//constructor w/ proof setter
 	public ProofStepPremise(Object proof) {
 		this.proof = proof;
 	}
@@ -20,17 +23,17 @@ public class ProofStepPremise extends AbstractProofStep {
 	// START-ProofStep
 	@Override
 	public List<ProofStep> getPredecessorSteps() {
-		return Collections.unmodifiableList(_noPredecessors);
+		return Collections.unmodifiableList(_noPredecessors); //return the list
 	}
 
 	@Override
 	public String getProof() {
-		return proof.toString();
+		return proof.toString(); //return the proof step
 	}
 
 	@Override
 	public String getJustification() {
-		return "Premise";
+		return "Premise"; //return premise, as in ... a claim
 	}
 	// END-ProofStep
 	//

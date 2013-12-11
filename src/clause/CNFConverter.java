@@ -25,15 +25,15 @@ import abstracts.CNF;
 import abstracts.Clause;
 
 /**
- * Every sentence of first-order logic can be converted into an
- * equivalent CNF sentence.
+ * Every sentence of first-order logic can be converted into an equivalent CNF
+ * sentence.
  */
 public class CNFConverter {
 
-	private FOLParser parser = null; //initialize FOL parser
+	private FOLParser parser = null; // initialize FOL parser
 	private SubstVisitor substVisitor; // ??????????????
 
-	//constructor
+	// constructor with parser setter
 	public CNFConverter(FOLParser parser) {
 		this.parser = parser;
 
@@ -51,15 +51,15 @@ public class CNFConverter {
 	 *         a disjunction of literals.
 	 */
 	public CNF convertToCNF(Sentence aSentence) {
-		// I)mplications Out:
+		// Implications Out:
 		Sentence implicationsOut = (Sentence) aSentence.accept(
 				new ImplicationsOut(), null);
 
-		// N)egations In:
+		// Negations In:
 		Sentence negationsIn = (Sentence) implicationsOut.accept(
 				new NegationsIn(), null);
 
-		// S)tandardize variables:
+		// Standardize variables:
 		// For sentences like:
 		// (FORALL x P(x)) V (EXISTS x Q(x)),
 		// which use the same variable name twice, change the name of one of the
@@ -70,52 +70,61 @@ public class CNFConverter {
 
 		// Remove explicit quantifiers, by skolemizing existentials
 		// and dropping universals:
-		// E)xistentials Out
-		// A)lls Out:
+		// Existentials Out
+		// Alls Out:
 		Sentence andsAndOrs = (Sentence) saSyncategorematicSymbols.accept(
-				new RemoveSyncategorematicSymbols(parser), new LinkedHashSet<Variable>());
+				new RemoveSyncategorematicSymbols(parser),
+				new LinkedHashSet<Variable>());
 
-		// D)istribution
+		// Distribution
 		// V over ^:
 		Sentence orDistributedOverAnd = (Sentence) andsAndOrs.accept(
 				new DistributeOrOverAnd(), null);
 
-		// O)perators Out
+		// Operators Out
 		return (new CNFConstructor()).construct(orDistributedOverAnd);
 	}
 }
 
+// implications class
 class ImplicationsOut implements FOLVisitor {
 	public ImplicationsOut() {
 
 	}
 
+	// predicate parser for implicator
 	public Object visitPredicate(Predicate p, Object arg) {
 		return p;
 	}
 
+	// term parser for implicator
 	public Object visitTermEquality(TermEquality equality, Object arg) {
 		return equality;
 	}
 
+	// variable parser for implicator
 	public Object visitVariable(Variable variable, Object arg) {
 		return variable;
 	}
 
+	// constant parser for implicator
 	public Object visitConstant(Constant constant, Object arg) {
 		return constant;
 	}
 
+	// function parser for implicator
 	public Object visitFunction(Function function, Object arg) {
 		return function;
 	}
 
+	// return negated sentence for implicator
 	public Object visitNotSentence(NotSentence notSentence, Object arg) {
 		Sentence negated = notSentence.getNegated();
 
 		return new NotSentence((Sentence) negated.accept(this, arg));
 	}
 
+	// conntectedSentences parser, while eliminating the 2 implications
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		Sentence alpha = (Sentence) sentence.getFirst().accept(this, arg);
 		Sentence beta = (Sentence) sentence.getSecond().accept(this, arg);
@@ -125,22 +134,24 @@ class ImplicationsOut implements FOLVisitor {
 		if (SyncategorematicSymbols.isBICOND(sentence.getConnector())) {
 			Sentence first = new ConnectedSentence(SyncategorematicSymbols.OR,
 					new NotSentence(alpha), beta);
-			Sentence second = new ConnectedSentence(SyncategorematicSymbols.OR, alpha,
-					new NotSentence(beta));
+			Sentence second = new ConnectedSentence(SyncategorematicSymbols.OR,
+					alpha, new NotSentence(beta));
 
-			return new ConnectedSentence(SyncategorematicSymbols.AND, first, second);
+			return new ConnectedSentence(SyncategorematicSymbols.AND, first,
+					second);
 		}
 
 		// Eliminate =>, implication elimination,
 		// replacing (alpha => beta) with (~alpha V beta)
 		if (SyncategorematicSymbols.isIMPLIES(sentence.getConnector())) {
-			return new ConnectedSentence(SyncategorematicSymbols.OR, new NotSentence(alpha),
-					beta);
+			return new ConnectedSentence(SyncategorematicSymbols.OR,
+					new NotSentence(alpha), beta);
 		}
 
 		return new ConnectedSentence(sentence.getConnector(), alpha, beta);
 	}
 
+	// quantified sentence parser
 	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
 			Object arg) {
 
@@ -150,53 +161,63 @@ class ImplicationsOut implements FOLVisitor {
 	}
 }
 
+// negations class
 class NegationsIn implements FOLVisitor {
 	public NegationsIn() {
-
+		// empty constructor
 	}
 
+	// predicate parser for negations
 	public Object visitPredicate(Predicate p, Object arg) {
 		return p;
 	}
 
+	// term parser for negations
 	public Object visitTermEquality(TermEquality equality, Object arg) {
 		return equality;
 	}
 
+	// variable parser for negations
 	public Object visitVariable(Variable variable, Object arg) {
 		return variable;
 	}
 
+	// Constant parser for negations
 	public Object visitConstant(Constant constant, Object arg) {
 		return constant;
 	}
 
+	// function parser for negations
 	public Object visitFunction(Function function, Object arg) {
 		return function;
 	}
 
+	// process negations
 	public Object visitNotSentence(NotSentence notSentence, Object arg) {
+		Sentence negated = notSentence.getNegated();
 		// CNF requires NOT (~) to appear only in literals, so we 'move ~
 		// inwards' by repeated application of the following equivalences:
-		Sentence negated = notSentence.getNegated();
-
 		// ~(~alpha) equivalent to alpha (double negation elimination)
 		if (negated instanceof NotSentence) {
 			return ((NotSentence) negated).getNegated().accept(this, arg);
 		}
 
 		if (negated instanceof ConnectedSentence) {
+			// temp variable
 			ConnectedSentence negConnected = (ConnectedSentence) negated;
+			// get the two connections
 			Sentence alpha = negConnected.getFirst();
 			Sentence beta = negConnected.getSecond();
-			// ~(alpha ^ beta) equivalent to (~alpha V ~beta) (De Morgan)
+			// ~(alpha ^ beta) equivalent to (~alpha V ~beta) as in De Morgan's
+			// Rules
 			if (SyncategorematicSymbols.isAND(negConnected.getConnector())) {
-				// I need to ensure the ~s are moved in deeper
+				// I need to ensure the ~ are moved in deeper
 				Sentence notAlpha = (Sentence) (new NotSentence(alpha)).accept(
 						this, arg);
 				Sentence notBeta = (Sentence) (new NotSentence(beta)).accept(
 						this, arg);
-				return new ConnectedSentence(SyncategorematicSymbols.OR, notAlpha, notBeta);
+				return new ConnectedSentence(SyncategorematicSymbols.OR,
+						notAlpha, notBeta);
 			}
 
 			// ~(alpha V beta) equivalent to (~alpha ^ ~beta) (De Morgan)
@@ -206,14 +227,15 @@ class NegationsIn implements FOLVisitor {
 						this, arg);
 				Sentence notBeta = (Sentence) (new NotSentence(beta)).accept(
 						this, arg);
-				return new ConnectedSentence(SyncategorematicSymbols.AND, notAlpha, notBeta);
+				return new ConnectedSentence(SyncategorematicSymbols.AND,
+						notAlpha, notBeta);
 			}
 		}
 
-		// in addition, rules for negated quantifiers:
+		// rules for negated quantifiers:
 		if (negated instanceof QuantifiedSentence) {
 			QuantifiedSentence negQuantified = (QuantifiedSentence) negated;
-			// I need to ensure the ~ is moved in deeper
+			// I need to ensure the ~ is moved in deeper as above
 			Sentence notP = (Sentence) (new NotSentence(
 					negQuantified.getQuantified())).accept(this, arg);
 
@@ -233,12 +255,16 @@ class NegationsIn implements FOLVisitor {
 		return new NotSentence((Sentence) negated.accept(this, arg));
 	}
 
+	// connectedsentences parser, just returns the notsentence parser of the two
+	// parts
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		return new ConnectedSentence(sentence.getConnector(),
 				(Sentence) sentence.getFirst().accept(this, arg),
 				(Sentence) sentence.getSecond().accept(this, arg));
 	}
 
+	// quantifiedsentence parser, returns the quantified sentence with the new
+	// set of variables, the quantifier string and sentence
 	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
 			Object arg) {
 
@@ -248,51 +274,63 @@ class NegationsIn implements FOLVisitor {
 	}
 }
 
+// standardizeclass
 class StandardizeQuantiferVariables implements FOLVisitor {
 	// Just use a localized indexical here.
 	private StandardizeApartIndexical quantifiedIndexical = new StandardizeApartIndexical() {
 		private int index = 0;
 
+		// getprefix
 		public String getPrefix() {
 			return "q";
 		}
 
+		// getnextindex of the indexical
 		public int getNextIndex() {
 			return index++;
 		}
 	};
-
+	// the visitor(reader)
 	private SubstVisitor substVisitor = null;
 
+	// constructor with visitor setter
 	public StandardizeQuantiferVariables(SubstVisitor substVisitor) {
 		this.substVisitor = substVisitor;
 	}
 
+	// predicate reader for standardize
 	public Object visitPredicate(Predicate p, Object arg) {
 		return p;
 	}
 
+	// term reader for standardize
 	public Object visitTermEquality(TermEquality equality, Object arg) {
 		return equality;
 	}
 
+	// variable reader for standardize
 	public Object visitVariable(Variable variable, Object arg) {
 		return variable;
 	}
 
+	// constant reader for standardize
 	public Object visitConstant(Constant constant, Object arg) {
 		return constant;
 	}
 
+	// function reader for standardize
 	public Object visitFunction(Function function, Object arg) {
 		return function;
 	}
 
+	// notsentence reader for standardize
 	public Object visitNotSentence(NotSentence sentence, Object arg) {
 		return new NotSentence((Sentence) sentence.getNegated().accept(this,
 				arg));
 	}
 
+	// connectedsentence reader, connects the two parts of the sentence with the
+	// connector
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		return new ConnectedSentence(sentence.getConnector(),
 				(Sentence) sentence.getFirst().accept(this, arg),
@@ -302,6 +340,7 @@ class StandardizeQuantiferVariables implements FOLVisitor {
 	@SuppressWarnings("unchecked")
 	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
 			Object arg) {
+		// progress tracker
 		Set<Variable> seenSoFar = (Set<Variable>) arg;
 
 		// Keep track of what I have to subst locally and
@@ -323,66 +362,79 @@ class StandardizeQuantiferVariables implements FOLVisitor {
 			}
 		}
 
-		// Apply the local subst
+		// Apply the local subst reader
 		Sentence subst = substVisitor.subst(localSubst,
 				sentence.getQuantified());
 
 		// Ensure all my existing and replaced variable
 		// names are tracked
 		seenSoFar.addAll(replVariables);
-
+		// build the sentence
 		Sentence sQuantified = (Sentence) subst.accept(this, arg);
-
+		// return the new sentence with the old one,new variables and quantifier
 		return new QuantifiedSentence(sentence.getQuantifier(), replVariables,
 				sQuantified);
 	}
 }
 
+// syncategorematics remover
 class RemoveSyncategorematicSymbols implements FOLVisitor {
-
+	// parser and reader
 	private FOLParser parser = null;
 	private SubstVisitor substVisitor = null;
 
+	// constructor
 	public RemoveSyncategorematicSymbols(FOLParser parser) {
 		this.parser = parser;
 
 		substVisitor = new SubstVisitor();
 	}
 
+	// predicate reader for Syncategorematics remover
 	public Object visitPredicate(Predicate p, Object arg) {
 		return p;
 	}
 
+	// term reader for Syncategorematics remover
 	public Object visitTermEquality(TermEquality equality, Object arg) {
 		return equality;
 	}
 
+	// variable reader for Syncategorematics remover
 	public Object visitVariable(Variable variable, Object arg) {
 		return variable;
 	}
 
+	// constant reader for Syncategorematics remover
 	public Object visitConstant(Constant constant, Object arg) {
 		return constant;
 	}
 
+	// function reader for Syncategorematics remover
 	public Object visitFunction(Function function, Object arg) {
 		return function;
 	}
 
+	// not sentence reader for Syncategorematics remover, return negated
+	// sentence
 	public Object visitNotSentence(NotSentence sentence, Object arg) {
 		return new NotSentence((Sentence) sentence.getNegated().accept(this,
 				arg));
 	}
 
+	// connectedsentence reader for Syncategorematics remover, connects two
+	// parts of the sentence with the connector
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		return new ConnectedSentence(sentence.getConnector(),
 				(Sentence) sentence.getFirst().accept(this, arg),
 				(Sentence) sentence.getSecond().accept(this, arg));
 	}
 
+	// Qsentence reader for Syncategorematics remover
 	@SuppressWarnings("unchecked")
 	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
 			Object arg) {
+		// get Q sentence
 		Sentence quantified = sentence.getQuantified();
 		Set<Variable> universalScope = (Set<Variable>) arg;
 
@@ -407,7 +459,7 @@ class RemoveSyncategorematicSymbols implements FOLVisitor {
 					skolemSubst.put(eVar, new Constant(skolemConstantName));
 				}
 			}
-
+			// return the skolemized sentence
 			Sentence skolemized = substVisitor.subst(skolemSubst, quantified);
 			return skolemized.accept(this, arg);
 		}
@@ -434,37 +486,46 @@ class RemoveSyncategorematicSymbols implements FOLVisitor {
 	}
 }
 
+// V to ^
 class DistributeOrOverAnd implements FOLVisitor {
-
+	// constructor
 	public DistributeOrOverAnd() {
 
 	}
 
+	// predicate reader for V to ^
 	public Object visitPredicate(Predicate p, Object arg) {
 		return p;
 	}
 
+	// term reader for V to ^
 	public Object visitTermEquality(TermEquality equality, Object arg) {
 		return equality;
 	}
 
+	// variable reader for V to ^
 	public Object visitVariable(Variable variable, Object arg) {
 		return variable;
 	}
 
+	// constant reader for V to ^
 	public Object visitConstant(Constant constant, Object arg) {
 		return constant;
 	}
 
+	// function reader for V to ^
 	public Object visitFunction(Function function, Object arg) {
 		return function;
 	}
 
+	// notsentence negator
 	public Object visitNotSentence(NotSentence sentence, Object arg) {
 		return new NotSentence((Sentence) sentence.getNegated().accept(this,
 				arg));
 	}
 
+	// connecting two parts of the sentence with the connector in between. (
+	// while editing V to ^)
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		// Distribute V over ^:
 
@@ -477,14 +538,19 @@ class DistributeOrOverAnd implements FOLVisitor {
 		if (SyncategorematicSymbols.isOR(sentence.getConnector())
 				&& ConnectedSentence.class.isInstance(beta)) {
 			ConnectedSentence betaAndGamma = (ConnectedSentence) beta;
-			if (SyncategorematicSymbols.isAND(betaAndGamma.getConnector())) {
-				beta = betaAndGamma.getFirst();
-				Sentence gamma = betaAndGamma.getSecond();
+			if (SyncategorematicSymbols.isAND(betaAndGamma.getConnector())) { // if
+																				// example
+																				// occurs
+				beta = betaAndGamma.getFirst(); // beta is the first sentence
+				Sentence gamma = betaAndGamma.getSecond(); // gamma is the 2nd
+				// connect beta and gamma using the connector
 				return new ConnectedSentence(SyncategorematicSymbols.AND,
-						(Sentence) (new ConnectedSentence(SyncategorematicSymbols.OR, alpha,
-								beta)).accept(this, arg),
-						(Sentence) (new ConnectedSentence(SyncategorematicSymbols.OR, alpha,
-								gamma)).accept(this, arg));
+						(Sentence) (new ConnectedSentence(
+								SyncategorematicSymbols.OR, alpha, beta))
+								.accept(this, arg),
+						(Sentence) (new ConnectedSentence(
+								SyncategorematicSymbols.OR, alpha, gamma))
+								.accept(this, arg));
 			}
 		}
 
@@ -492,45 +558,60 @@ class DistributeOrOverAnd implements FOLVisitor {
 		// ((alpha V beta) ^ (gamma V beta))
 		if (SyncategorematicSymbols.isOR(sentence.getConnector())
 				&& ConnectedSentence.class.isInstance(alpha)) {
-			ConnectedSentence alphaAndGamma = (ConnectedSentence) alpha;
+			ConnectedSentence alphaAndGamma = (ConnectedSentence) alpha; // if
+																			// example
+																			// occurs,
+																			// initialize
+																			// the
+																			// connected
+																			// sentence
 			if (SyncategorematicSymbols.isAND(alphaAndGamma.getConnector())) {
-				alpha = alphaAndGamma.getFirst();
-				Sentence gamma = alphaAndGamma.getSecond();
+				alpha = alphaAndGamma.getFirst(); // get first statement
+				Sentence gamma = alphaAndGamma.getSecond(); // get 2nd statement
+				// return the new CS with the new connector
 				return new ConnectedSentence(SyncategorematicSymbols.AND,
-						(Sentence) (new ConnectedSentence(SyncategorematicSymbols.OR, alpha,
-								beta)).accept(this, arg),
-						(Sentence) (new ConnectedSentence(SyncategorematicSymbols.OR, gamma,
-								beta)).accept(this, arg));
+						(Sentence) (new ConnectedSentence(
+								SyncategorematicSymbols.OR, alpha, beta))
+								.accept(this, arg),
+						(Sentence) (new ConnectedSentence(
+								SyncategorematicSymbols.OR, gamma, beta))
+								.accept(this, arg));
 			}
 		}
-
+		// return the connectedsentence if non of the special cases found
 		return new ConnectedSentence(sentence.getConnector(), alpha, beta);
 	}
 
 	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
 			Object arg) {
 		// This should not be called as should have already
-		// removed all of the quantifiers.
+		// removed all of the quantifiers earlier in the program.
 		throw new IllegalStateException(
 				"All quantified sentences should have already been removed.");
 	}
 }
 
+// the CNFconstructor using cnf.java
 class CNFConstructor implements FOLVisitor {
+	// constructor
 	public CNFConstructor() {
 
 	}
 
+	// construct using the latest changes ( the V distributed over ^ )
 	public CNF construct(Sentence orDistributedOverAnd) {
+		// clauses intilizer
 		ArgData ad = new ArgData();
 
 		orDistributedOverAnd.accept(this, ad);
-
+		// return the cnf with clauses
 		return new CNF(ad.clauses);
 	}
 
+	// predicate reader for cnfconstructor
 	public Object visitPredicate(Predicate p, Object arg) {
 		ArgData ad = (ArgData) arg;
+		// add clauses according to +/-ve
 		if (ad.negated) {
 			ad.clauses.get(ad.clauses.size() - 1).addNegativeLiteral(p);
 		} else {
@@ -539,8 +620,10 @@ class CNFConstructor implements FOLVisitor {
 		return p;
 	}
 
+	// term reader for cnfconstructor
 	public Object visitTermEquality(TermEquality equality, Object arg) {
 		ArgData ad = (ArgData) arg;
+		// add clauses according to +/-ve
 		if (ad.negated) {
 			ad.clauses.get(ad.clauses.size() - 1).addNegativeLiteral(equality);
 		} else {
@@ -549,21 +632,25 @@ class CNFConstructor implements FOLVisitor {
 		return equality;
 	}
 
+	// variable reader for cnfconstructor
 	public Object visitVariable(Variable variable, Object arg) {
 		// This should not be called
 		throw new IllegalStateException("visitVariable() should not be called.");
 	}
 
+	// constant reader for cnfconstructor
 	public Object visitConstant(Constant constant, Object arg) {
 		// This should not be called
 		throw new IllegalStateException("visitConstant() should not be called.");
 	}
 
+	// function reader for cnfconstructor
 	public Object visitFunction(Function function, Object arg) {
-		// This should not be called
+		// This should not be called as its already done
 		throw new IllegalStateException("visitFunction() should not be called.");
 	}
 
+	// negated sentence reader for cnfconstructor
 	public Object visitNotSentence(NotSentence sentence, Object arg) {
 		ArgData ad = (ArgData) arg;
 		// Indicate that the enclosed predicate is negated
@@ -574,12 +661,15 @@ class CNFConstructor implements FOLVisitor {
 		return sentence;
 	}
 
+	// CS reader for cnfconstructor
+	// binds two parts of the sentence with the connector
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		ArgData ad = (ArgData) arg;
 		Sentence first = sentence.getFirst();
 		Sentence second = sentence.getSecond();
 
 		first.accept(this, arg);
+		// if the CS has an AND
 		if (SyncategorematicSymbols.isAND(sentence.getConnector())) {
 			ad.clauses.add(new Clause());
 		}
@@ -588,18 +678,20 @@ class CNFConstructor implements FOLVisitor {
 		return sentence;
 	}
 
+	// done earlier
 	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
 			Object arg) {
 		// This should not be called as should have already
-		// removed all of the quantifiers.
+		// removed all of the quantifiers earlier in the program.
 		throw new IllegalStateException(
 				"All quantified sentences should have already been removed.");
 	}
 
+	// clauses initializer placeholder
 	class ArgData {
 		public List<Clause> clauses = new ArrayList<Clause>();
 		public boolean negated = false;
-
+		
 		public ArgData() {
 			clauses.add(new Clause());
 		}

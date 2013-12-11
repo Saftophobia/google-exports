@@ -5,36 +5,37 @@ import term.Term;
 
 
 public class Literal {
-	private AtomicSentence atom = null;
-	private boolean negativeLiteral = false;
-	private String strRep = null;
-	private int hashCode = 0;
+	private AtomicSentence atom = null; // the atomic sentence used to get the literal.
+	private boolean negativeLiteral = false; //whether the literal is negated or not.
+	private String strRep = null; //output string
 
+	//constructor with atomic sentence setter.
 	public Literal(AtomicSentence atom) {
 		this.atom = atom;
 	}
-
+	//constructor with atomic sentence and sign setters.
 	public Literal(AtomicSentence atom, boolean negated) {
 		this.atom = atom;
 		this.negativeLiteral = negated;
 	}
-
+	//create new literal with the given atomic sentence.
 	public Literal newInstance(AtomicSentence atom) {
 		return new Literal(atom, negativeLiteral);
 	}
-
+	//check whether literal is positive
 	public boolean isPositiveLiteral() {
 		return !negativeLiteral;
 	}
-
+	//check whether literal is negated
 	public boolean isNegativeLiteral() {
 		return negativeLiteral;
 	}
-
+	// literal's atomic sentence getter
 	public AtomicSentence getAtomicSentence() {
-		return atom;
+		return atom; 
 	}
 
+	//print the literal, adds ~ if its negated.
 	@Override
 	public String toString() {
 		if (null == strRep) {
@@ -49,6 +50,8 @@ public class Literal {
 		return strRep;
 	}
 
+	//implemented comparator for literals,
+	//compares classes, instanceof, each and every attribute in the two objects to be compared.
 	@Override
 	public boolean equals(Object o) {
 
@@ -71,17 +74,5 @@ public class Literal {
 				&& l.getAtomicSentence().getArgs().equals(atom.getArgs());
 	}
 
-	@Override
-	public int hashCode() {
-		if (0 == hashCode) {
-			hashCode = 17;
-			hashCode = 37 * hashCode + (getClass().getSimpleName().hashCode())
-					+ (isPositiveLiteral() ? "+".hashCode() : "-".hashCode())
-					+ atom.getSymbolicName().hashCode();
-			for (Term t : atom.getArgs()) {
-				hashCode = 37 * hashCode + t.hashCode();
-			}
-		}
-		return hashCode;
-	}
+	
 }

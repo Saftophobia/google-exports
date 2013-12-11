@@ -4,13 +4,14 @@ import java.util.List;
 
 
 public interface ProofStep {
-	int getStepNumber();
+	
+	int getStepNumber();//stepnumber getter
 
-	void setStepNumber(int step);
+	void setStepNumber(int step);//stepnumber setter
 
-	List<ProofStep> getPredecessorSteps();
+	List<ProofStep> getPredecessorSteps(); //get predecessor steps for tracing
 
-	String getProof();
+	String getProof(); //print the proof(step)
 
-	String getJustification();
+	String getJustification();//prints more details regarding the proof step
 }

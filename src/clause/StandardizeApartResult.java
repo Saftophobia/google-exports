@@ -7,12 +7,18 @@ import term.Term;
 import term.Variable;
 
 
-public class StandardizeApartResult {
-	private Sentence originalSentence = null;
-	private Sentence standardized = null;
-	private Map<Variable, Term> forwardSubstitution = null;
-	private Map<Variable, Term> reverseSubstitution = null;
 
+/**
+ * Standardize Output.
+ * 
+ */
+public class StandardizeApartResult {
+	private Sentence originalSentence = null; //original sentence
+	private Sentence standardized = null; //standardized sentence (output)
+	private Map<Variable, Term> forwardSubstitution = null; // used for forward substitution 
+	private Map<Variable, Term> reverseSubstitution = null; // used for backward substitution
+
+	//constructor with setters
 	public StandardizeApartResult(Sentence originalSentence,
 			Sentence standardized, Map<Variable, Term> forwardSubstitution,
 			Map<Variable, Term> reverseSubstitution) {
@@ -21,19 +27,19 @@ public class StandardizeApartResult {
 		this.forwardSubstitution = forwardSubstitution;
 		this.reverseSubstitution = reverseSubstitution;
 	}
-
+	//original sentence getter
 	public Sentence getOriginalSentence() {
 		return originalSentence;
 	}
-
+	//standardized sentence getter
 	public Sentence getStandardized() {
 		return standardized;
 	}
-
+	//forwardsubst. getter
 	public Map<Variable, Term> getForwardSubstitution() {
 		return forwardSubstitution;
 	}
-
+	//backward subst. getter
 	public Map<Variable, Term> getReverseSubstitution() {
 		return reverseSubstitution;
 	}

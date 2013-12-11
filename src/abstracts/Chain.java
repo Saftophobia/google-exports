@@ -15,32 +15,30 @@ import proofs.ProofStepPremise;
  * A Chain is a sequence of literals (while a clause is a set) - order is
  * important for a chain.
  * 
- * @see <a
- *      href="http://logic.stanford.edu/classes/cs157/2008/lectures/lecture13.pdf"
- *      >Chain</a>
- * 
- *
- * 
  */
 public class Chain {
+	//empty chain 
 	private static List<Literal> _emptyLiteralsList = Collections
 			.unmodifiableList(new ArrayList<Literal>());
-	//
+	//list of literals initialized
 	private List<Literal> literals = new ArrayList<Literal>();
+	//initializing proofstep
 	private ProofStep proofStep = null;
-
+	
+	//empty constructor for empty chain
 	public Chain() {
-		// i.e. the empty chain
+		
 	}
-
+	//constructor with initial list of literals
 	public Chain(List<Literal> literals) {
 		this.literals.addAll(literals);
 	}
-
+	//constructor with initial "set" of literals
 	public Chain(Set<Literal> literals) {
 		this.literals.addAll(literals);
 	}
 
+	//proofstep getter
 	public ProofStep getProofStep() {
 		if (null == proofStep) {
 			// Assume was a premise
@@ -48,19 +46,23 @@ public class Chain {
 		}
 		return proofStep;
 	}
-
+	
+	//proofstep setter
 	public void setProofStep(ProofStep proofStep) {
 		this.proofStep = proofStep;
 	}
 
+	//check if the chain is empty
 	public boolean isEmpty() {
 		return literals.size() == 0;
 	}
 
+	//add literal to the chain(list) of literals
 	public void addLiteral(Literal literal) {
 		literals.add(literal);
 	}
 
+	//get the first index in the chain
 	public Literal getHead() {
 		if (0 == literals.size()) {
 			return null;
@@ -68,6 +70,7 @@ public class Chain {
 		return literals.get(0);
 	}
 
+	//return the last index in the chain, return "emptyliterallist" if its empty
 	public List<Literal> getTail() {
 		if (0 == literals.size()) {
 			return _emptyLiteralsList;
@@ -75,11 +78,11 @@ public class Chain {
 		return Collections
 				.unmodifiableList(literals.subList(1, literals.size()));
 	}
-
+	//get list of literals size
 	public int getNumberLiterals() {
 		return literals.size();
 	}
-
+	//get the list of literals
 	public List<Literal> getLiterals() {
 		return Collections.unmodifiableList(literals);
 	}
@@ -88,26 +91,27 @@ public class Chain {
 	 * A contrapositive of a chain is a permutation in which a different literal
 	 * is placed at the front. The contrapositives of a chain are logically
 	 * equivalent to the original chain.
-	 * 
-	 * @return a list of contrapositives for this chain.
 	 */
 	public List<Chain> getContrapositives() {
+		//initialize the chain of contrapositives.
 		List<Chain> contrapositives = new ArrayList<Chain>();
+		//temp list of literals.
 		List<Literal> lits = new ArrayList<Literal>();
 
-		for (int i = 1; i < literals.size(); i++) {
-			lits.clear();
-			lits.add(literals.get(i));
-			lits.addAll(literals.subList(0, i));
-			lits.addAll(literals.subList(i + 1, literals.size()));
-			Chain cont = new Chain(lits);
-			cont.setProofStep(new ProofStepChainContrapositive(cont, this));
-			contrapositives.add(cont);
+		for (int i = 1; i < literals.size(); i++) { //forevery literal
+			lits.clear();  //clear lits
+			lits.add(literals.get(i)); //add the literal at position i.
+			lits.addAll(literals.subList(0, i)); //add all literals from 0 to i.
+			lits.addAll(literals.subList(i + 1, literals.size())); //add all literals from i+1 to the end of the list.
+			Chain cont = new Chain(lits); // create the chain with the current changes.
+			cont.setProofStep(new ProofStepChainContrapositive(cont, this)); //set the proof step for printing 
+			contrapositives.add(cont); // add the chain to the contrapositives.
 		}
-
+		//return the amended list.
 		return contrapositives;
 	}
 
+	//return the list of literals in a string. ( every literal)
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
