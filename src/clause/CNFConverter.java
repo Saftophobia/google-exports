@@ -597,15 +597,11 @@ class RemoveSyncategorematicSymbols implements FOLVisitor {
 }
 
 class RemoveSyncategorematicSymbols2 implements FOLVisitor {
-	// parser and reader
-	private FOLParser parser = null;
-	private SubstVisitor substVisitor = null;
+
 
 	// constructor
 	public RemoveSyncategorematicSymbols2(FOLParser parser) {
-		this.parser = parser;
 
-		substVisitor = new SubstVisitor();
 	}
 
 	// predicate reader for Syncategorematics remover

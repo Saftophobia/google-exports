@@ -1,13 +1,11 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import parser.FOLDomain;
 import parser.FOLParser;
 import sentence.Sentence;
 import term.Term;
-import term.Variable;
 import unifier.Unifier;
 import abstracts.CNF;
 import clause.CNFConverter;

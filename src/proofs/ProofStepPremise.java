@@ -22,8 +22,9 @@ public class ProofStepPremise extends AbstractProofStep {
 	//
 	// START-ProofStep
 	@Override
+	//return the list of predecessors for tracing/printing purposes
 	public List<ProofStep> getPredecessorSteps() {
-		return Collections.unmodifiableList(_noPredecessors); //return the list
+		return Collections.unmodifiableList(_noPredecessors);
 	}
 
 	@Override

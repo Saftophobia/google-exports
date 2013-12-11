@@ -25,7 +25,7 @@ public class StandardizeApartIndexicalFactory {
 		// append the two prefixes
 		synchronized (_assignedIndexicals) {
 			Integer currentPrefixCnt = _assignedIndexicals.get(preferredPrefix);
-			if (null == currentPrefixCnt) { // increase count if null
+			if (null == currentPrefixCnt) { // increase count if not null
 				currentPrefixCnt = 0;
 			} else {
 				currentPrefixCnt += 1;
