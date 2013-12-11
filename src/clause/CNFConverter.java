@@ -57,21 +57,21 @@ public class CNFConverter {
 		System.out.println("ORIGINAL: " + aSentence.toString());
 		Sentence implicationsOut = (Sentence) aSentence.accept(
 				new ImplicationsOut(), null);
-		if(trace)
+		if (trace)
 			System.out.println("IMPLICATIONS double : "
-				+ implicationsOut.toString());
+					+ implicationsOut.toString());
 
 		// single implications
 		Sentence implicationsOut2 = (Sentence) implicationsOut.accept(
 				new ImplicationsOut2(), null);
-		if(trace)
+		if (trace)
 			System.out.println("IMPLICATIONS single : "
-				+ implicationsOut2.toString());
+					+ implicationsOut2.toString());
 
 		// Negations In:
 		Sentence negationsIn = (Sentence) implicationsOut2.accept(
 				new NegationsIn(), null);
-		if(trace)
+		if (trace)
 			System.out.println("NEGATION: " + negationsIn.toString());
 
 		// Standardize variables:
@@ -82,7 +82,7 @@ public class CNFConverter {
 		Sentence saSyncategorematicSymbols = (Sentence) negationsIn.accept(
 				new StandardizeQuantiferVariables(substVisitor),
 				new LinkedHashSet<Variable>());
-		if(trace)
+		if (trace)
 			System.out.println("STANDARDIZED: " + saSyncategorematicSymbols);
 
 		// Remove explicit quantifiers, by skolemizing existentials
@@ -92,41 +92,38 @@ public class CNFConverter {
 		Sentence andsAndOrs = (Sentence) saSyncategorematicSymbols.accept(
 				new RemoveSyncategorematicSymbols(parser),
 				new LinkedHashSet<Variable>());
-		if(trace)
-			System.out.println("SKOLEMIZED there exist: " + andsAndOrs.toString());
-		
+		if (trace)
+			System.out.println("SKOLEMIZED there exist: "
+					+ andsAndOrs.toString());
+
 		// drop the forall
 		Sentence andsAndOrs2 = (Sentence) andsAndOrs.accept(
 				new RemoveSyncategorematicSymbols2(parser),
 				new LinkedHashSet<Variable>());
-		if(trace)
+		if (trace)
 			System.out.println("SKOLEMIZED for all: " + andsAndOrs2.toString());
 
 		// Distribution
 		// V over ^:
 		Sentence orDistributedOverAnd = (Sentence) andsAndOrs2.accept(
 				new DistributeOrOverAnd(), null);
-		if(trace)
-			System.out.println("DISTRIBUTED: " + orDistributedOverAnd.toString());
+		if (trace)
+			System.out.println("DISTRIBUTED: "
+					+ orDistributedOverAnd.toString());
 
-		
-		String []flattened = orDistributedOverAnd.toString().split("AND");
-		
-		for(int i = 0 ; i < flattened.length;i++)
-		{
-			if (i==0)
-			{
-				if(trace)
+		String[] flattened = orDistributedOverAnd.toString().split("AND");
+
+		for (int i = 0; i < flattened.length; i++) {
+			if (i == 0) {
+				if (trace)
 					System.out.println("FLATTEN:\t" + flattened[0]);
-			}else
-			{
-				if(trace)
+			} else {
+				if (trace)
 					System.out.println("\tAND " + flattened[i]);
 			}
-			
+
 		}
-		
-		
+
 		// Operators Out
 		return (new CNFConstructor()).construct(orDistributedOverAnd);
 	}
@@ -598,7 +595,6 @@ class RemoveSyncategorematicSymbols implements FOLVisitor {
 
 class RemoveSyncategorematicSymbols2 implements FOLVisitor {
 
-
 	// constructor
 	public RemoveSyncategorematicSymbols2(FOLParser parser) {
 
@@ -713,14 +709,16 @@ class DistributeOrOverAnd implements FOLVisitor {
 	}
 
 	// connecting two parts of the sentence with the connector in between. (
-	// while editing V to ^)
+	// while editing V to ^
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		// Distribute V over ^:
-
+		System.out.println("SENTENCE: " + sentence);
+		
 		// This will cause flattening out of nested ^s and Vs
 		Sentence alpha = (Sentence) sentence.getFirst().accept(this, arg);
 		Sentence beta = (Sentence) sentence.getSecond().accept(this, arg);
 
+		
 		// (alpha V (beta ^ gamma)) equivalent to
 		// ((alpha V beta) ^ (alpha V gamma))
 		if (SyncategorematicSymbols.isOR(sentence.getConnector())
@@ -766,6 +764,55 @@ class DistributeOrOverAnd implements FOLVisitor {
 								.accept(this, arg));
 			}
 		}
+		
+		
+		
+//		// (alpha ^ (beta V gamma))
+//				if (SyncategorematicSymbols.isAND(sentence.getConnector())
+//						&& ConnectedSentence.class.isInstance(beta)) {
+//					ConnectedSentence betaAndGamma = (ConnectedSentence) beta;
+//					if (SyncategorematicSymbols.isOR(betaAndGamma.getConnector())) { // if
+//																						// example
+//																						// occurs
+//						beta = betaAndGamma.getFirst(); // beta is the first sentence
+//						Sentence gamma = betaAndGamma.getSecond(); // gamma is the 2nd
+//						// connect beta and gamma using the connector
+//						return new ConnectedSentence(SyncategorematicSymbols.OR,
+//								(Sentence) (new ConnectedSentence(
+//										SyncategorematicSymbols.AND, alpha, beta))
+//										.accept(this, arg),
+//								(Sentence) (new ConnectedSentence(
+//										SyncategorematicSymbols.AND, alpha, gamma))
+//										.accept(this, arg));
+//					}
+//				}
+//
+//				// ((alpha V beta) ^ (gamma V beta))
+//				if (SyncategorematicSymbols.isAND(sentence.getConnector())
+//						&& ConnectedSentence.class.isInstance(alpha)) {
+//					ConnectedSentence alphaAndGamma = (ConnectedSentence) alpha; // if
+//																					// example
+//																					// occurs,
+//																					// initialize
+//																					// the
+//																					// connected
+//																					// sentence
+//					if (SyncategorematicSymbols.isOR(alphaAndGamma.getConnector())) {
+//						alpha = alphaAndGamma.getFirst(); // get first statement
+//						Sentence gamma = alphaAndGamma.getSecond(); // get 2nd statement
+//						// return the new CS with the new connector
+//						return new ConnectedSentence(SyncategorematicSymbols.OR,
+//								(Sentence) (new ConnectedSentence(
+//										SyncategorematicSymbols.AND, alpha, beta))
+//										.accept(this, arg),
+//								(Sentence) (new ConnectedSentence(
+//										SyncategorematicSymbols.AND, gamma, beta))
+//										.accept(this, arg));
+//					}
+//				}
+//
+//				
+				
 		// return the connectedsentence if non of the special cases found
 		return new ConnectedSentence(sentence.getConnector(), alpha, beta);
 	}

@@ -42,12 +42,12 @@ public class Main {
 		unifierSamples.add("P(f(x, g(x), x))");
 		unifierSamples.add("P(f(g(u), g(g(z)), z))");
 		// as written in the project description
+		ClauseSamples.add("EXISTS x (P(x) AND FORALL x (Q(x) => (NOT P(x))))");
 
 		ClauseSamples
 				.add("FORALL x (P(x) <=> (Q(x) AND EXISTS y (Q(y) AND R(y,x) ) ) )");
 
-		ClauseSamples.add("EXISTS x (P(x) AND FORALL x (Q(x) => (NOT P(x))))");
-
+		
 	}
 
 	public void setupDomain() {
@@ -79,7 +79,7 @@ public class Main {
 		// Creating a new instance of the unifier class
 		// using this class the unification is done
 		unifier = new Unifier(trace);
-		for (int i = 0; i < unifierSamples.size() - 1; i++) {
+		for (int i = 0; i < unifierSamples.size() - 1; i+=2) {
 			// Inputs to be unified
 			String st1 = unifierSamples.get(i);
 			String st2 = unifierSamples.get(i + 1);
@@ -113,7 +113,8 @@ public class Main {
 			// parse anf convert to clause form
 			CNF cnf = cnfConv.convertToCNF(parser.parse(ClauseSamples.get(i)),trace);
 		
-			// shoe the output
+			System.out.println(cnf.toString());
+			// show the output
 			String[] flattened = cnf.toString().split("\\[");
 
 			for (int j = 0; j < flattened.length; j++) {
@@ -134,11 +135,11 @@ public class Main {
 	public static void main(String[] args) {
 		Main m = new Main();
 		// call unify with trace
-		 m.Unify(true);
+		 m.Unify(false);
 		 System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		// call ClauseFrom with trace
 		 m.ClauseForm(true);
-
+		 String s = " (P(SC0) AND (NOT(Q(q0)) OR NOT(P(q0))))";
 	}
 
 }

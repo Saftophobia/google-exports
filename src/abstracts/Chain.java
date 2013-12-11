@@ -5,10 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import proofs.ProofStep;
-import proofs.ProofStepChainContrapositive;
-import proofs.ProofStepPremise;
-
 
 /**
  * 
@@ -23,7 +19,7 @@ public class Chain {
 	//list of literals initialized
 	private List<Literal> literals = new ArrayList<Literal>();
 	//initializing proofstep
-	private ProofStep proofStep = null;
+	//private ProofStep proofStep = null;
 	
 	//empty constructor for empty chain
 	public Chain() {
@@ -38,19 +34,7 @@ public class Chain {
 		this.literals.addAll(literals);
 	}
 
-	//proofstep getter
-	public ProofStep getProofStep() {
-		if (null == proofStep) {
-			// Assume was a premise
-			proofStep = new ProofStepPremise(this);
-		}
-		return proofStep;
-	}
 	
-	//proofstep setter
-	public void setProofStep(ProofStep proofStep) {
-		this.proofStep = proofStep;
-	}
 
 	//check if the chain is empty
 	public boolean isEmpty() {
@@ -104,7 +88,7 @@ public class Chain {
 			lits.addAll(literals.subList(0, i)); //add all literals from 0 to i.
 			lits.addAll(literals.subList(i + 1, literals.size())); //add all literals from i+1 to the end of the list.
 			Chain cont = new Chain(lits); // create the chain with the current changes.
-			cont.setProofStep(new ProofStepChainContrapositive(cont, this)); //set the proof step for printing 
+		//	cont.setProofStep(new ProofStepChainContrapositive(cont, this)); //set the proof step for printing 
 			contrapositives.add(cont); // add the chain to the contrapositives.
 		}
 		//return the amended list.

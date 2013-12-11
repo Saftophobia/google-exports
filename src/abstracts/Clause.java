@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.Set;
 
 import parser.FOLVisitor;
-import proofs.ProofStep;
-import proofs.ProofStepClauseBinaryResolvent;
-import proofs.ProofStepClauseFactor;
-import proofs.ProofStepPremise;
+//import proofs.ProofStep;
+//import proofs.ProofStepClauseBinaryResolvent;
+//import proofs.ProofStepClauseFactor;
+//import proofs.ProofStepPremise;
 import sentence.AtomicSentence;
 import sentence.ConnectedSentence;
 import sentence.NotSentence;
@@ -59,7 +59,7 @@ public class Clause {
 	private Set<Clause> nonTrivialFactors = null;
 	private String stringRep = null; // for toString()
 	// proofstep of the given clause, for tracing and printing
-	private ProofStep proofStep = null;
+	//private ProofStep proofStep = null;
 
 	// constructor for empty cluase.
 	public Clause() {
@@ -102,18 +102,10 @@ public class Clause {
 	}
 
 	// get proof step for printing/tracing
-	public ProofStep getProofStep() {
-		if (null == proofStep) {
-			// Assume was a premise
-			proofStep = new ProofStepPremise(this);
-		}
-		return proofStep;
-	}
+	
 
 	// proof step setter
-	public void setProofStep(ProofStep proofStep) {
-		this.proofStep = proofStep;
-	}
+	
 
 	// return true of immutable
 	public boolean isImmutable() {
@@ -386,9 +378,9 @@ public class Clause {
 																			// with
 																			// +/-ve
 																			// literals
-						c.setProofStep(new ProofStepClauseBinaryResolvent(c,
-								pl, nl, this, othC, copyRBindings,
-								renameSubstitituon)); // create the proof step
+					//	c.setProofStep(new ProofStepClauseBinaryResolvent(c,
+					//			pl, nl, this, othC, copyRBindings,
+					//			renameSubstitituon)); // create the proof step
 														// for tracing
 						if (isImmutable()) { // set immutability
 							c.setImmutable();
@@ -537,8 +529,8 @@ public class Clause {
 						// creates new clause for output
 						Clause c = new Clause(posLits, negLits);
 						// set proof step for tracing
-						c.setProofStep(new ProofStepClauseFactor(c, this, litX,
-								litY, substitution, renameSubst));
+				//		c.setProofStep(new ProofStepClauseFactor(c, this, litX,
+					//			litY, substitution, renameSubst));
 						// set immutability and uniqueness checks
 						if (isImmutable()) {
 							c.setImmutable();

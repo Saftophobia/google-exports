@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import proofs.ProofStepRenaming;
+//import proofs.ProofStepRenaming;
 import sentence.AtomicSentence;
 import sentence.Sentence;
 import term.Term;
@@ -118,8 +118,8 @@ public class StandardizeApart {
 			Clause renamed = new Clause(literals); // create new clause with the
 													// literals listed
 			// set the proof step for printing/tracing
-			renamed.setProofStep(new ProofStepRenaming(renamed, clause
-					.getProofStep()));
+		//	renamed.setProofStep(new ProofStepRenaming(renamed, clause
+		//			.getProofStep()));
 			// return the clause
 			return renamed;
 		}
@@ -172,8 +172,8 @@ public class StandardizeApart {
 			Chain renamed = new Chain(lits);// create new clause with the
 											// literals listed
 			// set proof step for tracing/print
-			renamed.setProofStep(new ProofStepRenaming(renamed, chain
-					.getProofStep()));
+	//		renamed.setProofStep(new ProofStepRenaming(renamed, chain
+		//			.getProofStep()));
 			// return the chain
 			return renamed;
 		}
