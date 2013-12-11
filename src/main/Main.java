@@ -101,6 +101,7 @@ public class Main {
 				// show unification results if exists
 				System.out.println(unifier.unify(s1, s2));
 			}
+			System.out.println("\n");
 		}
 	}
 
@@ -109,9 +110,10 @@ public class Main {
 		cnfConv = new CNFConverter(parser);
 
 		for (int i = 0; i < ClauseSamples.size(); i++) {
+			// parse anf convert to clause form
 			CNF cnf = cnfConv.convertToCNF(parser.parse(ClauseSamples.get(i)),trace);
-			//System.out.println(cnf.toString());
-
+		
+			// shoe the output
 			String[] flattened = cnf.toString().split("\\[");
 
 			for (int j = 0; j < flattened.length; j++) {
@@ -122,18 +124,20 @@ public class Main {
 				}
 
 			}
+			System.out.println("\n");
 
 		}
-		;
-
+		
 	}
 
 	// The main method that run the two methods (Unify and ClauseForm)
 	public static void main(String[] args) {
 		Main m = new Main();
+		// call unify with trace
 		 m.Unify(true);
 		 System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
-		m.ClauseForm(true);
+		// call ClauseFrom with trace
+		 m.ClauseForm(true);
 
 	}
 
