@@ -27,7 +27,8 @@ public interface FOLNode {
 	// in case of unification the substVisitor which is a subclass of FOLVisitor
 	// was used to do the substitution part and the decompose part 
 	// of the unification algorithm
-	// in case of the clause form TODO
+	// in case of the clause form, it handles each step in the algorithm, such as removing implications, quantifiers ..etc
+	// as each step had its own visitor, as such, the response differs from one algorithm step to another
 	// the function is designed to be generic so that it can be used in any purpose problem
 	// it takes and outputs Object data type which is the most generic data type.
 	Object accept(FOLVisitor v,Object arg);
