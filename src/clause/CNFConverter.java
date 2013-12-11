@@ -31,7 +31,9 @@ import abstracts.Clause;
 public class CNFConverter {
 
 	private FOLParser parser = null; // initialize FOL parser
-	private SubstVisitor substVisitor; // ??????????????
+	private SubstVisitor substVisitor; // determine the behavior of the
+										// variables when visited using the
+										// input
 
 	// constructor with parser setter
 	public CNFConverter(FOLParser parser) {
@@ -51,13 +53,23 @@ public class CNFConverter {
 	 *         a disjunction of literals.
 	 */
 	public CNF convertToCNF(Sentence aSentence) {
-		// Implications Out:
+		// double Implications Out:
+		System.out.println("ORIGINAL: " + aSentence.toString());
 		Sentence implicationsOut = (Sentence) aSentence.accept(
 				new ImplicationsOut(), null);
+		System.out.println("IMPLICATIONS double : "
+				+ implicationsOut.toString());
+
+		// single implications
+		Sentence implicationsOut2 = (Sentence) implicationsOut.accept(
+				new ImplicationsOut2(), null);
+		System.out.println("IMPLICATIONS single : "
+				+ implicationsOut2.toString());
 
 		// Negations In:
-		Sentence negationsIn = (Sentence) implicationsOut.accept(
+		Sentence negationsIn = (Sentence) implicationsOut2.accept(
 				new NegationsIn(), null);
+		System.out.println("NEGATION: " + negationsIn.toString());
 
 		// Standardize variables:
 		// For sentences like:
@@ -67,20 +79,45 @@ public class CNFConverter {
 		Sentence saSyncategorematicSymbols = (Sentence) negationsIn.accept(
 				new StandardizeQuantiferVariables(substVisitor),
 				new LinkedHashSet<Variable>());
+		System.out.println("STANDARDIZED: " + saSyncategorematicSymbols);
 
 		// Remove explicit quantifiers, by skolemizing existentials
 		// and dropping universals:
 		// Existentials Out
-		// Alls Out:
+		// skolemize + drop the there exist
 		Sentence andsAndOrs = (Sentence) saSyncategorematicSymbols.accept(
 				new RemoveSyncategorematicSymbols(parser),
 				new LinkedHashSet<Variable>());
+		System.out.println("SKOLEMIZED there exist: " + andsAndOrs.toString());
+		
+		// drop the forall
+		Sentence andsAndOrs2 = (Sentence) andsAndOrs.accept(
+				new RemoveSyncategorematicSymbols2(parser),
+				new LinkedHashSet<Variable>());
+		System.out.println("SKOLEMIZED for all: " + andsAndOrs2.toString());
 
 		// Distribution
 		// V over ^:
-		Sentence orDistributedOverAnd = (Sentence) andsAndOrs.accept(
+		Sentence orDistributedOverAnd = (Sentence) andsAndOrs2.accept(
 				new DistributeOrOverAnd(), null);
+		System.out.println("DISTRIBUTED: " + orDistributedOverAnd.toString());
 
+		
+		String []flattened = orDistributedOverAnd.toString().split("AND");
+		
+		for(int i = 0 ; i < flattened.length;i++)
+		{
+			if (i==0)
+			{
+				System.out.println("FLATTEN:\t" + flattened[0]);
+			}else
+			{
+				System.out.println("\tAND " + flattened[i]);
+			}
+			
+		}
+		
+		
 		// Operators Out
 		return (new CNFConstructor()).construct(orDistributedOverAnd);
 	}
@@ -132,14 +169,77 @@ class ImplicationsOut implements FOLVisitor {
 		// Eliminate <=>, bi-conditional elimination,
 		// replace (alpha <=> beta) with (~alpha V beta) ^ (alpha V ~beta).
 		if (SyncategorematicSymbols.isBICOND(sentence.getConnector())) {
-			Sentence first = new ConnectedSentence(SyncategorematicSymbols.OR,
-					new NotSentence(alpha), beta);
-			Sentence second = new ConnectedSentence(SyncategorematicSymbols.OR,
-					alpha, new NotSentence(beta));
+			// Sentence first = new
+			// ConnectedSentence(SyncategorematicSymbols.OR,
+			// new NotSentence(alpha), beta);
+
+			Sentence first = new ConnectedSentence(
+					SyncategorematicSymbols.IMPLIES, alpha, beta);
+
+			// Sentence second = new
+			// ConnectedSentence(SyncategorematicSymbols.OR,
+			// alpha, new NotSentence(beta));
+			Sentence second = new ConnectedSentence(
+					SyncategorematicSymbols.IMPLIES, beta, alpha);
 
 			return new ConnectedSentence(SyncategorematicSymbols.AND, first,
 					second);
 		}
+
+		return new ConnectedSentence(sentence.getConnector(), alpha, beta);
+	}
+
+	// quantified sentence parser
+	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
+			Object arg) {
+
+		return new QuantifiedSentence(sentence.getQuantifier(),
+				sentence.getVariables(), (Sentence) sentence.getQuantified()
+						.accept(this, arg));
+	}
+}
+
+class ImplicationsOut2 implements FOLVisitor {
+	public ImplicationsOut2() {
+
+	}
+
+	// predicate parser for implicator
+	public Object visitPredicate(Predicate p, Object arg) {
+		return p;
+	}
+
+	// term parser for implicator
+	public Object visitTermEquality(TermEquality equality, Object arg) {
+		return equality;
+	}
+
+	// variable parser for implicator
+	public Object visitVariable(Variable variable, Object arg) {
+		return variable;
+	}
+
+	// constant parser for implicator
+	public Object visitConstant(Constant constant, Object arg) {
+		return constant;
+	}
+
+	// function parser for implicator
+	public Object visitFunction(Function function, Object arg) {
+		return function;
+	}
+
+	// return negated sentence for implicator
+	public Object visitNotSentence(NotSentence notSentence, Object arg) {
+		Sentence negated = notSentence.getNegated();
+
+		return new NotSentence((Sentence) negated.accept(this, arg));
+	}
+
+	// conntectedSentences parser, while eliminating the 2 implications
+	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
+		Sentence alpha = (Sentence) sentence.getFirst().accept(this, arg);
+		Sentence beta = (Sentence) sentence.getSecond().accept(this, arg);
 
 		// Eliminate =>, implication elimination,
 		// replacing (alpha => beta) with (~alpha V beta)
@@ -464,6 +564,89 @@ class RemoveSyncategorematicSymbols implements FOLVisitor {
 			return skolemized.accept(this, arg);
 		}
 
+		// System.out.println("TESTER 3 : " + sentence );
+		// Drop universal quantifiers.
+		if (SyncategorematicSymbols.isFORALL(sentence.getQuantifier())) {
+			// Add to the universal scope so that
+			// existential skolemization may be done correctly
+			universalScope.addAll(sentence.getVariables());
+
+			Sentence droppedUniversal = (Sentence) quantified.accept(this, arg);
+
+			// Ensure my scope is removed before moving back up
+			// the call stack when returning
+			universalScope.removeAll(sentence.getVariables());
+			return new QuantifiedSentence(SyncategorematicSymbols.FORALL,
+					sentence.getVariables(), droppedUniversal);
+		}
+
+		// Should not reach here as have already
+		// handled the two quantifiers.
+		throw new IllegalStateException("Unhandled Quantifier:"
+				+ sentence.getQuantifier());
+	}
+}
+
+class RemoveSyncategorematicSymbols2 implements FOLVisitor {
+	// parser and reader
+	private FOLParser parser = null;
+	private SubstVisitor substVisitor = null;
+
+	// constructor
+	public RemoveSyncategorematicSymbols2(FOLParser parser) {
+		this.parser = parser;
+
+		substVisitor = new SubstVisitor();
+	}
+
+	// predicate reader for Syncategorematics remover
+	public Object visitPredicate(Predicate p, Object arg) {
+		return p;
+	}
+
+	// term reader for Syncategorematics remover
+	public Object visitTermEquality(TermEquality equality, Object arg) {
+		return equality;
+	}
+
+	// variable reader for Syncategorematics remover
+	public Object visitVariable(Variable variable, Object arg) {
+		return variable;
+	}
+
+	// constant reader for Syncategorematics remover
+	public Object visitConstant(Constant constant, Object arg) {
+		return constant;
+	}
+
+	// function reader for Syncategorematics remover
+	public Object visitFunction(Function function, Object arg) {
+		return function;
+	}
+
+	// not sentence reader for Syncategorematics remover, return negated
+	// sentence
+	public Object visitNotSentence(NotSentence sentence, Object arg) {
+		return new NotSentence((Sentence) sentence.getNegated().accept(this,
+				arg));
+	}
+
+	// connectedsentence reader for Syncategorematics remover, connects two
+	// parts of the sentence with the connector
+	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
+		return new ConnectedSentence(sentence.getConnector(),
+				(Sentence) sentence.getFirst().accept(this, arg),
+				(Sentence) sentence.getSecond().accept(this, arg));
+	}
+
+	// Qsentence reader for Syncategorematics remover
+	@SuppressWarnings("unchecked")
+	public Object visitQuantifiedSentence(QuantifiedSentence sentence,
+			Object arg) {
+		// get Q sentence
+		Sentence quantified = sentence.getQuantified();
+		Set<Variable> universalScope = (Set<Variable>) arg;
+
 		// Drop universal quantifiers.
 		if (SyncategorematicSymbols.isFORALL(sentence.getQuantifier())) {
 			// Add to the universal scope so that
@@ -691,7 +874,7 @@ class CNFConstructor implements FOLVisitor {
 	class ArgData {
 		public List<Clause> clauses = new ArrayList<Clause>();
 		public boolean negated = false;
-		
+
 		public ArgData() {
 			clauses.add(new Clause());
 		}
