@@ -369,10 +369,6 @@ public class Clause {
 							copyRNegLits.add(_substVisitor.subst(copyRBindings,
 									l)); // add if not found
 						}
-						// Ensure the resolvents are standardized apart
-						Map<Variable, Term> renameSubstitituon = _standardizeApart
-								.standardizeApart(copyRPosLits, copyRNegLits,
-										_saIndexical); // standardized hashmaps
 						Clause c = new Clause(copyRPosLits, copyRNegLits); // new
 																			// clause
 																			// with
@@ -523,9 +519,6 @@ public class Clause {
 							negLits.add(_substVisitor.subst(substitution, nl));
 						}
 						// Ensure the non trivial factor is standardized apart
-						Map<Variable, Term> renameSubst = _standardizeApart
-								.standardizeApart(posLits, negLits,
-										_saIndexical);
 						// creates new clause for output
 						Clause c = new Clause(posLits, negLits);
 						// set proof step for tracing

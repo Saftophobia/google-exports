@@ -139,7 +139,6 @@ public class Main {
 		 System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		// call ClauseFrom with trace
 		 m.ClauseForm(true);
-		 String s = " (P(SC0) AND (NOT(Q(q0)) OR NOT(P(q0))))";
 	}
 
 }
