@@ -52,24 +52,27 @@ public class CNFConverter {
 	 * @return the specified sentence as a list of clauses, where each clause is
 	 *         a disjunction of literals.
 	 */
-	public CNF convertToCNF(Sentence aSentence) {
+	public CNF convertToCNF(Sentence aSentence, boolean trace) {
 		// double Implications Out:
 		System.out.println("ORIGINAL: " + aSentence.toString());
 		Sentence implicationsOut = (Sentence) aSentence.accept(
 				new ImplicationsOut(), null);
-		System.out.println("IMPLICATIONS double : "
+		if(trace)
+			System.out.println("IMPLICATIONS double : "
 				+ implicationsOut.toString());
 
 		// single implications
 		Sentence implicationsOut2 = (Sentence) implicationsOut.accept(
 				new ImplicationsOut2(), null);
-		System.out.println("IMPLICATIONS single : "
+		if(trace)
+			System.out.println("IMPLICATIONS single : "
 				+ implicationsOut2.toString());
 
 		// Negations In:
 		Sentence negationsIn = (Sentence) implicationsOut2.accept(
 				new NegationsIn(), null);
-		System.out.println("NEGATION: " + negationsIn.toString());
+		if(trace)
+			System.out.println("NEGATION: " + negationsIn.toString());
 
 		// Standardize variables:
 		// For sentences like:
@@ -79,7 +82,8 @@ public class CNFConverter {
 		Sentence saSyncategorematicSymbols = (Sentence) negationsIn.accept(
 				new StandardizeQuantiferVariables(substVisitor),
 				new LinkedHashSet<Variable>());
-		System.out.println("STANDARDIZED: " + saSyncategorematicSymbols);
+		if(trace)
+			System.out.println("STANDARDIZED: " + saSyncategorematicSymbols);
 
 		// Remove explicit quantifiers, by skolemizing existentials
 		// and dropping universals:
@@ -88,19 +92,22 @@ public class CNFConverter {
 		Sentence andsAndOrs = (Sentence) saSyncategorematicSymbols.accept(
 				new RemoveSyncategorematicSymbols(parser),
 				new LinkedHashSet<Variable>());
-		System.out.println("SKOLEMIZED there exist: " + andsAndOrs.toString());
+		if(trace)
+			System.out.println("SKOLEMIZED there exist: " + andsAndOrs.toString());
 		
 		// drop the forall
 		Sentence andsAndOrs2 = (Sentence) andsAndOrs.accept(
 				new RemoveSyncategorematicSymbols2(parser),
 				new LinkedHashSet<Variable>());
-		System.out.println("SKOLEMIZED for all: " + andsAndOrs2.toString());
+		if(trace)
+			System.out.println("SKOLEMIZED for all: " + andsAndOrs2.toString());
 
 		// Distribution
 		// V over ^:
 		Sentence orDistributedOverAnd = (Sentence) andsAndOrs2.accept(
 				new DistributeOrOverAnd(), null);
-		System.out.println("DISTRIBUTED: " + orDistributedOverAnd.toString());
+		if(trace)
+			System.out.println("DISTRIBUTED: " + orDistributedOverAnd.toString());
 
 		
 		String []flattened = orDistributedOverAnd.toString().split("AND");
@@ -109,10 +116,12 @@ public class CNFConverter {
 		{
 			if (i==0)
 			{
-				System.out.println("FLATTEN:\t" + flattened[0]);
+				if(trace)
+					System.out.println("FLATTEN:\t" + flattened[0]);
 			}else
 			{
-				System.out.println("\tAND " + flattened[i]);
+				if(trace)
+					System.out.println("\tAND " + flattened[i]);
 			}
 			
 		}
