@@ -712,7 +712,6 @@ class DistributeOrOverAnd implements FOLVisitor {
 	// while editing V to ^
 	public Object visitConnectedSentence(ConnectedSentence sentence, Object arg) {
 		// Distribute V over ^:
-		System.out.println("SENTENCE: " + sentence);
 		
 		// This will cause flattening out of nested ^s and Vs
 		Sentence alpha = (Sentence) sentence.getFirst().accept(this, arg);
