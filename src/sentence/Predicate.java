@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import parser.FOLVisitor;
 
 import term.Term;
+import utility.FOLVisitor;
 
 //this class is representing a predicate
 public class Predicate implements AtomicSentence {

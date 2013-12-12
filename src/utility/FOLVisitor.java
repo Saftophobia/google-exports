@@ -1,4 +1,4 @@
-package parser;
+package utility;
 
 import sentence.ConnectedSentence;
 import sentence.NotSentence;

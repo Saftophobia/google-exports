@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import parser.FOLVisitor;
 import term.Term;
+import utility.FOLVisitor;
 
 // a class to represent the equality sentence
 public class TermEquality implements AtomicSentence {

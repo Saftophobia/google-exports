@@ -6,7 +6,6 @@ import java.util.Map;
 
 import abstracts.Literal;
 
-import parser.AbstractFOLVisitor;
 import sentence.AtomicSentence;
 import sentence.QuantifiedSentence;
 import sentence.Sentence;

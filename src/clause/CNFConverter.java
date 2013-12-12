@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import parser.FOLParser;
-import parser.FOLVisitor;
 import sentence.ConnectedSentence;
 import sentence.NotSentence;
 import sentence.Predicate;
@@ -19,6 +18,7 @@ import term.Constant;
 import term.Function;
 import term.Term;
 import term.Variable;
+import utility.FOLVisitor;
 import utility.SubstVisitor;
 import utility.SyncategorematicSymbols;
 import abstracts.CNF;

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import parser.FOLVisitor;
 //import proofs.ProofStep;
 //import proofs.ProofStepClauseBinaryResolvent;
 //import proofs.ProofStepClauseFactor;
@@ -27,6 +26,7 @@ import term.Function;
 import term.Term;
 import term.Variable;
 import unifier.Unifier;
+import utility.FOLVisitor;
 import utility.MixedRadixNumber;
 import utility.SubstVisitor;
 import clause.StandardizeApart;

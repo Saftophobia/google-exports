@@ -2,6 +2,8 @@ package parser;
 
 import java.util.List;
 
+import utility.FOLVisitor;
+
 // This interface is used to present any part of FOL Sentence or Term
 public interface FOLNode {
 	

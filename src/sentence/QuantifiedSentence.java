@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import parser.FOLNode;
-import parser.FOLVisitor;
 
 import term.Variable;
+import utility.FOLVisitor;
 
 //this class is representing a Quantified sentence
 public class QuantifiedSentence implements Sentence {

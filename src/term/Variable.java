@@ -2,7 +2,7 @@ package term;
 
 import java.util.List;
 
-import parser.FOLVisitor;
+import utility.FOLVisitor;
 
 
 // this class is used to represent a variable class

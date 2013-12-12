@@ -3,7 +3,6 @@ package clause;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import parser.FOLVisitor;
 import sentence.ConnectedSentence;
 import sentence.NotSentence;
 import sentence.Predicate;
@@ -14,6 +13,7 @@ import term.Constant;
 import term.Function;
 import term.Term;
 import term.Variable;
+import utility.FOLVisitor;
 import abstracts.Chain;
 import abstracts.Clause;
 import abstracts.Literal;

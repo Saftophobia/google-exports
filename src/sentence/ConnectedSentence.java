@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import parser.FOLVisitor;
+import utility.FOLVisitor;
 
 
 // this class is representing a connected sentence
