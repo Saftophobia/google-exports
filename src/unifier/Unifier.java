@@ -169,26 +169,19 @@ public class Unifier {
 	// PROTECTED METHODS
 	//
 
-	// Note: You can subclass and override this method in order
-	// to re-implement the OCCUR-CHECK?() to always
-	// return false if you want that to be the default
-	// behavior, as is the case with Prolog.
-	// Note: Implementation is based on unify-bug.pdf document by Peter Norvig:
-	// http://norvig.com/unify-bug.pdf
+
 	protected boolean occurCheck(Map<Variable, Term> theta, Variable var,
 			FOLNode x) {
-		// ((equal var x) t)
+		// if var equal x)
 		if (var.equals(x)) {
 			return true;
-			// ((bound? x subst)
+			// if x is in theta keys
 		} else if (theta.containsKey(x)) {
-			// (occurs-in? var (lookup x subst) subst))
+			// check if var occurs in the substitution of x
 			return occurCheck(theta, var, theta.get(x));
-			// ((consp x) (or (occurs-in? var (first x) subst) (occurs-in? var
-			// (rest x) subst)))
+			// if x is function
 		} else if (x instanceof Function) {
-			// (or (occurs-in? var (first x) subst) (occurs-in? var (rest x)
-			// subst)))
+			// check on every argument of the function if var occur
 			Function fx = (Function) x;
 			for (Term fxt : fx.getArgs()) {
 				if (occurCheck(theta, var, fxt)) {
@@ -261,7 +254,7 @@ public class Unifier {
 		return x.isCompound();
 	}
 
-	// this method
+	// this method is responsible update the theta and add the new substitution
 	private Map<Variable, Term> cascadeSubstitution(Map<Variable, Term> theta,
 			Variable var, Term x) {
 		if(tracer)

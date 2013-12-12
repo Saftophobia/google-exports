@@ -135,7 +135,7 @@ public class Main {
 	public static void main(String[] args) {
 		Main m = new Main();
 		// call unify with trace
-		 m.Unify(false);
+		 m.Unify(true);
 		 System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		// call ClauseFrom with trace
 		 m.ClauseForm(true);
