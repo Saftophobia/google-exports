@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<vxml version = "2.1" xmlns="http://www.w3.org/2001/06/vxml">
+
+<meta name="copyright" content="2012 voxeo corporation"/>
+<meta name="maintainer" content="YOUR_EMAIL@HERE.COM"/>
+
+
+<form id="F1">
+	<script>
+        <![CDATA[
+          function sayasDigits(number)
+          {
+            var digitNumber = number.charAt(0);
+            for(var i = 1; i < number.length; i++)
+            {
+              digitNumber += ' ' + number.charAt(i);
+            }
+            return digitNumber;
+          }
+        ]]>
+      </script>
+       <var name="MyFavoriteActor"  expr="'Tony Danza'"/>
+  <var name="MyFavoriteTVShow" expr="'Who\'s the boss'"/>
+  <var name="TonysSATScore"/>
+  
+  <field name="F_1">
+   <grammar xml:lang="en-us" root="myrule">
+      <rule id="myrule">
+        <one-of>
+            <item> yes </item>
+            <item> <item repeat="0-1"> hell </item> no </item>
+            <item> ha ha ha </item>
+        </one-of>
+      </rule>
+    </grammar>
+   
+    <prompt> can anyone take john travolta seriously as an actor?</prompt>
+      <filled mode="any">
+        <prompt> you must have filled but one field </prompt>
+      </filled>
+  </field>
+
+  <field name="F_2">
+    <grammar xml:lang="en-us" root="myrule">
+        <rule id="myrule">
+            <one-of>
+                <item> yes </item>
+                <item> no </item>
+                <item> he should be </item>
+            </one-of>
+        </rule>
+    </grammar>
+   
+    <prompt> do you think don king is ashamed of himself?</prompt>
+  </field>
+
+  <filled namespace="F_1 F_2">
+    <prompt>you must have filled both fields. </prompt>
+  </filled>
+	<block>
+        <if cond="MeatOrPlant == 'meat'">
+            <goto next="#Meat"/>
+        <elseif cond="MeatOrPlant == 'plant'"/>
+            <goto next="#Plant"/>
+        </if>
+    </block>
+</form>
+
+</vxml>
