@@ -150,9 +150,9 @@ public class Parser {
 			String[] FunctionArgument = expr.substring(expr.indexOf("("),
 					expr.indexOf(")")).split(",");
 			for (int i = 0; i < FunctionArgument.length; i++) {
-				FunctionArgument[i] = ScriptHM.get(FunctionArgument[i]);
+				FunctionArgument[i] = VarHM.get(FunctionArgument[i]);
 			}
-
+			
 			// Iterator it = ScriptHM.entrySet().iterator();
 			// while(it.hasNext()){
 			// Map.Entry pairs = (Map.Entry)it.next();
@@ -517,13 +517,28 @@ public class Parser {
 
 	public void Prompt(Node e) {
 		// dun forget the inside tags
-		String s = e.getTextContent();
+		String s = "";
+		for(int i = 0; i < e.getChildNodes().getLength();i++)
+		{
+			Node iterated = e.getChildNodes().item(i);
+			if(iterated.getNodeName() == "#text")
+			{
+				s += iterated.getNodeValue();
+			}else{
+				if(iterated.getNodeName() == "value")
+				{
+					s += parseValue(iterated);
+				}
+			}
+		}
+		
 		System.out.println(s);
 		this.lastPrompt = s;
 	}
 
 	public void Reprompt() {
 		System.out.println(this.lastPrompt);
+		//wait for input
 	}
 
 	public String readFile(String pathname) throws IOException {

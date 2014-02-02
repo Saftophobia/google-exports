@@ -20,7 +20,7 @@
           }
         ]]>
       </script>
-       <var name="MyFavoriteActor"  expr="'Tony Danza'"/>
+  <var name="MyFavoriteActor"  expr="'Tony Danza'"/>
   <var name="MyFavoriteTVShow" expr="'Who\'s the boss'"/>
   <var name="TonysSATScore"/>
   
@@ -37,7 +37,7 @@
    
     <prompt> can anyone take john travolta seriously as an actor?</prompt>
       <filled mode="any">
-        <prompt> you must have filled but one field </prompt>
+        <prompt> you must have filled but one field</prompt>
       </filled>
   </field>
 
@@ -52,7 +52,7 @@
         </rule>
     </grammar>
    
-    <prompt> do you think don king is ashamed of himself?</prompt>
+    <prompt> do you think don king is ashamed of himself?  <value expr="MyFavoriteTVShow"/> YES INDEED</prompt>
   </field>
 
   <filled namespace="F_1 F_2">
