@@ -89,6 +89,154 @@ public class VxmlParser {
 			e.printStackTrace();
 		}
 	}
+	public Grammar parseGrammar(Node nodeE) {
+		Grammar grammarClass = new Grammar(null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "getchhint":
+				grammarClass.fetchHint = attribute.getNodeValue();
+				break;
+			case "fetchtimeout":
+				grammarClass.fetchtimeout = attribute.getNodeValue();
+				break;
+			case "src":
+				grammarClass.src = attribute.getNodeValue();
+				break;
+			case "srcexpr":
+				grammarClass.srcexpr = attribute.getNodeValue();
+				break;
+			case "mode":
+				grammarClass.mode = attribute.getNodeValue();
+				break;
+			case "scope":
+				grammarClass.scope = attribute.getNodeValue();
+				break;
+			case "tagformat":
+				grammarClass.tagFormat = attribute.getNodeValue();
+				break;
+			case "type":
+				grammarClass.type = attribute.getNodeValue();
+				break;
+			case "version":
+				grammarClass.version = attribute.getNodeValue();
+				break;
+			case "voxeo:useuri":
+				grammarClass.voxeo_useuri = attribute.getNodeValue();
+				break;
+			case "weight":
+				grammarClass.weight = attribute.getNodeValue();
+				break;
+			case "xml:base":
+				grammarClass.xml_base = attribute.getNodeValue();
+				break;
+			case "xml:lang":
+				grammarClass.xml_lang = attribute.getNodeValue();
+				break;
+			case "xmlns":
+				grammarClass.xmlns = attribute.getNodeValue();
+				break;
+			case "root":
+				grammarClass.root = attribute.getNodeValue();
+				break;
+			}
+		}
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = nodeE.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "rule":
+				grammarClass.addChild(parseRule(e));
+				break;
+			}
+		}
+		return grammarClass;
+	}
+	public Rule parseRule(Node nodeE) {
+		Rule ruleClass = new Rule(null, null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "id":
+				ruleClass.id = attribute.getNodeValue();
+				break;
+			case "scope":
+				ruleClass.scope = attribute.getNodeValue();
+				break;
+			}
+		}
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = nodeE.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "item":
+				ruleClass.addChild(parseItem(e));
+				break;
+			case "one-of":
+				ruleClass.addChild(parseOneOf(e));
+				break;
+			}
+		}
+		return ruleClass;
+	}
+	public Item parseItem(Node nodeE) {
+		Item itemClass = new Item(null, null, null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "weight":
+				itemClass.weight = attribute.getNodeValue();
+				break;
+			case "prob":
+				itemClass.prob = attribute.getNodeValue();
+				break;
+			case "repeat":
+				itemClass.repeat = attribute.getNodeValue();
+				break;
+			}
+
+		}
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = nodeE.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "item":
+				itemClass.addChild(parseItem(e));
+				break;
+			case "one-of":
+				itemClass.addChild(parseOneOf(e));
+				break;
+			}
+		}
+		return itemClass;
+	}
+	public OneOf parseOneOf(Node nodeE) {
+		OneOf oneofClass = new OneOf();
+
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = nodeE.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "item":
+				oneofClass.addChild(parseItem(e));
+				break;
+			}
+		}
+		return oneofClass;
+	}
 	public Help parseHelp(Node nodeE)
 	{
 		Help helpClass = new Help(null,null);
@@ -372,7 +520,7 @@ public class VxmlParser {
 			}
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
-			Node e = e.getChildNodes().item(i);
+			Node e = nodeE.getChildNodes().item(i);
 			if (e.getNodeName().startsWith("#")) {
 				continue;
 			}
@@ -443,7 +591,7 @@ public class VxmlParser {
 			}
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
-			Node e = e.getChildNodes().item(i);
+			Node e = nodeE.getChildNodes().item(i);
 			if (e.getNodeName().startsWith("#")) {
 				continue;
 			}

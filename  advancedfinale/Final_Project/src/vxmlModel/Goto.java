@@ -70,8 +70,8 @@ public class Goto extends DataHolder {
 	}
 
 
-	public String getNestItemString() {
-		return nestItemString;
+	public String getNextItem() {
+		return nextItem;
 	}
 	
 	
