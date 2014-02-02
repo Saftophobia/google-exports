@@ -8,9 +8,10 @@ public class Script extends DataHolder {
 	String maxStale;
 	String fetchHint;
 	String fetchTimeOut;
+	String ScriptContent;
 
 	public Script(String charSet, String maxAge, String src, String srcExpr,
-			String maxStale, String fetchHint, String fetchTimeOut) {
+			String maxStale, String fetchHint, String fetchTimeOut,String ScriptContent) {
 		super();
 		this.charSet = charSet;
 		this.maxAge = maxAge;
@@ -19,6 +20,7 @@ public class Script extends DataHolder {
 		this.maxStale = maxStale;
 		this.fetchHint = fetchHint;
 		this.fetchTimeOut = fetchTimeOut;
+		this.ScriptContent = ScriptContent;
 	}
 
 	public String getCharSet() {

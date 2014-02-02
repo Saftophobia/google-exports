@@ -6,18 +6,18 @@ public class Vxml extends TagHolder{
 	String application;
 	String version;
 	String xml_base;
-	String xml_land;
+	String xml_lang;
 	String xmlns;
 	String xmlns_voxeo;
 	ArrayList<Tag> children;
 	
 	public Vxml(String application, String version, String xml_base,
-			String xml_land, String xmlns, String xmlns_voxeo) {
+			String xml_lang, String xmlns, String xmlns_voxeo) {
 		super();
 		this.application = application;
 		this.version = version;
 		this.xml_base = xml_base;
-		this.xml_land = xml_land;
+		this.xml_lang = xml_lang;
 		this.xmlns = xmlns;
 		this.xmlns_voxeo = xmlns_voxeo;
 		children =  new ArrayList<Tag>();	
