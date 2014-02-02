@@ -62,26 +62,26 @@ public class VxmlParser {
 				System.out.println(e.getNodeName());
 				switch (e.getNodeName()) {
 				case "script":
-					vxmlclass.addChild(ParseScript(e));
+					vxmlclass.addChild(parseScript(e));
 
 					break;
 				case "form":
-					vxmlclass.addChild(ParseForm(e));
+					vxmlclass.addChild(parseForm(e));
 					break;
 				case "noinput":
-					vxmlclass.addChild(ParseNoInput(e));
-					;
+					vxmlclass.addChild(parseNoInput(e));
+					
 					break;
 				case "nomatch":
-					vxmlclass.addChild(ParseNoMatch(e));
-					;
+					vxmlclass.addChild(parseNoMatch(e));
+					
 					break;
 				case "var":
-					vxmlclass.addChild(ParseVar(e));
+					vxmlclass.addChild(parseVar(e));
 					break;
 				case "help":
-					vxmlclass.addChild(ParseHelp(e));
-					;
+					vxmlclass.addChild(parseHelp(e));
+					
 					break;
 				}
 			}
@@ -89,7 +89,7 @@ public class VxmlParser {
 			e.printStackTrace();
 		}
 	}
-	public Help ParseHelp(Node nodeE)
+	public Help parseHelp(Node nodeE)
 	{
 		Help helpClass = new Help(null,null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
@@ -104,47 +104,47 @@ public class VxmlParser {
 			}
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
-			Node e = e.getChildNodes().item(i);
+			Node e = nodeE.getChildNodes().item(i);
 			if (e.getNodeName().startsWith("#")) {
 				continue;
 			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
 			case "audio":
-				helpClass.addChild(ParseAudio(e));
+				helpClass.addChild(parseAudio(e));
 
 				break;
 			case "goto":
-				helpClass.addChild(ParseGoto(e));
+				helpClass.addChild(parseGoto(e));
 				break;
 			case "if":
-				helpClass.addChild(ParseIf(e));
-				;
+				helpClass.addChild(parseIf(e));
+				
 				break;
 			case "prompt":
-				helpClass.addChild(ParsePrompt(e));
-				;
+				helpClass.addChild(parsePrompt(e));
+				
 				break;	
 			case "reprompt":
-				helpClass.addChild(ParseReprompt(e));
-				;
+				helpClass.addChild(parseReprompt(e));
+				
 				break;
 			case "script":
-				helpClass.addChild(ParseScript(e));
+				helpClass.addChild(parseScript(e));
 				break;
 			case "value":
-				helpClass.addChild(ParseValue(e));
-				;
+				helpClass.addChild(parseValue(e));
+				
 				break;
 			case "var":
-				helpClass.addChild(ParseVar(e));
-				;
+				helpClass.addChild(parseVar(e));
+				
 				break;
 			}
 		}
 		return helpClass;
 	}
-	public Var ParseVar(Node nodeE)
+	public Var parseVar(Node nodeE)
 	{
 		Var varClass = new Var(null, null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
@@ -160,7 +160,7 @@ public class VxmlParser {
 		}
 		return varClass;
 	}
-	public NoInput ParseNoInput(Node nodeE) {
+	public NoInput parseNoInput(Node nodeE) {
 		NoInput noInputClass = new NoInput(null, null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
 			Node attribute = nodeE.getAttributes().item(i);
@@ -174,36 +174,71 @@ public class VxmlParser {
 			}
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
-			Node e = e.getChildNodes().item(i);
+			Node e = nodeE.getChildNodes().item(i);
 			if (e.getNodeName().startsWith("#")) {
 				continue;
 			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
 			case "audio":
-				noInputClass.addChild(ParseAudio(e));
-
+				noInputClass.addChild(parseAudio(e));
 				break;
 			case "goto":
-				noInputClass.addChild(ParseGoto(e));
+				noInputClass.addChild(parseGoto(e));
 				break;
 			case "if":
-				noInputClass.addChild(ParseIf(e));
+				noInputClass.addChild(parseIf(e));
 				;
 				break;
 			case "reprompt":
-				noInputClass.addChild(ParseReprompt(e));
+				noInputClass.addChild(parseReprompt(e));
 				;
 				break;
 			case "script":
-				noInputClass.addChild(ParseScript(e));
+				noInputClass.addChild(parseScript(e));
 				break;
 			}
 		}
 		return noInputClass;
 	}
-
-	public NoMatch ParseNoMatch(Node nodeE)
+	public Goto parseGoto(Node nodeE)
+	{
+		Goto gotoClass = new Goto(null, null, null, null, null, null, null, null, null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "expr":
+				gotoClass.expr = attribute.getNodeValue();
+				break;
+			case "expritem":
+				gotoClass.exprItem = attribute.getNodeValue();
+				break;
+			case "fetchaudio":
+				gotoClass.fetchAudio = attribute.getNodeValue();
+				break;
+			case "fetchhint":
+				gotoClass.fetchHint = attribute.getNodeValue();
+				break;
+			case "fetchtimeout":
+				gotoClass.fetchTimeOut = attribute.getNodeValue();
+				break;
+			case "maxage":
+				gotoClass.maxAge = attribute.getNodeValue();
+				break;
+			case "maxstale":
+				gotoClass.maxAge = attribute.getNodeValue();
+				break;
+			case "next":
+				gotoClass.next = attribute.getNodeValue();
+				break;
+			case "nextitem":
+				gotoClass.nextItem = attribute.getNodeValue();
+				break;
+			}
+		}
+		return gotoClass;
+	}
+	public NoMatch parseNoMatch(Node nodeE)
 	{
 		NoMatch noMatchClass = new NoMatch(null, null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
@@ -218,45 +253,44 @@ public class VxmlParser {
 			}
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
-			Node e = e.getChildNodes().item(i);
+			Node e = nodeE.getChildNodes().item(i);
 			if (e.getNodeName().startsWith("#")) {
 				continue;
 			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
 			case "audio":
-				noMatchClass.addChild(ParseAudio(e));
+				noMatchClass.addChild(parseAudio(e));
 
 				break;
 			case "goto":
-				noMatchClass.addChild(ParseGoto(e));
+				noMatchClass.addChild(parseGoto(e));
 				break;
 			case "if":
-				noMatchClass.addChild(ParseIf(e));
+				noMatchClass.addChild(parseIf(e));
 				;
 				break;
 			case "prompt":
-				noMatchClass.addChild(ParsePrompt(e));
+				noMatchClass.addChild(parsePrompt(e));
 				;
 				break;
 			case "reprompt":
-				noMatchClass.addChild(ParseReprompt(e));
+				noMatchClass.addChild(parseReprompt(e));
 				;
 				break;
 			case "script":
-				noMatchClass.addChild(ParseScript(e));
+				noMatchClass.addChild(parseScript(e));
 				break;
 			case "value":
-				noMatchClass.addChild(ParseValue(e));
+				noMatchClass.addChild(parseValue(e));
 				break;
 			case "var":
-				noMatchClass.addChild(ParseVar(e));
+				noMatchClass.addChild(parseVar(e));
 				break;
 			}
 		}
 			return noMatchClass;
 	}
-	
 	public Prompt parsePrompt(Node NodeE)
 	{
 		Prompt promptClass = new Prompt(null, null, null, null, null, null, null);
@@ -282,23 +316,15 @@ public class VxmlParser {
 				promptClass.xml_lang = attribute.getNodeValue();
 				break;
 			}
-			promptClass.data = NodeE;
-			
-			return promptClass;
 		}
-		
-		
-		
-		
-		
-		
+		promptClass.data = NodeE;		
 		return promptClass;
 	}
 	public Reprompt parseReprompt(Node NodeE)
 	{
 		return new Reprompt();
 	}
-	public Script ParseScript(Node e) {
+	public Script parseScript(Node e) {
 		Script scriptClass = new Script(null, null, null, null, null, null,
 				null, null);
 		for (int i = 0; i < e.getAttributes().getLength(); i++) {
@@ -332,8 +358,7 @@ public class VxmlParser {
 		}
 		return scriptClass;
 	}
-
-	public Form ParseForm(Node nodeE) {
+	public Form parseForm(Node nodeE) {
 		Form formclass = new Form(null, null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
 			Node attribute = nodeE.getAttributes().item(i);
@@ -354,44 +379,169 @@ public class VxmlParser {
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
 			case "block":
-				formclass.addChild(ParseBlock(e));
+				formclass.addChild(parseBlock(e));
 
 				break;
 			case "field":
-				formclass.addChild(ParseField(e));
+				formclass.addChild(parseField(e));
 				break;
 			case "filled":
-				formclass.addChild(ParseFilled(e));
-				;
+				formclass.addChild(parseFilled(e));
+				
 				break;
 			case "grammar":
-				formclass.addChild(ParseGrammar(e));
-				;
+				formclass.addChild(parseGrammar(e));
+				
 				break;
 			case "help":
-				formclass.addChild(ParseHelp(e));
+				formclass.addChild(parseHelp(e));
 				break;
 			case "noinput":
-				formclass.addChild(ParseNoInput(e));
-				;
+				formclass.addChild(parseNoInput(e));
+				
 				break;
 			case "nomatch":
-				formclass.addChild(ParseNoMatch(e));
-				;
+				formclass.addChild(parseNoMatch(e));
+				
 				break;
 			case "script":
-				formclass.addChild(ParseScript(e));
-				;
+				formclass.addChild(parseScript(e));
+				
 				break;
 			case "var":
-				formclass.addChild(ParseVar(e));
-				;
+				formclass.addChild(parseVar(e));
+				
 				break;
 			}
 		}
 		return formclass;
 	}
-	public Audio ParseAudio(Node nodeE){
+	public Field parseField(Node nodeE)
+	{
+		Field fieldClass = new Field(null, null, null, null, null, null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "cond":
+				fieldClass.condition = attribute.getNodeValue();
+				break;
+			case "expr":
+				fieldClass.expr = attribute.getNodeValue();
+				break;
+			case "modal":
+				fieldClass.modal = attribute.getNodeValue();
+				break;
+			case "name":
+				fieldClass.name = attribute.getNodeValue();
+				break;
+			case "slot":
+				fieldClass.slot = attribute.getNodeValue();
+				break;
+			case "type":
+				fieldClass.type = attribute.getNodeValue();
+				break;
+			}
+		}
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = e.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "audio":
+				fieldClass.addChild(parseAudio(e));
+
+				break;
+			
+			case "filled":
+				fieldClass.addChild(parseFilled(e));
+				
+				break;
+			case "grammar":
+				fieldClass.addChild(parseGrammar(e));
+				
+				break;
+			case "help":
+				fieldClass.addChild(parseHelp(e));
+				break;
+			case "noinput":
+				fieldClass.addChild(parseNoInput(e));
+				
+				break;
+			case "nomatch":
+				fieldClass.addChild(parseNoMatch(e));
+				
+				break;
+			case "prompt":
+				fieldClass.addChild(parseScript(e));
+				
+				break;
+			case "value":
+				fieldClass.addChild(parseValue(e));
+				
+				break;
+			}
+		}
+		return fieldClass;
+	}
+	public Filled parseFilled(Node nodeE)
+	{
+		Filled filledClass = new Filled(null, null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "mode":
+				filledClass.mode = attribute.getNodeValue();
+				break;
+			case "namelist":
+				filledClass.nameList = attribute.getNodeValue();
+				break;
+			}
+		}
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = nodeE.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "audio":
+				filledClass.addChild(parseAudio(e));
+
+				break;
+			case "goto":
+				filledClass.addChild(parseGoto(e));
+				break;
+			case "if":
+				filledClass.addChild(parseIf(e));
+				
+				break;
+			case "reprompt":
+				filledClass.addChild(parseReprompt(e));
+				
+				break;
+			case "prompt":
+				filledClass.addChild(parsePrompt(e));
+				
+				break;
+			case "value":
+				filledClass.addChild(parseValue(e));
+				
+				break;
+			case "var":
+				filledClass.addChild(parseVar(e));
+				
+				break;
+			case "script":
+				filledClass.addChild(parseScript(e));
+				
+				break;
+			}
+		}
+		return filledClass;
+	}
+	public Audio parseAudio(Node nodeE){
 		Audio audioclass = new Audio(null,null,null,null,null,null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
 			Node attribute = nodeE.getAttributes().item(i);
@@ -419,7 +569,7 @@ public class VxmlParser {
 		
 		return audioclass;
 	}
-	public Block ParseBlock(Node nodeE) {
+	public Block parseBlock(Node nodeE) {
 		Block blockClass = new Block(null, null,null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
 			Node attribute = nodeE.getAttributes().item(i);
@@ -436,46 +586,135 @@ public class VxmlParser {
 			}
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
-			Node e = e.getChildNodes().item(i);
+			Node e = nodeE.getChildNodes().item(i);
 			if (e.getNodeName().startsWith("#")) {
 				continue;
 			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
 			case "audio":
-				blockClass.addChild(ParseAudio(e));
+				blockClass.addChild(parseAudio(e));
 				break;
 			case "goto":
-				blockClass.addChild(ParseGoto(e));
+				blockClass.addChild(parseGoto(e));
 				break;
 			case "if":
-				blockClass.addChild(ParseIf(e));
-				;
+				blockClass.addChild(parseIf(e));
+				
 				break;
 			case "prompt":
 				blockClass.addChild(parsePrompt(e));
-				;
+				
 				break;
 			case "reprompt":
 				blockClass.addChild(parseReprompt(e));
 				break;
 			case "script":
-				blockClass.addChild(ParseScript(e));
-				;
+				blockClass.addChild(parseScript(e));
+				
 				break;
 			case "value":
-				blockClass.addChild(ParseVar(e));
-				;
+				blockClass.addChild(parseValue(e));
+				
 				break;
 			case "var":
-				blockClass.addChild(ParseVar(e));
-				;
+				blockClass.addChild(parseVar(e));
+				
 				break;
 			}
 		}
 		return blockClass;
 	}
-	
+	public If parseIf(Node nodeE)
+	{
+		If ifClass = new If(null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "cond":
+				ifClass.cond = attribute.getNodeValue();
+				break;
+			}
+		}
+		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
+			Node e = nodeE.getChildNodes().item(i);
+			if (e.getNodeName().startsWith("#")) {
+				continue;
+			}
+			System.out.println(e.getNodeName());
+			switch (e.getNodeName()) {
+			case "audio":
+				ifClass.addChild(parseAudio(e));
+
+				break;
+			case "else":
+				ifClass.addChild(parseElse(e));
+				break;
+			case "elseif":
+				ifClass.addChild(parseElseIf(e));
+				
+				break;
+			case "goto":
+				ifClass.addChild(parseGoto(e));
+				
+				break;
+			case "if":
+				ifClass.addChild(parseIf(e));
+				break;
+			case "prompt":
+				ifClass.addChild(parsePrompt(e));
+				
+				break;
+			case "reprompt":
+				ifClass.addChild(parseReprompt(e));
+				
+				break;
+			case "script":
+				ifClass.addChild(parseScript(e));
+				
+				break;
+			case "var":
+				ifClass.addChild(parseVar(e));
+				
+				break;
+			case "value":
+				ifClass.addChild(parseValue(e));
+				
+				break;
+			}
+		}
+		return ifClass;
+	}
+	public Value parseValue(Node nodeE)
+	{
+		Value valueClass = new Value(null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "expr":
+				valueClass.expr = attribute.getNodeValue();
+				break;
+			}
+		}
+		return valueClass;
+	}
+	public Elseif parseElseIf(Node nodeE)
+	{
+		Elseif elseIf = new Elseif(null);
+		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
+			Node attribute = nodeE.getAttributes().item(i);
+			switch (attribute.getNodeName()) {
+			case "cond":
+				elseIf.cond = attribute.getNodeValue();
+				break;
+			}
+		}
+		return elseIf;
+	}
+	public Else parseElse(Node nodeE)
+	{
+		return new Else();
+	}
 	public static void main(String[] args) {
 
 	}

@@ -11,12 +11,12 @@ public class Goto extends DataHolder {
 	String maxAge;
 	String maxStale;
 	String next;
-	String nestItemString;
+	String nextItem;
 	
 	
 	public Goto(String expr, String exprItem, String fetchAudio,
 			String fetchHint, String fetchTimeOut, String maxAge,
-			String maxStale, String next, String nestItemString) {
+			String maxStale, String next, String nextItem) {
 		super();
 		this.expr = expr;
 		this.exprItem = exprItem;
@@ -26,7 +26,7 @@ public class Goto extends DataHolder {
 		this.maxAge = maxAge;
 		this.maxStale = maxStale;
 		this.next = next;
-		this.nestItemString = nestItemString;
+		this.nextItem = nextItem;
 	}
 
 
