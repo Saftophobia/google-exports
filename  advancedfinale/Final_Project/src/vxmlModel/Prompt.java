@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import org.w3c.dom.Node;
+
 
 public class Prompt extends TagHolder{
 
@@ -11,11 +13,11 @@ public class Prompt extends TagHolder{
 	String count;
 	String timeout;
 	String xml_lang;
-	String data;
+	Node data;
 	ArrayList<Tag> children; 
 	
 	public Prompt(String bargein, String bargeinType, String condition,
-			String count, String timeout, String xml_lang, String data) {
+			String count, String timeout, String xml_lang, Node data) {
 		super();
 		this.bargein = bargein;
 		this.bargeinType = bargeinType;
@@ -27,7 +29,7 @@ public class Prompt extends TagHolder{
 		children =  new ArrayList<Tag>();
 	}
 	
-	public String getData(){
+	public Node getData(){
 		return data;
 	}
 	
