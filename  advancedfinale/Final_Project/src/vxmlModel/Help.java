@@ -1,18 +1,19 @@
 package vxmlModel;
 import java.util.ArrayList;
 
-public class NoMatch extends TagHolder {
+public class Help extends TagHolder {
 
 	String cond;
 	String count;
 	ArrayList<Tag> children;
+	int parsingIndex = 0;
 
-	public NoMatch(String cond, String count) {
+	public Help(String cond, String count) {
 		this.cond =cond;
 		this.count = count;
 		children = new ArrayList<Tag>();
-		identifier = 2;
 	}
+
 	
 	public String GetCondition(){
 		return cond;
@@ -22,7 +23,7 @@ public class NoMatch extends TagHolder {
 	public String GetCount(){
 		return count;
 	}
-
+	
 	public void addChild(Tag child) {
 		children.add(child);
 	}

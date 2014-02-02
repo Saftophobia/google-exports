@@ -6,7 +6,6 @@ public class NoInput extends TagHolder {
 	String cond;
 	String count;
 	ArrayList<Tag> children;
-	int parsingIndex = 0;
 
 	public NoInput(String cond, String count) {
 		this.cond =cond;
