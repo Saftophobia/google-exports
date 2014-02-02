@@ -1,4 +1,8 @@
 package vxmlModel;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+
 public class Script extends DataHolder {
 
 	String charSet;
@@ -53,7 +57,16 @@ public class Script extends DataHolder {
 
 	@Override
 	public Object eval(Object o) {
-		// TODO Auto-generated method stub
+		ScriptEngine engine = (ScriptEngine) o;
+		if(src != null){
+			//load file TODO
+		}else{
+		try {
+			engine.eval(ScriptContent);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		}
 		return null;
 	}
 

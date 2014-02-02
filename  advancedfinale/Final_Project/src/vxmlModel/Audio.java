@@ -1,5 +1,7 @@
 package vxmlModel;
 
+import util.AudioPlayer;
+
 public class Audio extends DataHolder{
 	
 	String expr;
@@ -44,7 +46,8 @@ public class Audio extends DataHolder{
 
 	@Override
 	public Object eval(Object o) {
-		// TODO Auto-generated method stub
+		AudioPlayer player = (AudioPlayer) o;
+		player.playSound(src, 0);
 		return null;
 	}
 	
