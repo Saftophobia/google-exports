@@ -51,4 +51,10 @@ public class Script extends DataHolder {
 		return fetchTimeOut;
 	}
 
+	@Override
+	public Object eval(Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

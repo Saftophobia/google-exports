@@ -12,6 +12,12 @@ public class Value extends DataHolder{
 	public String getExpr() {
 		return expr;
 	}
+
+	@Override
+	public Object eval(Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

@@ -11,5 +11,11 @@ public class Elseif extends DataHolder{
 	public String getCond(){
 		return cond;
 	}
+
+	@Override
+	public Object eval(Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

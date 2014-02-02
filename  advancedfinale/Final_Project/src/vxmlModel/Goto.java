@@ -73,6 +73,13 @@ public class Goto extends DataHolder {
 	public String getNextItem() {
 		return nextItem;
 	}
+
+
+	@Override
+	public Object eval(Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

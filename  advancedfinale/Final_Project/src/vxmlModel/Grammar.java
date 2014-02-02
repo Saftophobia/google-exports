@@ -47,6 +47,7 @@ public class Grammar extends TagHolder{
 	}
 	
 	public void addChild(Rule child){
+		child.parent = this;
 		rules.add(child);
 	}
 	
@@ -56,6 +57,12 @@ public class Grammar extends TagHolder{
 	
 	public void updateParsingIndex(int i){
 		parsingIndex = i;
+	}
+
+	@Override
+	public Object eval(Object o) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

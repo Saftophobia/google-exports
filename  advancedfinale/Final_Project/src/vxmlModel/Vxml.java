@@ -24,6 +24,7 @@ public class Vxml extends TagHolder{
 	}
 	
 	public void addChild(Tag child){
+		child.parent = this;
 		children.add(child);
 	}
 	
@@ -43,6 +44,12 @@ public class Vxml extends TagHolder{
 			}
 		}
 		return output;
+	}
+	
+	public Object eval(Object o){
+		
+		return children;
+		
 	}
 	
 

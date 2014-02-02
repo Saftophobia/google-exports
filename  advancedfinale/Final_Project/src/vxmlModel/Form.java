@@ -14,6 +14,7 @@ public class Form extends TagHolder{
 	}
 	
 	public void addChild(Tag child){
+		child.parent = this;
 		children.add(child);
 	}
 	
@@ -33,5 +34,11 @@ public class Form extends TagHolder{
 			}
 		}
 		return output;
+	}
+
+	@Override
+	public Object eval(Object o) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
