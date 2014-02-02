@@ -14,15 +14,15 @@ import org.w3c.dom.NodeList;
 
 public class VxmlParser {
 
-	HashMap<String, String> ScriptHashMap;
-	HashMap<String, String> VariableHashMap;
-	ScriptEngineManager manager = new ScriptEngineManager();
-	ScriptEngine engine = manager.getEngineByName("JavaScript");
-	String lastPrompt = "";
+	//HashMap<String, String> ScriptHashMap;
+	//HashMap<String, String> VariableHashMap;
+	//ScriptEngineManager manager = new ScriptEngineManager();
+	//ScriptEngine engine = manager.getEngineByName("JavaScript");
+	//String lastPrompt = "";
 
 	public VxmlParser(File filename) {
-		this.ScriptHashMap = new HashMap<String, String>();
-		this.VariableHashMap = new HashMap<String, String>();
+		//this.ScriptHashMap = new HashMap<String, String>();
+		//this.VariableHashMap = new HashMap<String, String>();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -180,7 +180,7 @@ public class VxmlParser {
 				ruleClass.addChild(parseItem(e));
 				break;
 			case "one-of":
-				ruleClass.addChild(parseOneOf(e));
+				ruleClass.addChild(parseOneOf(e)); //errored
 				break;
 			}
 		}
@@ -863,7 +863,10 @@ public class VxmlParser {
 	{
 		return new Else();
 	}
+	
 	public static void main(String[] args) {
-
+		
+		VxmlParser parser = new VxmlParser(new File("src/test.vxml"));
+		
 	}
 }

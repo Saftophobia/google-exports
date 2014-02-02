@@ -12,6 +12,7 @@ public class Rule extends TagHolder{
 	public Rule(String id, String scope) {
 		super();
 		this.id = id;
+		this.children = new ArrayList<Tag>();
 		this.scope = scope;
 	}
 
