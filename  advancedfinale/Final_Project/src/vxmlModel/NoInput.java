@@ -53,6 +53,39 @@ public class NoInput extends TagHolder {
 	@Override
 	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
+		
+
+		if (cond != null) {
+			if (cond.contains("==")) {
+				String firstOP = cond.split("==")[0].replace(" ", "")
+						.replace("\'", "");
+				String secondOP = cond.split("==")[1].replace(" ", "")
+						.replace("\'", "");
+
+				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+																			// equal
+					return null;
+				}
+			} else {
+				if (cond.contains("!=")) {
+					String firstOP = cond.split("!=")[0].replace(" ", "")
+							.replace("\'", "");
+					String secondOP = cond.split("!=")[1].replace(" ", "")
+							.replace("\'", "");
+
+					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+																				// equal
+						return null;
+					}
+				}
+			}
+		}
+		
+		for(Tag t: children)
+		{
+			t.eval(o);
+		}
+		
 		return null;
 	}
 

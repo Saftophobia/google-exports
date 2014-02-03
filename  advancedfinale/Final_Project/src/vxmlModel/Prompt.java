@@ -1,14 +1,13 @@
 package vxmlModel;
+
 import java.util.ArrayList;
 
 import org.w3c.dom.Node;
 
 import util.StateVariables;
 
+public class Prompt extends TagHolder {
 
-public class Prompt extends TagHolder{
-
-	
 	String bargein;
 	String bargeinType;
 	String condition;
@@ -16,63 +15,63 @@ public class Prompt extends TagHolder{
 	String timeout;
 	String xml_lang;
 	Node data;
-	ArrayList<Tag> children; 
-	
+	ArrayList<Tag> children;
+
 	public Prompt(String bargein, String bargeinType, String condition,
 			String count, String timeout, String xml_lang, Node data) {
 		super();
-		this.bargein = bargein;
-		this.bargeinType = bargeinType;
+		this.bargein = "true";
+		this.bargeinType = "speech";
 		this.condition = condition;
 		this.count = count;
-		this.timeout = timeout;
+		this.timeout = "5";
 		this.xml_lang = xml_lang;
 		this.data = data;
-		children =  new ArrayList<Tag>();
+		children = new ArrayList<Tag>();
 	}
-	
-	public Node getData(){
+
+	public Node getData() {
 		return data;
 	}
-	
-	public String getTimeOut(){
+
+	public String getTimeOut() {
 		return timeout;
 	}
-	
-	public String getBargein(){
+
+	public String getBargein() {
 		return bargein;
 	}
-	
-	public String GetBargeinTsype(){
+
+	public String GetBargeinTsype() {
 		return bargeinType;
 	}
-	
-	public String GetCondition(){
+
+	public String GetCondition() {
 		return condition;
-		
+
 	}
-	
-	public String GetCount(){
+
+	public String GetCount() {
 		return count;
 	}
-	
-	public void addChild(Tag child){
+
+	public void addChild(Tag child) {
 		child.parent = this;
 		children.add(child);
 	}
-	
-	public Tag getChild(){
+
+	public Tag getChild() {
 		return children.get(parsingIndex++);
 	}
-	
-	public void updateParsingIndex(int i){
+
+	public void updateParsingIndex(int i) {
 		parsingIndex = i;
 	}
-	
-	public ArrayList<Tag> getTagsByType(int identifier){
+
+	public ArrayList<Tag> getTagsByType(int identifier) {
 		ArrayList<Tag> output = new ArrayList<Tag>();
-		for(Tag child:children){
-			if(child.identifier == identifier){
+		for (Tag child : children) {
+			if (child.identifier == identifier) {
 				output.add(child);
 			}
 		}
@@ -81,28 +80,50 @@ public class Prompt extends TagHolder{
 
 	@Override
 	public Object eval(StateVariables o) {
-		String s = "";
-		for(int i = 0; i < data.getChildNodes().getLength();i++)
-		{
-			Node iterated = data.getChildNodes().item(i);
-			if(iterated.getNodeName() == "#text")
-			{
-				s += iterated.getNodeValue();
-			}else{
-				if(iterated.getNodeName() == "value")
-				{
-					Value v = new Value(iterated.getNodeValue());
-					
-					s += (String)v.eval(null);
+
+		if (condition != null) {
+			if (condition.contains("==")) {
+				String firstOP = condition.split("==")[0].replace(" ", "")
+						.replace("\'", "");
+				String secondOP = condition.split("==")[1].replace(" ", "")
+						.replace("\'", "");
+
+				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+																	// equal
+					return null;
+				}
+			} else {
+				if (condition.contains("!=")) {
+					String firstOP = condition.split("!=")[0].replace(" ", "")
+							.replace("\'", "");
+					String secondOP = condition.split("!=")[1].replace(" ", "")
+							.replace("\'", "");
+
+					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+																		// equal
+						return null;
+					}
 				}
 			}
 		}
-		
-		System.out.println(s); //prompt user
+
+		String s = "";
+		for (int i = 0; i < data.getChildNodes().getLength(); i++) {
+			Node iterated = data.getChildNodes().item(i);
+			if (iterated.getNodeName() == "#text") {
+				s += iterated.getNodeValue();
+			} else {
+				if (iterated.getNodeName() == "value") {
+					Value v = new Value(iterated.getNodeValue());
+
+					s += (String) v.eval(null);
+				}
+			}
+		}
+
+		System.out.println(s); // prompt user
 		o.LastPrompt = s;
-		
-		
-		
+
 		return data;
 	}
 }
