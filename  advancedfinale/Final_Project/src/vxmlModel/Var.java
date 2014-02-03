@@ -1,5 +1,7 @@
 package vxmlModel;
 
+import util.StateVariables;
+
 public class Var extends DataHolder{
 	
 	String name;
@@ -22,8 +24,10 @@ public class Var extends DataHolder{
 
 
 	@Override
-	public Object eval(Object o) {
-		// TODO Auto-generated method stub
+	public Object eval(StateVariables o) {
+		if(name != null && expr != null){
+			o.VariableHashMap.put(name, expr);
+		}
 		return null;
 	}
 	

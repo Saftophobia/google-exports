@@ -1,6 +1,7 @@
 package vxmlModel;
 
 import util.AudioPlayer;
+import util.StateVariables;
 
 public class Audio extends DataHolder{
 	
@@ -45,9 +46,8 @@ public class Audio extends DataHolder{
 
 
 	@Override
-	public Object eval(Object o) {
-		AudioPlayer player = (AudioPlayer) o;
-		player.playSound(src, 0);
+	public Object eval(StateVariables o) {
+		o.audioPlayer.playSound(src, 0);
 		return null;
 	}
 	

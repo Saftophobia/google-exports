@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import util.StateVariables;
+
 
 public class Filled extends TagHolder{
 
@@ -10,7 +12,7 @@ public class Filled extends TagHolder{
 	
 	public Filled(String mode, String nameList) {
 		super();
-		this.mode = mode;
+		this.mode = "any";
 		this.nameList = nameList;
 		this.children = new ArrayList<Tag>();
 	}
@@ -44,8 +46,34 @@ public class Filled extends TagHolder{
 		return output;
 	}
 	@Override
-	public Object eval(Object o) {
-		// TODO Auto-generated method stub
+	public Object eval(StateVariables o) {
+		if(nameList != null)
+		{
+			String[] fieldvars = nameList.split(" ");
+			if(mode.equalsIgnoreCase("all"))
+			{
+				for (int i = 0; i < fieldvars.length; i++) {
+					if (o.VariableHashMap.get(fieldvars[i]) == null)
+						return null;
+				}
+			}else{
+				if(mode.equalsIgnoreCase("any"))
+				{
+					boolean found = false;
+					for (int i = 0; i < fieldvars.length; i++) {
+						if (o.VariableHashMap.get(fieldvars[i]) != null)
+							found = true;
+					}
+					if (!found) {
+						return null;
+					}
+				}
+			}
+			for (Tag t: children)
+			{
+				t.eval(o);
+			}
+		}
 		return null;
 	}
 	

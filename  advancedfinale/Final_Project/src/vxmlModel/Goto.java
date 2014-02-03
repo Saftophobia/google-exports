@@ -1,5 +1,7 @@
 package vxmlModel;
 
+import util.StateVariables;
+
 public class Goto extends DataHolder {
 
 	
@@ -76,7 +78,7 @@ public class Goto extends DataHolder {
 
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Node;
 
+import util.StateVariables;
+
 
 public class Prompt extends TagHolder{
 
@@ -78,7 +80,29 @@ public class Prompt extends TagHolder{
 	}
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
+		String s = "";
+		for(int i = 0; i < data.getChildNodes().getLength();i++)
+		{
+			Node iterated = data.getChildNodes().item(i);
+			if(iterated.getNodeName() == "#text")
+			{
+				s += iterated.getNodeValue();
+			}else{
+				if(iterated.getNodeName() == "value")
+				{
+					Value v = new Value(iterated.getNodeValue());
+					
+					s += (String)v.eval(null);
+				}
+			}
+		}
+		
+		System.out.println(s); //prompt user
+		o.LastPrompt = s;
+		
+		
+		
 		return data;
 	}
 }

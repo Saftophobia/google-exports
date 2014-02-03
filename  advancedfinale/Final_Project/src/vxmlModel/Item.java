@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import util.StateVariables;
+
 
 public class Item extends TagHolder{
 
@@ -64,7 +66,7 @@ public class Item extends TagHolder{
 
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

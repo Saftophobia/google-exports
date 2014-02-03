@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import util.StateVariables;
+
 public class Vxml extends TagHolder{
 	
 	String application;
@@ -46,8 +48,11 @@ public class Vxml extends TagHolder{
 		return output;
 	}
 	
-	public Object eval(Object o){
-		
+	public Object eval(StateVariables o){
+		for(Tag t:this.children )
+		{
+			t.eval(o);
+		}
 		return children;
 		
 	}

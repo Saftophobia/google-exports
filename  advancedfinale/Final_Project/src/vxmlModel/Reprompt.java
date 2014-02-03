@@ -1,5 +1,7 @@
 package vxmlModel;
 
+import util.StateVariables;
+
 public class Reprompt extends DataHolder{
 
 	
@@ -8,9 +10,9 @@ public class Reprompt extends DataHolder{
 	}
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
-		return null;
+		return o.LastPrompt;
 	}
 	
 }

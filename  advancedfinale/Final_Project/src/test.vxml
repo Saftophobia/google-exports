@@ -2,8 +2,7 @@
 
 <vxml version="2.0">
   <!-- A function in JavaScript -->
-  <script>
-  function price(size,toppings,crust,thickness)
+  <script>function price(size,toppings,crust,thickness)
   {
     var res = 10;
     if ('big' == size) res += 5;
@@ -18,7 +17,7 @@
    if ('thick' == thickness) res += 5;
 
    return res;
-  }
+  };
   </script>
   <!-- -->
 

@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import util.StateVariables;
+
 
 public class If extends TagHolder{
 	
@@ -40,8 +42,46 @@ public class If extends TagHolder{
 	}
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
+		boolean IfConditionisTrue = true;
+		boolean elseIfvisited = false;
+		
+		String firstOP = cond.split("==")[0].replace(" ", "").replace(
+				"\'", "");
+		String secondOP = cond.split("==")[1].replace(" ", "").replace(
+				"\'", "");
+		
+		if (o.VariableHashMap.get(firstOP) != secondOP) { // not equal
+			IfConditionisTrue = false;
+		}
+		for(Tag t:children)
+		{
+			if(IfConditionisTrue && !(t instanceof Elseif) && !(t instanceof Else))
+			{
+				t.eval(o);
+			}
+			if(!IfConditionisTrue && !elseIfvisited)
+			{
+				if(t instanceof Elseif)
+				{
+					String elseiffirstOP = ((Elseif) t).cond.split("==")[0]
+							.replace(" ", "").replace("\'", "");
+					String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
+							.replace(" ", "").replace("\'", "");
+					
+					if (o.VariableHashMap.get(elseiffirstOP) == elseifsecondOP) { // condition satisfied
+						IfConditionisTrue = true;
+						elseIfvisited = true; 
+												
+					}					
+				}
+				if(t instanceof Else)
+				{
+					IfConditionisTrue = true;
+				}
+			}
+		}
 		return null;
 	}
 	

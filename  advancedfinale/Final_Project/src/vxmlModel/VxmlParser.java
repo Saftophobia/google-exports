@@ -1,6 +1,11 @@
 package vxmlModel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -8,14 +13,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import util.AudioPlayer;
+
 public class VxmlParser {
-
-	// HashMap<String, String> ScriptHashMap;
-	// HashMap<String, String> VariableHashMap;
-	// ScriptEngineManager manager = new ScriptEngineManager();
-	// ScriptEngine engine = manager.getEngineByName("JavaScript");
-	// String lastPrompt = "";
-
+	Vxml vxmlclass;
+	
+	
 	public VxmlParser(File filename) {
 		// this.ScriptHashMap = new HashMap<String, String>();
 		// this.VariableHashMap = new HashMap<String, String>();
@@ -25,7 +28,7 @@ public class VxmlParser {
 			Document doc = dBuilder.parse(filename);
 			NodeList vxmlNL = doc.getElementsByTagName("vxml");
 			Node vxmlElement = (Node) vxmlNL.item(0);
-			Vxml vxmlclass = new Vxml(null, null, null, null, null, null);
+			this.vxmlclass = new Vxml(null, null, null, null, null, null);
 			for (int i = 0; i < vxmlElement.getAttributes().getLength(); i++) {
 				Node attribute = vxmlElement.getAttributes().item(i);
 				switch (attribute.getNodeName()) {
@@ -84,6 +87,7 @@ public class VxmlParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	public Grammar parseGrammar(Node nodeE) {
@@ -627,7 +631,7 @@ public class VxmlParser {
 
 				break;
 			case "prompt":
-				fieldClass.addChild(parseScript(e));
+				fieldClass.addChild(parsePrompt(e));
 
 				break;
 			case "value":
@@ -871,9 +875,8 @@ public class VxmlParser {
 		return new Else();
 	}
 
-	public static void main(String[] args) {
-
-		new VxmlParser(new File("src/test.vxml"));
-
+	public Vxml getVxml()
+	{
+		return this.vxmlclass;
 	}
 }

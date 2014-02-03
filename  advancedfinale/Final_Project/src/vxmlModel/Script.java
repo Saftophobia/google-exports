@@ -1,7 +1,13 @@
 package vxmlModel;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+
+import util.StateVariables;
 
 public class Script extends DataHolder {
 
@@ -55,16 +61,41 @@ public class Script extends DataHolder {
 		return fetchTimeOut;
 	}
 
+	public String readFile(String pathname) throws IOException {
+
+		File file = new File(pathname);
+		StringBuilder fileContents = new StringBuilder((int) file.length());
+		Scanner scanner = new Scanner(file);
+		String lineSeparator = System.getProperty("line.separator");
+
+		try {
+			while (scanner.hasNextLine()) {
+				fileContents.append(scanner.nextLine() + lineSeparator);
+			}
+			return fileContents.toString();
+		} finally {
+			scanner.close();
+		}
+	}
+	
 	@Override
-	public Object eval(Object o) {
-		ScriptEngine engine = (ScriptEngine) o;
+	public Object eval(StateVariables o) {
+		//ScriptEngine engine = (ScriptEngine) o;
 		if(src != null){
 			//load file TODO
+			try{
+			o.engine.eval(this.readFile(src));
+			}catch(Exception wtv)
+			{
+				
+			}
 		}else{
 		try {
-			engine.eval(ScriptContent);
+			System.out.println(ScriptContent);
+			o.engine.eval(ScriptContent);
 		} catch (ScriptException e) {
 			e.printStackTrace();
+			//System.exit(0);
 		}
 		}
 		return null;

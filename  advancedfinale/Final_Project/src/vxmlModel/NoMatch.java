@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import util.StateVariables;
+
 public class NoMatch extends TagHolder {
 
 	String cond;
@@ -13,6 +15,7 @@ public class NoMatch extends TagHolder {
 		children = new ArrayList<Tag>();
 		identifier = 2;
 	}
+	
 	
 	public String GetCondition(){
 		return cond;
@@ -47,7 +50,7 @@ public class NoMatch extends TagHolder {
 	}
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

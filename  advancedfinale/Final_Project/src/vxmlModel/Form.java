@@ -1,6 +1,8 @@
 package vxmlModel;
 import java.util.ArrayList;
 
+import util.StateVariables;
+
 
 public class Form extends TagHolder{
 	String id;
@@ -37,8 +39,12 @@ public class Form extends TagHolder{
 	}
 
 	@Override
-	public Object eval(Object o) {
+	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
+		for(Tag t:children)
+		{
+			t.eval(o);
+		}
 		return null;
 	}
 }
