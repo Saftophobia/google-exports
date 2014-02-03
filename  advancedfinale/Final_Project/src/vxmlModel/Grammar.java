@@ -67,6 +67,11 @@ public class Grammar extends TagHolder{
 		return null;
 	}
 
+	public boolean evalValue(String s) {
+		
+		return true;
+	}
+
 	
 	
 }

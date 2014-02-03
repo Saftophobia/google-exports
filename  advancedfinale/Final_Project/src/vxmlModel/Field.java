@@ -1,5 +1,7 @@
 package vxmlModel;
 
+import iO.InputSimulator.Output;
+
 import java.util.ArrayList;
 
 import util.FreeTTSListener;
@@ -14,6 +16,8 @@ public class Field extends TagHolder {
 	String type;
 	String slot;
 	ArrayList<Tag> children;
+
+	Prompt currentPrompt;
 
 	public Field(String condition, String expr, String modal, String name,
 			String type, String slot) {
@@ -89,7 +93,7 @@ public class Field extends TagHolder {
 						.replace("\'", "");
 
 				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
-																			// equal
+																	// equal
 					return null;
 				}
 			} else {
@@ -100,7 +104,7 @@ public class Field extends TagHolder {
 							.replace("\'", "");
 
 					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
-																				// equal
+																		// equal
 						return null;
 					}
 				}
@@ -113,31 +117,80 @@ public class Field extends TagHolder {
 				return null;
 			}
 		}
-		
-		//done with attributes
-		Tag Grammar;
-		//getGrammar
-		for(int i=0;i<children.size();i++)
-		{
-			if( children.get(i) instanceof Grammar)
-			{
-				// o.CurrentGrammar = (vxmlModel.Grammar) children.get(i);
+
+		// done with attributes
+		Grammar grammar = null;
+		// getGrammar
+		for (int i = 0; i < children.size(); i++) {
+			if (children.get(i) instanceof Grammar) {
+				grammar = (vxmlModel.Grammar) children.get(i);
 			}
 		}
-		
-		
-		
-		for (Tag t : children) {
-			if(t instanceof Value)
-			{
-				for (FreeTTSListener listener : o.Listerners) {
-					listener.Say((String)t.eval(o));
+
+		for (int i = 0; i < children.size(); i++) {
+			if (children.get(i) instanceof Prompt) {
+				currentPrompt = (vxmlModel.Prompt) children.get(i);
+				currentPrompt.eval(o);
+				Output input = o.inputSim.OpenMic();
+				if (!input.timeout) {
+					boolean match = grammar.evalValue(input.value);
+					if (!match) {
+						noMatchCase();
+					}
+				}else{
+					noInputCase();
 				}
-			}else{
-			t.eval(o);
+
 			}
+
+			if (children.get(i) instanceof Value) {
+				for (FreeTTSListener listener : o.Listerners) {
+					listener.Say((String) children.get(i).eval(o));
+				}
+			}
+			if (children.get(i) instanceof Text) {
+
+				children.get(i).eval(o);
+			}
+
 		}
+
+		filledCase();
+
 		return null;
+	}
+
+	public void noInputCase() {
+		NoInput noInput;
+		for (int i = 0; i < children.size(); i++) {
+			if (children.get(i) instanceof NoInput) {
+				noInput = (vxmlModel.NoInput) children.get(i);
+			}
+
+			// neval we nshoof 3ayzeen ne3mel eih
+		}
+	}
+
+	public void noMatchCase() {
+		NoMatch noMatch;
+		for (int i = 0; i < children.size(); i++) {
+			if (children.get(i) instanceof NoMatch) {
+				noMatch = (vxmlModel.NoMatch) children.get(i);
+			}
+
+			// neval we nshoof 3ayzeen ne3mel eih
+		}
+	}
+
+	public void filledCase() {
+		Filled noMatch;
+		for (int i = 0; i < children.size(); i++) {
+			if (children.get(i) instanceof Filled) {
+				noMatch = (vxmlModel.Filled) children.get(i);
+			}
+
+			// neval we nshoof 3ayzeen ne3mel eih
+		}
 	}
 
 }
