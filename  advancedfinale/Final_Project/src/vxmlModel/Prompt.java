@@ -29,6 +29,7 @@ public class Prompt extends TagHolder {
 		this.xml_lang = xml_lang;
 		this.data = data;
 		children = new ArrayList<Tag>();
+		identifier = 4;
 	}
 
 	public Node getData() {

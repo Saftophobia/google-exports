@@ -18,6 +18,7 @@ public class Block extends TagHolder {
 		this.cond = cond;
 		this.blockContent=blockContent;
 		children = new ArrayList<Tag>();
+		identifier = 3;
 
 	}
 

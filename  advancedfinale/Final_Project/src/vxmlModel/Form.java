@@ -13,6 +13,7 @@ public class Form extends TagHolder{
 		this.id = id;
 		this.scope = scope;
 		children = new ArrayList<Tag>();
+		identifier = 1;
 	}
 	
 	public void addChild(Tag child){

@@ -15,11 +15,11 @@ public class Field extends TagHolder {
 	String name;
 	String type;
 	String slot;
-	
+
 	int atWhichPrompt;
 	int countNoMatch;
 	int countNoInput;
-	
+
 	ArrayList<Tag> children;
 
 	Prompt currentPrompt;
@@ -34,6 +34,7 @@ public class Field extends TagHolder {
 		this.type = type;
 		this.slot = slot;
 		this.children = new ArrayList<Tag>();
+		identifier = 2;
 	}
 
 	public void addChild(Tag child) {
@@ -122,10 +123,9 @@ public class Field extends TagHolder {
 				return null;
 			}
 		}
-		
-		//done with attributes
-		
-		
+
+		// done with attributes
+
 		Grammar grammar = null;
 		// getGrammar
 		for (int i = 0; i < children.size(); i++) {
@@ -135,7 +135,7 @@ public class Field extends TagHolder {
 			}
 		}
 
-		for (int i = 0; i < children.size(); i++) {
+		for (int i = atWhichPrompt; i < children.size(); i++) {
 			if (children.get(i) instanceof Prompt) {
 				atWhichPrompt = i;
 				currentPrompt = (vxmlModel.Prompt) children.get(i);
@@ -145,10 +145,10 @@ public class Field extends TagHolder {
 					boolean match = grammar.evalValue(input.value);
 					System.out.println("MATCH IS " + match);
 					if (!match) {
-						noMatchCase();
+						noMatchCase(o);
 					}
-				}else{
-					noInputCase();
+				} else {
+					noInputCase(o);
 				}
 
 			}
@@ -164,43 +164,50 @@ public class Field extends TagHolder {
 			}
 		}
 
-		filledCase();
+		filledCase(o);
 
 		return null;
 	}
-		
 
-	public void noInputCase() {
-		NoInput noInput;
+	public void noInputCase(StateVariables o) {
+		NoInput noInput = null;
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof NoInput) {
 				noInput = (vxmlModel.NoInput) children.get(i);
 			}
 
-			// neval we nshoof 3ayzeen ne3mel eih
 		}
+		if (noInput != null)
+			noInput.eval(o);
 	}
 
-	public void noMatchCase() {
-		NoMatch noMatch;
-		for (int i = 0; i < children.size(); i++) {
+	public void noMatchCase(StateVariables o) {
+		NoMatch noMatch = null;
+		for (int i = countNoMatch; i < children.size(); i++) {
 			if (children.get(i) instanceof NoMatch) {
 				noMatch = (vxmlModel.NoMatch) children.get(i);
 			}
 
 			// neval we nshoof 3ayzeen ne3mel eih
+
+			countNoMatch++;
 		}
+		if (noMatch != null)
+			noMatch.eval(o);
 	}
 
-	public void filledCase() {
-		Filled noMatch;
+	public void filledCase(StateVariables o) {
+		Filled filled = null;
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof Filled) {
-				noMatch = (vxmlModel.Filled) children.get(i);
+				filled = (vxmlModel.Filled) children.get(i);
 			}
 
 			// neval we nshoof 3ayzeen ne3mel eih
 		}
+
+		if (filled != null)
+			filled.eval(o);
 	}
 
 }
