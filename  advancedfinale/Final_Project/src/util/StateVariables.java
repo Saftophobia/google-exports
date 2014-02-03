@@ -9,6 +9,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import vxmlModel.Grammar;
+
 public class StateVariables {
 	public ScriptEngineManager manager = new ScriptEngineManager();
 	public ScriptEngine engine = manager.getEngineByName("javascript");
@@ -16,7 +18,6 @@ public class StateVariables {
 	public AudioPlayer audioPlayer = new AudioPlayer();
 	public String LastPrompt = "";
 	public ArrayList<FreeTTSListener> Listerners = new ArrayList<FreeTTSListener>();
-
 	public InputSimulator inputSim = new InputSimulator();
 	
 	public StateVariables() {

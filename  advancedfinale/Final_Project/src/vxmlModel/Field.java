@@ -113,6 +113,20 @@ public class Field extends TagHolder {
 				return null;
 			}
 		}
+		
+		//done with attributes
+		Tag Grammar;
+		//getGrammar
+		for(int i=0;i<children.size();i++)
+		{
+			if( children.get(i) instanceof Grammar)
+			{
+				// o.CurrentGrammar = (vxmlModel.Grammar) children.get(i);
+			}
+		}
+		
+		
+		
 		for (Tag t : children) {
 			if(t instanceof Value)
 			{
