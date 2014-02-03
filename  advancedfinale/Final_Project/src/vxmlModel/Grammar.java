@@ -68,8 +68,14 @@ public class Grammar extends TagHolder{
 	}
 
 	public boolean evalValue(String s) {
-		
-		return true;
+		for(Tag t:this.rules)
+		{
+			if(((Rule) t).evalValue(s))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	

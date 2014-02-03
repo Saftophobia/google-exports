@@ -41,4 +41,15 @@ public class OneOf extends TagHolder{
 		return null;
 	}
 	
+	public boolean evalValue(String s) {
+		for(Tag t:this.children)
+		{
+			if(((Item) t).evalValue(s))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

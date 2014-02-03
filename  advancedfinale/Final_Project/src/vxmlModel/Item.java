@@ -10,14 +10,15 @@ public class Item extends TagHolder{
 	String weight;
 	String prob;
 	String repeat;
-	
+	String data;
 	ArrayList<Tag> children; 
 	
-	public Item(String weight, String prob, String repeat) {
+	public Item(String weight, String prob, String repeat,String data) {
 		super();
 		this.weight = weight;
 		this.prob = prob;
 		this.repeat = repeat;
+		this.data = data;
 		this.children = new ArrayList<Tag>();
 	}
 
@@ -69,6 +70,33 @@ public class Item extends TagHolder{
 	public Object eval(StateVariables o) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public boolean evalValue(String s) {
+		if(this.children.size() == 0)
+		{
+			return this.data.replace(" ", "").equalsIgnoreCase(s);
+		}
+		for(Tag t:this.children)
+		{
+			if(t instanceof Item)
+			{
+				if(((Item) t).evalValue(s))
+				{
+					return true;
+				}
+			}else{
+				if(t instanceof OneOf)
+				{
+					if(((OneOf) t).evalValue(s))
+					{
+						return true;
+					}
+				}else{
+					return this.data.replace(" ", "").equalsIgnoreCase(s);
+				}
+			}
+		}
+		return false;
 	}
 	
 }

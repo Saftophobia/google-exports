@@ -54,6 +54,24 @@ public class Rule extends TagHolder{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public boolean evalValue(String s) {
+		for(Tag t:this.children)
+		{
+			try{
+			if(((Item) t).evalValue(s))
+			{
+				return true;
+			}
+			}catch(Exception e)
+			{
+				if(((OneOf) t).evalValue(s))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 	
 }

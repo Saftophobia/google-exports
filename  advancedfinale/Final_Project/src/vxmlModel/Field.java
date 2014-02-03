@@ -15,6 +15,11 @@ public class Field extends TagHolder {
 	String name;
 	String type;
 	String slot;
+	
+	int atWhichPrompt;
+	int countNoMatch;
+	int countNoInput;
+	
 	ArrayList<Tag> children;
 
 	Prompt currentPrompt;
@@ -117,23 +122,28 @@ public class Field extends TagHolder {
 				return null;
 			}
 		}
-
-		// done with attributes
+		
+		//done with attributes
+		
+		
 		Grammar grammar = null;
 		// getGrammar
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof Grammar) {
 				grammar = (vxmlModel.Grammar) children.get(i);
+
 			}
 		}
 
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof Prompt) {
+				atWhichPrompt = i;
 				currentPrompt = (vxmlModel.Prompt) children.get(i);
 				currentPrompt.eval(o);
 				Output input = o.inputSim.OpenMic();
 				if (!input.timeout) {
 					boolean match = grammar.evalValue(input.value);
+					System.out.println("MATCH IS " + match);
 					if (!match) {
 						noMatchCase();
 					}
@@ -152,13 +162,13 @@ public class Field extends TagHolder {
 
 				children.get(i).eval(o);
 			}
-
 		}
 
 		filledCase();
 
 		return null;
 	}
+		
 
 	public void noInputCase() {
 		NoInput noInput;

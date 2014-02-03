@@ -189,7 +189,7 @@ public class VxmlParser {
 	}
 
 	public Item parseItem(Node nodeE) {
-		Item itemClass = new Item(null, null, null);
+		Item itemClass = new Item(null, null, null,null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
 			Node attribute = nodeE.getAttributes().item(i);
 			switch (attribute.getNodeName()) {
@@ -220,6 +220,7 @@ public class VxmlParser {
 				break;
 			}
 		}
+		itemClass.data = nodeE.getTextContent();
 		return itemClass;
 	}
 
