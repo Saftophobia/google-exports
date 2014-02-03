@@ -1,5 +1,7 @@
 package util;
 
+import iO.InputSimulator;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,6 +17,8 @@ public class StateVariables {
 	public String LastPrompt = "";
 	public ArrayList<FreeTTSListener> Listerners = new ArrayList<FreeTTSListener>();
 
+	public InputSimulator inputSim = new InputSimulator();
+	
 	public StateVariables() {
 	/*	try {
 			this.engine.eval("  function price(size,toppings,crust,thickness) {    var res = 10;    if ('big' == size) res += 5;    if ('cheese' == toppings) res += 1;    if ('mushrooms' == toppings) res += 2;    if ('regular' == size) res += 2;    if ('tuna' == toppings) res += 7;    if ('small' == size) res += 1;    if ('stuffed' == crust) res += 12;   if ('normal' == crust) res += 10;    if ('pan' == thickness) res += 2;   if ('thick' == thickness) res += 5;   return res;  }");

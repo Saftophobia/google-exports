@@ -127,7 +127,7 @@ public class Prompt extends TagHolder {
 		}
 
 		o.LastPrompt = s;
-
+		
 		return data;
 	}
 }

@@ -1,8 +1,9 @@
 package main;
 
+import iO.TextToSpeech;
+
 import java.io.File;
 
-import textToSpeech.TextToSpeech;
 import vxmlEngine.Engine;
 import vxmlModel.VxmlParser;
 
