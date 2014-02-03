@@ -2,18 +2,21 @@ package vxmlModel;
 
 import java.util.ArrayList;
 
+import util.FreeTTSListener;
 import util.StateVariables;
 
 public class Block extends TagHolder {
 	String name;
 	String expr;
 	String cond;
+	String blockContent;
 	ArrayList<Tag> children;
 
-	public Block(String name, String expr, String cond) {
+	public Block(String name, String expr, String cond,String blockContent) {
 		this.name = name;
 		this.expr = expr;
 		this.cond = cond;
+		this.blockContent=blockContent;
 		children = new ArrayList<Tag>();
 
 	}
@@ -83,7 +86,14 @@ public class Block extends TagHolder {
 			}
 		}
 		for (Tag t : children) {
+			if(t instanceof Value)
+			{
+				for (FreeTTSListener listener : o.Listerners) {
+					listener.Say((String)t.eval(o));
+				}
+			}else{
 			t.eval(o);
+			}
 		}
 
 		return null;

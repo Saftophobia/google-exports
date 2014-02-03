@@ -17,8 +17,7 @@ import util.AudioPlayer;
 
 public class VxmlParser {
 	Vxml vxmlclass;
-	
-	
+
 	public VxmlParser(File filename) {
 		// this.ScriptHashMap = new HashMap<String, String>();
 		// this.VariableHashMap = new HashMap<String, String>();
@@ -87,7 +86,7 @@ public class VxmlParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public Grammar parseGrammar(Node nodeE) {
@@ -408,11 +407,14 @@ public class VxmlParser {
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
 			Node e = nodeE.getChildNodes().item(i);
-			if (e.getNodeName().startsWith("#")) {
-				continue;
-			}
 			System.out.println(e.getNodeName());
+
 			switch (e.getNodeName()) {
+			case "#text":
+				noMatchClass.addChild(parseText(e));
+				;
+				break;
+
 			case "audio":
 				noMatchClass.addChild(parseAudio(e));
 
@@ -601,11 +603,11 @@ public class VxmlParser {
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
 			Node e = nodeE.getChildNodes().item(i);
-			if (e.getNodeName().startsWith("#")) {
-				continue;
-			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
+			case "#text":fieldClass.addChild(parseText(e));
+			;break;
+		
 			case "audio":
 				fieldClass.addChild(parseAudio(e));
 
@@ -658,15 +660,17 @@ public class VxmlParser {
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
 			Node e = nodeE.getChildNodes().item(i);
-			if (e.getNodeName().startsWith("#")) {
-				continue;
-			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
 			case "audio":
 				filledClass.addChild(parseAudio(e));
 
 				break;
+			case "#text":
+				filledClass.addChild(parseText(e));
+				;
+				break;
+
 			case "goto":
 				filledClass.addChild(parseGoto(e));
 				break;
@@ -729,7 +733,7 @@ public class VxmlParser {
 	}
 
 	public Block parseBlock(Node nodeE) {
-		Block blockClass = new Block(null, null, null);
+		Block blockClass = new Block(null, null, null, null);
 		for (int i = 0; i < nodeE.getAttributes().getLength(); i++) {
 			Node attribute = nodeE.getAttributes().item(i);
 			switch (attribute.getNodeName()) {
@@ -746,11 +750,13 @@ public class VxmlParser {
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
 			Node e = nodeE.getChildNodes().item(i);
-			if (e.getNodeName().startsWith("#")) {
-				continue;
-			}
+
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
+			case "#text":
+				blockClass.addChild(parseText(e));
+				;
+				break;
 			case "audio":
 				blockClass.addChild(parseAudio(e));
 				break;
@@ -797,11 +803,13 @@ public class VxmlParser {
 		}
 		for (int i = 0; i < nodeE.getChildNodes().getLength(); i++) {
 			Node e = nodeE.getChildNodes().item(i);
-			if (e.getNodeName().startsWith("#")) {
-				continue;
-			}
 			System.out.println(e.getNodeName());
 			switch (e.getNodeName()) {
+			case "#text":
+				ifClass.addChild(parseText(e));
+				;
+				break;
+
 			case "audio":
 				ifClass.addChild(parseAudio(e));
 
@@ -871,12 +879,15 @@ public class VxmlParser {
 		return elseIf;
 	}
 
+	public Text parseText(Node nodeE) {
+		return new Text(nodeE.getNodeValue());
+	}
+
 	public Else parseElse(Node nodeE) {
 		return new Else();
 	}
 
-	public Vxml getVxml()
-	{
+	public Vxml getVxml() {
 		return this.vxmlclass;
 	}
 }

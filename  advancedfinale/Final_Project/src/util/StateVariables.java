@@ -1,5 +1,6 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.script.ScriptEngine;
@@ -12,6 +13,7 @@ public class StateVariables {
 	public HashMap<String, String> VariableHashMap = new HashMap<String, String>();
 	public AudioPlayer audioPlayer = new AudioPlayer();
 	public String LastPrompt = "";
+	public ArrayList<FreeTTSListener> Listerners = new ArrayList<FreeTTSListener>();
 
 	public StateVariables() {
 	/*	try {

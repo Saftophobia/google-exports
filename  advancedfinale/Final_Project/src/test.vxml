@@ -4,7 +4,7 @@
   <!-- A function in JavaScript -->
   <script>function price(size,toppings,crust,thickness)
   {
-    var res = 10;
+    var res = 15;
     if ('big' == size) res += 5;
     if ('cheese' == toppings) res += 1;
     if ('mushrooms' == toppings) res += 2;
@@ -162,7 +162,9 @@
 
 
 	<!-- A block for generating a summary and termination of the dialogue -->
-    <block>Fine. Your total is <value expr="price(size,toppings,crust,thickness)"/> pounds. Your order will be ready shortly.</block>
+    <block>
+    Fine. Your total is <value expr="price(size,toppings,crust,thickness)"/> pounds. Your order will be ready shortly.
+    </block>
 	<!-- -->
   </form>
   

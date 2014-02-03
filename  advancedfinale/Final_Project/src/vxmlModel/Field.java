@@ -2,6 +2,7 @@ package vxmlModel;
 
 import java.util.ArrayList;
 
+import util.FreeTTSListener;
 import util.StateVariables;
 
 public class Field extends TagHolder {
@@ -113,7 +114,14 @@ public class Field extends TagHolder {
 			}
 		}
 		for (Tag t : children) {
+			if(t instanceof Value)
+			{
+				for (FreeTTSListener listener : o.Listerners) {
+					listener.Say((String)t.eval(o));
+				}
+			}else{
 			t.eval(o);
+			}
 		}
 		return null;
 	}

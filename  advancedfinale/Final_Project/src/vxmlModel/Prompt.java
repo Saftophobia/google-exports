@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Node;
 
+import util.FreeTTSListener;
 import util.StateVariables;
 
 public class Prompt extends TagHolder {
@@ -121,7 +122,10 @@ public class Prompt extends TagHolder {
 			}
 		}
 
-		System.out.println(s); // prompt user
+		for (FreeTTSListener sListener : o.Listerners) {
+			sListener.Say(s);
+		}
+
 		o.LastPrompt = s;
 
 		return data;

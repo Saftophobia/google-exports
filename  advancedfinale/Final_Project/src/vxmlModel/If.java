@@ -2,6 +2,7 @@ package vxmlModel;
 
 import java.util.ArrayList;
 
+import util.FreeTTSListener;
 import util.StateVariables;
 
 public class If extends TagHolder {
@@ -48,10 +49,10 @@ public class If extends TagHolder {
 		boolean elseIfvisited = false;
 
 		if (cond.contains("==")) {
-			String firstOP = cond.split("==")[0].replace(" ", "").replace(
+			String firstOP = cond.split("==")[0].replace(" ", "").replace("\'",
+					"");
+			String secondOP = cond.split("==")[1].replace(" ", "").replace(
 					"\'", "");
-			String secondOP = cond.split("==")[1].replace(" ", "")
-					.replace("\'", "");
 
 			if (o.VariableHashMap.get(firstOP) != secondOP) { // not
 																// equal
@@ -59,10 +60,10 @@ public class If extends TagHolder {
 			}
 		} else {
 			if (cond.contains("!=")) {
-				String firstOP = cond.split("!=")[0].replace(" ", "")
-						.replace("\'", "");
-				String secondOP = cond.split("!=")[1].replace(" ", "")
-						.replace("\'", "");
+				String firstOP = cond.split("!=")[0].replace(" ", "").replace(
+						"\'", "");
+				String secondOP = cond.split("!=")[1].replace(" ", "").replace(
+						"\'", "");
 
 				if (o.VariableHashMap.get(firstOP) == secondOP) { // not
 																	// equal
@@ -74,7 +75,14 @@ public class If extends TagHolder {
 		for (Tag t : children) {
 			if (IfConditionisTrue && !(t instanceof Elseif)
 					&& !(t instanceof Else)) {
-				t.eval(o);
+				if (t instanceof Value) {
+					for (FreeTTSListener listener : o.Listerners) {
+						listener.Say((String) t.eval(o));
+					}
+				} else {
+					t.eval(o);
+				}
+
 			}
 			if (!IfConditionisTrue && !elseIfvisited) {
 				if (t instanceof Elseif) {
