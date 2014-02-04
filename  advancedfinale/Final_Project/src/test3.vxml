@@ -38,7 +38,7 @@
     
 
       <!-- Grammar for available responses for either "Carnivore" or "Vegetarian".-->
-      <grammar xml:lang="en-US" root = "MEATPLANT">
+      <grammar xml:lang="en-US" root = "MEATPLANT" >
         <rule id="MEATPLANT" scope="public">
          <one-of>
       
