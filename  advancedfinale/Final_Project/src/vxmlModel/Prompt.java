@@ -139,7 +139,7 @@ public class Prompt extends TagHolder {
 			sListener.Say(s);
 		}
 
-		((StateVariables) o).LastPrompt = this;
+		
 
 		return data;
 	}

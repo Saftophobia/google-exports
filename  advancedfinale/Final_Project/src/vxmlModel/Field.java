@@ -159,8 +159,9 @@ public class Field extends TagHolder implements HelpListener {
 		for (Tag tag : children) {
 			if (tag instanceof Prompt) {
 				boolean match = false;
+				tag.eval(o);
+				((StateVariables) o).LastPrompt = (Prompt) tag;
 				do {
-					tag.eval(o);
 					if (timer != null) {
 						timer.stop();
 					}
@@ -194,7 +195,6 @@ public class Field extends TagHolder implements HelpListener {
 							tag.eval(o);
 							
 						} else {
-							fieldValue = null;
 							countNoMatch++;
 							noMatchCase(o);
 
