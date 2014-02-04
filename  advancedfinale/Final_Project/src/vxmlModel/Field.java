@@ -214,7 +214,7 @@ public class Field extends TagHolder {
 
 			if (tag instanceof Filled) {
 				Filled f = (Filled) tag;
-				tag.eval(o);
+				f.eval(o);
 			}
 
 		}
