@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version = "2.1">
+
+  <meta name="maintainer" content="YOUREMAILADDRESS@HERE.com"/>
+
+  <form id="HelloWorld">
+  <var name="MyFavoriteActor"  expr="2222"/>
+  
+    <block>
+    <var name="MyFavoriteActor"  expr="2222"/>
+  
+      <script>
+        <![CDATA[
+          function sayasDigits(number)
+          {
+            var digitNumber = number.charAt(0);
+            for(var i = 1; i < number.length; i++)
+            {
+              digitNumber += ' ' + number.charAt(i);
+            }
+            return digitNumber;
+          }
+        ]]>
+      </script>
+    <prompt>
+      Hello there. The caller i d value is: <value expr="sayasDigits(MyFavoriteActor)"/>
+      The called i d of this application is: <value expr="sayasDigits(MyFavoriteActor)"/>
+    </prompt>
+    </block>
+  </form>
+</vxml>

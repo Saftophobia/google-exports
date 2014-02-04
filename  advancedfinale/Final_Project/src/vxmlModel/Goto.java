@@ -146,7 +146,7 @@ public class Goto extends DataHolder {
 				}
 			}
 			if (tag instanceof TagHolder) {
-				Tag t= SearchHelper1((TagHolder) tag, searchFor);
+				Tag t= SearchHelper2((TagHolder) tag, searchFor);
 				if(t != null)
 				{
 					return t;

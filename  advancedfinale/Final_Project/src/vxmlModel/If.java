@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import util.FreeTTSListener;
 import util.StateVariables;
+import util.StaticMethods;
 
 public class If extends TagHolder {
 
@@ -47,12 +48,9 @@ public class If extends TagHolder {
 		// TODO Auto-generated method stub
 		boolean IfConditionisTrue = true;
 		boolean elseIfvisited = false;
-
 		if (cond.contains("==")) {
-			String firstOP = cond.split("==")[0].replace(" ", "").replace("\'",
-					"");
-			String secondOP = cond.split("==")[1].replace(" ", "").replace(
-					"\'", "");
+			String firstOP = StaticMethods.Normalize(cond.split("==")[0]);
+			String secondOP = StaticMethods.Normalize(cond.split("==")[1]);
 			if (((StateVariables) o).VariableHashMap.get(firstOP) == null) {
 				return null;
 			}
@@ -63,22 +61,21 @@ public class If extends TagHolder {
 			}
 		} else {
 			if (cond.contains("!=")) {
-				String firstOP = cond.split("!=")[0].replace(" ", "").replace(
-						"\'", "");
-				String secondOP = cond.split("!=")[1].replace(" ", "").replace(
-						"\'", "");
+				String firstOP = StaticMethods.Normalize(cond.split("!=")[0]);
+				String secondOP = StaticMethods.Normalize(cond.split("!=")[1]);
+
 				if (((StateVariables) o).VariableHashMap.get(firstOP) == null) {
 					return null;
 				}
 				if (((StateVariables) o).VariableHashMap.get(firstOP).equals(
-						secondOP)) { // not
-					// equal
+						secondOP)) {
 					IfConditionisTrue = false;
 				}
 			}
 		}
 
 		for (Tag t : children) {
+			// true condition, execute
 			if (IfConditionisTrue && !(t instanceof Elseif)
 					&& !(t instanceof Else)) {
 				if (t instanceof Value) {
@@ -90,38 +87,36 @@ public class If extends TagHolder {
 				}
 
 			}
-			if (!IfConditionisTrue && !elseIfvisited) {
-				if (t instanceof Elseif) {
-					if (cond.contains("==")) {
-						String elseiffirstOP = ((Elseif) t).cond.split("==")[0]
-								.replace(" ", "").replace("\'", "");
-						String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
-								.replace(" ", "").replace("\'", "");
+			// if If condition is false;
+			if (t instanceof Elseif) {
+				IfConditionisTrue = false;
+				if (elseIfvisited == false) {
+					if (((Elseif) t).cond.contains("==")) {
+						String elseiffirstOP = StaticMethods
+								.Normalize(((Elseif) t).cond.split("==")[0]);
+						String elseifsecondOP = StaticMethods
+								.Normalize(((Elseif) t).cond.split("==")[1]);
 						if (((StateVariables) o).VariableHashMap
 								.get(elseiffirstOP) == null) {
 							return null;
 						}
 						if (((StateVariables) o).VariableHashMap.get(
-								elseiffirstOP).equals(elseifsecondOP)) { // condition
-							// satisfied
+								elseiffirstOP).equals(elseifsecondOP)) {
 							IfConditionisTrue = true;
 							elseIfvisited = true;
-
 						}
 					} else {
-						if (cond.contains("!=")) {
-							String elseiffirstOP = ((Elseif) t).cond
-									.split("!=")[0].replace(" ", "").replace(
-									"\'", "");
-							String elseifsecondOP = ((Elseif) t).cond
-									.split("==")[1].replace(" ", "").replace(
-									"\'", "");
+						if (((Elseif) t).cond.contains("!=")) {
+							String elseiffirstOP = StaticMethods
+									.Normalize(((Elseif) t).cond.split("!=")[0]);
+							String elseifsecondOP = StaticMethods
+									.Normalize(((Elseif) t).cond.split("==")[1]);
 
 							if (((StateVariables) o).VariableHashMap
 									.get(elseiffirstOP) == null) {
 								return null;
 							}
-							if (((StateVariables) o).VariableHashMap.get(
+							if (!((StateVariables) o).VariableHashMap.get(
 									elseiffirstOP).equals(elseifsecondOP)) { // condition
 								// satisfied
 
@@ -129,32 +124,15 @@ public class If extends TagHolder {
 								elseIfvisited = true;
 
 							}
-						} else {
-							if (cond.contains("!=")) {
-								String elseiffirstOP = ((Elseif) t).cond
-										.split("!=")[0].replace(" ", "")
-										.replace("\'", "");
-								String elseifsecondOP = ((Elseif) t).cond
-										.split("!=")[1].replace(" ", "")
-										.replace("\'", "");
-
-								if (!((StateVariables) o).VariableHashMap.get(
-										elseiffirstOP).equals(elseifsecondOP)) { // condition
-									// satisfied
-									IfConditionisTrue = true;
-									elseIfvisited = true;
-
-								}
-							}
 						}
-					}
-					if (t instanceof Else) {
-						IfConditionisTrue = true;
 					}
 				}
 			}
-			
+			if (t instanceof Else && elseIfvisited == false) {
+				IfConditionisTrue = true;
+			}
 		}
+
 		return null;
 	}
 
