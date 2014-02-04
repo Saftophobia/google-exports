@@ -21,8 +21,10 @@
         ]]>
       </script>
   <var name="MyFavoriteActor"  expr="'Tony Danza'"/>
-  <var name="MyFavoriteTVShow" expr="'Who\'s the boss'"/>
-  <var name="TonysSATScore"/>
+  <var name="MyFavoriteTVShow" expr="'Who's the boss'"/>
+  <var name="TonysSATScore" expr="Mina"/>
+  <var name="MeatOrPlant" expr="'meat'"/>
+  
   
   <field name="F_1">
    <grammar xml:lang="en-us" root="myrule">
@@ -48,7 +50,7 @@
     </nomatch>
    
     <prompt> can anyone take john travolta seriously as an actor?</prompt>
-      <filled mode="any">
+      <filled namelist="F_1">
         <prompt> you must have filled but one field</prompt>
       </filled>
   </field>
@@ -67,13 +69,15 @@
     <prompt> do you think don king is ashamed of himself?  <value expr="MyFavoriteTVShow"/> YES INDEED</prompt>
   </field>
 
-  <filled namespace="F_1 F_2">
+  <filled namelist="F_1 F_2" mode="all">
     <prompt>you must have filled both fields. </prompt>
   </filled>
 	<block>
         <if cond="MeatOrPlant == 'meat'">
+        	<prompt> SAFTY AND MINA ARE AWESOME! </prompt>
             <goto next="#Meat"/>
         <elseif cond="MeatOrPlant == 'plant'"/>
+       		 <prompt> SAFTY AND MINA ARE AWESOME! 222 </prompt>
             <goto next="#Plant"/>
         </if>
     </block>

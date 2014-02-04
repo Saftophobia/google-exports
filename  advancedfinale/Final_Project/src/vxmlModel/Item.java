@@ -70,7 +70,7 @@ public class Item extends TagHolder{
 	public Object eval(Object o) {
 		if(this.children.size() == 0)
 		{
-			return this.data.replace(" ", "").equalsIgnoreCase((String)o);
+			return this.data.contains((String)o);
 		}
 		for(Tag t:this.children)
 		{
@@ -88,7 +88,7 @@ public class Item extends TagHolder{
 						return true;
 					}
 				}else{
-					return this.data.replace(" ", "").equalsIgnoreCase((String)o);
+					return this.data.contains((String)o);
 				}
 			}
 		}

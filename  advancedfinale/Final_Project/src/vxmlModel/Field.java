@@ -2,6 +2,8 @@ package vxmlModel;
 
 import java.util.ArrayList;
 
+import javax.swing.text.FieldView;
+
 import util.FreeTTSListener;
 import util.StateVariables;
 
@@ -162,7 +164,7 @@ public class Field extends TagHolder {
 								if (fieldValue == null) {
 									noInputCase(o);
 								}
-								System.out.println("here");
+								// system.out.println("here");
 							}
 						}
 					};
@@ -173,15 +175,43 @@ public class Field extends TagHolder {
 						fieldValue = null;
 						countNoMatch++;
 						noMatchCase(o);
-					}
-					if(!noMatchExists){
-						fieldValue = "";
-					}
-					System.out.println(match + " " + noMatchExists);
-				} while (!match && noMatchExists);
-			}
-		}
 
+						if (!noMatchExists) {
+							fieldValue = "";
+						}
+					}
+
+					// system.out.println(match + " " + noMatchExists);
+				} while (!match && noMatchExists);
+				// valid input
+				if(fieldValue != null && !fieldValue.equals(""))
+				{
+				((StateVariables) o).VariableHashMap.put(this.name,
+						this.fieldValue);
+				}
+			}
+
+			if (tag instanceof Value) {
+				for (FreeTTSListener sListener : ((StateVariables) o).Listerners) {
+					sListener.Say((String) tag.eval(o));
+				}
+			}
+			if (tag instanceof Text) {
+				Text t = (Text) tag;
+				if (t.valueText.replace(" ", "").replace("\n", "").length() > 0) {
+					tag.eval(o);
+				}
+				// tag.eval(o);
+			}
+
+			if (tag instanceof Filled) {
+				System.out.println("mostafa");
+				Filled f = (Filled) tag;
+				System.out.println(f.nameList);
+				tag.eval(o);
+			}
+
+		}
 		return null;
 	}
 
@@ -209,19 +239,4 @@ public class Field extends TagHolder {
 			}
 		}
 	}
-
-	public void filledCase(Object o) {
-		Filled filled = null;
-		for (int i = 0; i < children.size(); i++) {
-			if (children.get(i) instanceof Filled) {
-				filled = (vxmlModel.Filled) children.get(i);
-			}
-
-			// neval we nshoof 3ayzeen ne3mel eih
-		}
-
-		if (filled != null)
-			filled.eval(o);
-	}
-
 }

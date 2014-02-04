@@ -25,6 +25,7 @@ public class Var extends DataHolder{
 
 	@Override
 	public Object eval(Object o) {
+		
 		if(name != null && expr != null){
 			((StateVariables)o).VariableHashMap.put(name, expr);
 		}

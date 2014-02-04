@@ -116,9 +116,17 @@ public class Prompt extends TagHolder {
 				s += iterated.getNodeValue();
 			} else {
 				if (iterated.getNodeName() == "value") {
-					Value v = new Value(iterated.getNodeValue());
-
-					s += (String) v.eval(null);
+					Value v = new Value(null);
+					for(int z =0;z<iterated.getAttributes().getLength();z++)
+					{
+						Node Attribute = iterated.getAttributes().item(z);
+						if(Attribute.getNodeName() == "expr")
+						{
+							v.expr = Attribute.getNodeValue();
+						}
+						
+					}
+					s += (String) v.eval(o);
 				}
 			}
 		}

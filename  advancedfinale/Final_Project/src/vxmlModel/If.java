@@ -54,7 +54,9 @@ public class If extends TagHolder {
 			String secondOP = cond.split("==")[1].replace(" ", "").replace(
 					"\'", "");
 
-			if (((StateVariables)o).VariableHashMap.get(firstOP) != secondOP) { // not
+			System.out.println("firstOP "+ firstOP + ", secondOP " + secondOP);
+
+			if (!((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																// equal
 				IfConditionisTrue = false;
 			}
@@ -65,7 +67,7 @@ public class If extends TagHolder {
 				String secondOP = cond.split("!=")[1].replace(" ", "").replace(
 						"\'", "");
 
-				if (((StateVariables)o).VariableHashMap.get(firstOP) == secondOP) { // not
+				if (((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																	// equal
 					IfConditionisTrue = false;
 				}
@@ -91,7 +93,7 @@ public class If extends TagHolder {
 					String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
 							.replace(" ", "").replace("\'", "");
 
-					if (((StateVariables)o).VariableHashMap.get(elseiffirstOP) == elseifsecondOP) { // condition
+					if (((StateVariables)o).VariableHashMap.get(elseiffirstOP).equals(elseifsecondOP)) { // condition
 																					// satisfied
 						IfConditionisTrue = true;
 						elseIfvisited = true;
