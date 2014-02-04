@@ -53,7 +53,9 @@ public class If extends TagHolder {
 					"");
 			String secondOP = cond.split("==")[1].replace(" ", "").replace(
 					"\'", "");
-
+			if (((StateVariables) o).VariableHashMap.get(firstOP) == null) {
+				return null;
+			}
 			if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(
 					secondOP)) { // not
 				// equal
@@ -65,7 +67,9 @@ public class If extends TagHolder {
 						"\'", "");
 				String secondOP = cond.split("!=")[1].replace(" ", "").replace(
 						"\'", "");
-
+				if (((StateVariables) o).VariableHashMap.get(firstOP) == null) {
+					return null;
+				}
 				if (((StateVariables) o).VariableHashMap.get(firstOP).equals(
 						secondOP)) { // not
 					// equal
@@ -93,7 +97,10 @@ public class If extends TagHolder {
 								.replace(" ", "").replace("\'", "");
 						String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
 								.replace(" ", "").replace("\'", "");
-
+						if (((StateVariables) o).VariableHashMap
+								.get(elseiffirstOP) == null) {
+							return null;
+						}
 						if (((StateVariables) o).VariableHashMap.get(
 								elseiffirstOP).equals(elseifsecondOP)) { // condition
 							// satisfied
@@ -107,23 +114,46 @@ public class If extends TagHolder {
 									.split("!=")[0].replace(" ", "").replace(
 									"\'", "");
 							String elseifsecondOP = ((Elseif) t).cond
-									.split("!=")[1].replace(" ", "").replace(
+									.split("==")[1].replace(" ", "").replace(
 									"\'", "");
 
-							if (!((StateVariables) o).VariableHashMap.get(
+							if (((StateVariables) o).VariableHashMap
+									.get(elseiffirstOP) == null) {
+								return null;
+							}
+							if (((StateVariables) o).VariableHashMap.get(
 									elseiffirstOP).equals(elseifsecondOP)) { // condition
 								// satisfied
+
 								IfConditionisTrue = true;
 								elseIfvisited = true;
 
 							}
+						} else {
+							if (cond.contains("!=")) {
+								String elseiffirstOP = ((Elseif) t).cond
+										.split("!=")[0].replace(" ", "")
+										.replace("\'", "");
+								String elseifsecondOP = ((Elseif) t).cond
+										.split("!=")[1].replace(" ", "")
+										.replace("\'", "");
+
+								if (!((StateVariables) o).VariableHashMap.get(
+										elseiffirstOP).equals(elseifsecondOP)) { // condition
+									// satisfied
+									IfConditionisTrue = true;
+									elseIfvisited = true;
+
+								}
+							}
 						}
 					}
-				}
-				if (t instanceof Else) {
-					IfConditionisTrue = true;
+					if (t instanceof Else) {
+						IfConditionisTrue = true;
+					}
 				}
 			}
+			
 		}
 		return null;
 	}
