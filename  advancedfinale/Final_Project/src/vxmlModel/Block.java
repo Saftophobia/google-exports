@@ -11,12 +11,13 @@ public class Block extends TagHolder {
 	String cond;
 	String blockContent;
 	ArrayList<Tag> children;
+	boolean alreadyVisited;
 
-	public Block(String name, String expr, String cond,String blockContent) {
+	public Block(String name, String expr, String cond, String blockContent) {
 		this.name = name;
 		this.expr = expr;
 		this.cond = cond;
-		this.blockContent=blockContent;
+		this.blockContent = blockContent;
 		children = new ArrayList<Tag>();
 		identifier = 3;
 
@@ -52,7 +53,7 @@ public class Block extends TagHolder {
 
 	@Override
 	public Object eval(Object o) {
-		// TODO Auto-generated method stub
+		alreadyVisited = true;
 
 		if (cond != null) {
 			if (cond.contains("==")) {
@@ -61,8 +62,9 @@ public class Block extends TagHolder {
 				String secondOP = cond.split("==")[1].replace(" ", "").replace(
 						"\'", "");
 
-				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
-																	// equal
+				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(
+						secondOP)) { // not
+					// equal
 					return null;
 				}
 			} else {
@@ -72,8 +74,9 @@ public class Block extends TagHolder {
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (((StateVariables) o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
-																		// equal
+					if (((StateVariables) o).VariableHashMap.get(firstOP)
+							.equals(secondOP)) { // not
+						// equal
 						return null;
 					}
 				}
@@ -87,16 +90,19 @@ public class Block extends TagHolder {
 			}
 		}
 		for (Tag t : children) {
-			if(t instanceof Value)
-			{
+			if (t instanceof Value) {
 				for (FreeTTSListener listener : ((StateVariables) o).Listerners) {
-					listener.Say((String)t.eval(o));
+					listener.Say((String) t.eval(o));
 				}
-			}else{
-			t.eval(o);
+			} else {
+				t.eval(o);
 			}
 		}
 
 		return null;
+	}
+	
+	public ArrayList<Tag> getChildren() {
+		return children;
 	}
 }

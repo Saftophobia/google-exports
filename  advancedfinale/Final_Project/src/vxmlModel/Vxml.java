@@ -1,10 +1,11 @@
 package vxmlModel;
+
 import java.util.ArrayList;
 
 import util.StateVariables;
 
-public class Vxml extends TagHolder{
-	
+public class Vxml extends TagHolder {
+
 	String application;
 	String version;
 	String xml_base;
@@ -12,7 +13,7 @@ public class Vxml extends TagHolder{
 	String xmlns;
 	String xmlns_voxeo;
 	ArrayList<Tag> children;
-	
+
 	public Vxml(String application, String version, String xml_base,
 			String xml_lang, String xmlns, String xmlns_voxeo) {
 		super();
@@ -22,45 +23,49 @@ public class Vxml extends TagHolder{
 		this.xml_lang = xml_lang;
 		this.xmlns = xmlns;
 		this.xmlns_voxeo = xmlns_voxeo;
-		children =  new ArrayList<Tag>();	
+		children = new ArrayList<Tag>();
 	}
-	
-	public void addChild(Tag child){
+
+	public void addChild(Tag child) {
 		child.parent = this;
 		children.add(child);
 	}
-	
-	public Tag getChild(){
+
+	public Tag getChild() {
 		return children.get(parsingIndex++);
 	}
-	
-	public void updateParsingIndex(int i){
+
+	public void updateParsingIndex(int i) {
 		parsingIndex = i;
 	}
-	
-	public ArrayList<Tag> getTagsByType(int identifier){
+
+	public ArrayList<Tag> getTagsByType(int identifier) {
 		ArrayList<Tag> output = new ArrayList<Tag>();
-		for(Tag child:children){
-			if(child.identifier == identifier){
+		for (Tag child : children) {
+			if (child.identifier == identifier) {
 				output.add(child);
 			}
 		}
 		return output;
 	}
-	
+
 	@Override
-	public Object eval(Object o){
-		for(Tag t:this.children )
-		{
-			t.eval(o);
+	public Object eval(Object o) {
+		for (Tag t : this.children) {
+			if (t instanceof Form) {
+				if (!((Form) t).alreadyVisited)
+					t.eval(o);
+				else{
+					t.eval(o);
+				}
+			}
 		}
 		return children;
-		
+
 	}
 
 	public ArrayList<Tag> getChildren() {
 		return children;
 	}
-	
 
 }

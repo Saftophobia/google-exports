@@ -9,8 +9,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import vxmlModel.Form;
 import vxmlModel.Grammar;
 import vxmlModel.Prompt;
+import vxmlModel.Vxml;
 
 public class StateVariables {
 	public ScriptEngineManager manager = new ScriptEngineManager();
@@ -20,6 +22,8 @@ public class StateVariables {
 	public Prompt LastPrompt;
 	public ArrayList<FreeTTSListener> Listerners = new ArrayList<FreeTTSListener>();
 	public InputSimulator inputSim = new InputSimulator();
+	public Vxml root;
+	public Form LastForm;
 	
 	public StateVariables() {
 	/*	try {

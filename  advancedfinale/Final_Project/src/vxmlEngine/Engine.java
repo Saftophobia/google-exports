@@ -16,6 +16,7 @@ public class Engine {
 	public Engine(VxmlParser vxmlClass) {
 		this.vxml = vxmlClass;
 		this.stateVariables = new StateVariables();
+		this.stateVariables.root = vxml.getVxml();
 	}
 
 	public void AddfreeTTsListener(FreeTTSListener s) {
@@ -25,6 +26,7 @@ public class Engine {
 	
 
 	public void eval() {
+		
 		this.vxml.getVxml().eval(stateVariables);
 	}
 }

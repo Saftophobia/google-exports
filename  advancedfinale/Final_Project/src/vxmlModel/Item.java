@@ -95,5 +95,7 @@ public class Item extends TagHolder{
 		return false;
 	}
 
-	
+	public ArrayList<Tag> getChildren() {
+		return children;
+	}
 }

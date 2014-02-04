@@ -24,6 +24,7 @@ public class Field extends TagHolder {
 	int countNoInput;
 	boolean noMatchExists = false;
 	Thread timer;
+	boolean alreadyVisited = false;
 
 	Grammar currentGrammar;
 	private String fieldValue;
@@ -94,7 +95,7 @@ public class Field extends TagHolder {
 
 	@Override
 	public Object eval(final Object o) {
-		// TODO Auto-generated method stub
+		alreadyVisited = true;
 		if (condition != null) {
 			if (condition.contains("==")) {
 				String firstOP = condition.split("==")[0].replace(" ", "")
@@ -239,4 +240,6 @@ public class Field extends TagHolder {
 			}
 		}
 	}
+	
+
 }

@@ -1,38 +1,39 @@
 package vxmlModel;
+
 import java.util.ArrayList;
 
 import util.StateVariables;
 
-
-public class Form extends TagHolder{
+public class Form extends TagHolder {
 	String id;
 	String scope;
 	ArrayList<Tag> children;
-	
-	public Form(String id, String scope){
+	boolean alreadyVisited = false;
+
+	public Form(String id, String scope) {
 		this.id = id;
 		this.scope = scope;
 		children = new ArrayList<Tag>();
 		identifier = 1;
 	}
-	
-	public void addChild(Tag child){
+
+	public void addChild(Tag child) {
 		child.parent = this;
 		children.add(child);
 	}
-	
-	public Tag getChild(){
+
+	public Tag getChild() {
 		return children.get(parsingIndex++);
 	}
-	
-	public void updateParsingIndex(int i){
+
+	public void updateParsingIndex(int i) {
 		parsingIndex = i;
 	}
-	
-	public ArrayList<Tag> getTagsByType(int identifier){
+
+	public ArrayList<Tag> getTagsByType(int identifier) {
 		ArrayList<Tag> output = new ArrayList<Tag>();
-		for(Tag child:children){
-			if(child.identifier == identifier){
+		for (Tag child : children) {
+			if (child.identifier == identifier) {
 				output.add(child);
 			}
 		}
@@ -41,11 +42,20 @@ public class Form extends TagHolder{
 
 	@Override
 	public Object eval(Object o) {
-		// TODO Auto-generated method stub
-		for(Tag t:children)
-		{
-			t.eval(o);
+		alreadyVisited = true;
+		((StateVariables)o).LastForm = this;
+		for (Tag t : children) {
+			if (t instanceof Block) {
+				if (!((Block) t).alreadyVisited || !((Field) t).alreadyVisited)
+					t.eval(o);
+			} else {
+				t.eval(o);
+			}
 		}
 		return null;
+	}
+	
+	public ArrayList<Tag> getChildren() {
+		return children;
 	}
 }

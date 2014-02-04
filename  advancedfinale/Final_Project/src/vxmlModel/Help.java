@@ -87,5 +87,7 @@ public class Help extends TagHolder {
 		
 		return null;
 	}
-
+	public ArrayList<Tag> getChildren() {
+		return children;
+	}
 }

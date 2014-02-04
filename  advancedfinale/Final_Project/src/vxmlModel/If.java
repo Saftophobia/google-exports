@@ -54,8 +54,9 @@ public class If extends TagHolder {
 			String secondOP = cond.split("==")[1].replace(" ", "").replace(
 					"\'", "");
 
-			if (!((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
-																// equal
+			if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(
+					secondOP)) { // not
+				// equal
 				IfConditionisTrue = false;
 			}
 		} else {
@@ -65,8 +66,9 @@ public class If extends TagHolder {
 				String secondOP = cond.split("!=")[1].replace(" ", "").replace(
 						"\'", "");
 
-				if (((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
-																	// equal
+				if (((StateVariables) o).VariableHashMap.get(firstOP).equals(
+						secondOP)) { // not
+					// equal
 					IfConditionisTrue = false;
 				}
 			}
@@ -76,7 +78,7 @@ public class If extends TagHolder {
 			if (IfConditionisTrue && !(t instanceof Elseif)
 					&& !(t instanceof Else)) {
 				if (t instanceof Value) {
-					for (FreeTTSListener listener : ((StateVariables)o).Listerners) {
+					for (FreeTTSListener listener : ((StateVariables) o).Listerners) {
 						listener.Say((String) t.eval(o));
 					}
 				} else {
@@ -86,34 +88,37 @@ public class If extends TagHolder {
 			}
 			if (!IfConditionisTrue && !elseIfvisited) {
 				if (t instanceof Elseif) {
-					if(cond.contains("==")){
-					String elseiffirstOP = ((Elseif) t).cond.split("==")[0]
-							.replace(" ", "").replace("\'", "");
-					String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
-							.replace(" ", "").replace("\'", "");
-
-					if (((StateVariables)o).VariableHashMap.get(elseiffirstOP).equals(elseifsecondOP)) { // condition
-																					// satisfied
-						IfConditionisTrue = true;
-						elseIfvisited = true;
-
-					}
-				}else{
-					if(cond.contains("!="))
-					{
-						String elseiffirstOP = ((Elseif) t).cond.split("!=")[0]
+					if (cond.contains("==")) {
+						String elseiffirstOP = ((Elseif) t).cond.split("==")[0]
 								.replace(" ", "").replace("\'", "");
-						String elseifsecondOP = ((Elseif) t).cond.split("!=")[1]
+						String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
 								.replace(" ", "").replace("\'", "");
-						
-						if (!((StateVariables)o).VariableHashMap.get(elseiffirstOP).equals(elseifsecondOP)) { // condition
-																						// satisfied
+
+						if (((StateVariables) o).VariableHashMap.get(
+								elseiffirstOP).equals(elseifsecondOP)) { // condition
+							// satisfied
 							IfConditionisTrue = true;
 							elseIfvisited = true;
 
 						}
+					} else {
+						if (cond.contains("!=")) {
+							String elseiffirstOP = ((Elseif) t).cond
+									.split("!=")[0].replace(" ", "").replace(
+									"\'", "");
+							String elseifsecondOP = ((Elseif) t).cond
+									.split("!=")[1].replace(" ", "").replace(
+									"\'", "");
+
+							if (!((StateVariables) o).VariableHashMap.get(
+									elseiffirstOP).equals(elseifsecondOP)) { // condition
+								// satisfied
+								IfConditionisTrue = true;
+								elseIfvisited = true;
+
+							}
+						}
 					}
-				}
 				}
 				if (t instanceof Else) {
 					IfConditionisTrue = true;
@@ -123,4 +128,7 @@ public class If extends TagHolder {
 		return null;
 	}
 
+	public ArrayList<Tag> getChildren() {
+		return children;
+	}
 }

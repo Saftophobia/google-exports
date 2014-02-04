@@ -48,5 +48,7 @@ public class OneOf extends TagHolder{
 	}
 	
 	
-	
+	public ArrayList<Tag> getChildren() {
+		return children;
+	}
 }

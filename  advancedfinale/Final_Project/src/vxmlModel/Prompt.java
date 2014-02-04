@@ -90,8 +90,9 @@ public class Prompt extends TagHolder {
 				String secondOP = condition.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if (!((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
-																	// equal
+				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(
+						secondOP)) { // not
+					// equal
 					return null;
 				}
 			} else {
@@ -101,8 +102,9 @@ public class Prompt extends TagHolder {
 					String secondOP = condition.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
-																		// equal
+					if (((StateVariables) o).VariableHashMap.get(firstOP)
+							.equals(secondOP)) { // not
+						// equal
 						return null;
 					}
 				}
@@ -117,27 +119,28 @@ public class Prompt extends TagHolder {
 			} else {
 				if (iterated.getNodeName() == "value") {
 					Value v = new Value(null);
-					for(int z =0;z<iterated.getAttributes().getLength();z++)
-					{
+					for (int z = 0; z < iterated.getAttributes().getLength(); z++) {
 						Node Attribute = iterated.getAttributes().item(z);
-						if(Attribute.getNodeName() == "expr")
-						{
+						if (Attribute.getNodeName() == "expr") {
 							v.expr = Attribute.getNodeValue();
 						}
-						
+
 					}
 					s += (String) v.eval(o);
 				}
 			}
 		}
 
-		for (FreeTTSListener sListener : ((StateVariables)o).Listerners) {
+		for (FreeTTSListener sListener : ((StateVariables) o).Listerners) {
 			sListener.Say(s);
 		}
 
-		((StateVariables)o).LastPrompt = this;
-				
-		
+		((StateVariables) o).LastPrompt = this;
+
 		return data;
+	}
+
+	public ArrayList<Tag> getChildren() {
+		return children;
 	}
 }

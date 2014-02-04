@@ -23,7 +23,7 @@ public class Grammar extends TagHolder{
 	String xml_lang;
 	String xmlns;
 	
-	ArrayList<Rule> rules;
+	ArrayList<Tag> rules;
 	
 	public Grammar(String fetchHint, String fetchtimeout, String mode,
 			String root, String scope, String src, String srcexpr,
@@ -45,7 +45,7 @@ public class Grammar extends TagHolder{
 		this.xml_base = xml_base;
 		this.xml_lang = xml_lang;
 		this.xmlns = xmlns;
-		this.rules = new ArrayList<Rule>();
+		this.rules = new ArrayList<Tag>();
 		this.identifier = 10;
 	}
 	
@@ -55,7 +55,7 @@ public class Grammar extends TagHolder{
 	}
 	
 	public Rule getChild(){
-		return rules.get(parsingIndex++);
+		return (Rule) rules.get(parsingIndex++);
 	}
 	
 	public void updateParsingIndex(int i){
@@ -72,6 +72,10 @@ public class Grammar extends TagHolder{
 			}
 		}
 		return false;
+	}
+
+	public ArrayList<Tag> getChildren() {
+		return rules;
 	}	
 	
 }

@@ -1,14 +1,14 @@
 package vxmlModel;
+
 import java.util.ArrayList;
 
 import util.StateVariables;
 
+public class Rule extends TagHolder {
 
-public class Rule extends TagHolder{
-	
-	String  id ;
+	String id;
 	String scope;
-	
+
 	ArrayList<Tag> children;
 
 	public Rule(String id, String scope) {
@@ -22,27 +22,27 @@ public class Rule extends TagHolder{
 		return id;
 	}
 
-	public String getScope(){
+	public String getScope() {
 		return scope;
 	}
-	
-	public void addChild(Tag child){
+
+	public void addChild(Tag child) {
 		child.parent = this;
 		children.add(child);
 	}
-	
-	public Tag getChild(){
+
+	public Tag getChild() {
 		return children.get(parsingIndex++);
 	}
-	
-	public void updateParsingIndex(int i){
+
+	public void updateParsingIndex(int i) {
 		parsingIndex = i;
 	}
-	
-	public ArrayList<Tag> getTagsByType(int identifier){
+
+	public ArrayList<Tag> getTagsByType(int identifier) {
 		ArrayList<Tag> output = new ArrayList<Tag>();
-		for(Tag child:children){
-			if(child.identifier == identifier){
+		for (Tag child : children) {
+			if (child.identifier == identifier) {
 				output.add(child);
 			}
 		}
@@ -51,23 +51,22 @@ public class Rule extends TagHolder{
 
 	@Override
 	public Object eval(Object o) {
-		for(Tag t:this.children)
-		{
-			try{
-			if((boolean) t.eval(o))
-			{
-				return true;
-			}
-			}catch(Exception e)
-			{
-				if((boolean) t.eval(o))
-				{
+		for (Tag t : this.children) {
+			try {
+				if ((boolean) t.eval(o)) {
+					return true;
+				}
+			} catch (Exception e) {
+				if ((boolean) t.eval(o)) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
-	
+
+	public ArrayList<Tag> getChildren() {
+		return children;
+	}
+
 }

@@ -98,5 +98,9 @@ public class Filled extends TagHolder {
 		}
 		return null;
 	}
+	
+	public ArrayList<Tag> getChildren() {
+		return children;
+	}
 
 }
