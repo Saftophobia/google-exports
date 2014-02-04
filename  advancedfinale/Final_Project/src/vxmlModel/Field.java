@@ -103,14 +103,15 @@ public class Field extends TagHolder {
 				String secondOP = condition.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if(((StateVariables) o).VariableHashMap.get(firstOP) == null){
+				if (((StateVariables) o).VariableHashMap.get(firstOP) == null) {
 					return null;
 				}
-				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
+				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(
+						secondOP)) { // not
 					// equal
 					return null;
 				}
-			
+
 			} else {
 				if (condition.contains("!=")) {
 					String firstOP = condition.split("!=")[0].replace(" ", "")
@@ -118,10 +119,11 @@ public class Field extends TagHolder {
 					String secondOP = condition.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if(((StateVariables) o).VariableHashMap.get(firstOP) == null){
+					if (((StateVariables) o).VariableHashMap.get(firstOP) == null) {
 						return null;
 					}
-					if (((StateVariables) o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
+					if (((StateVariables) o).VariableHashMap.get(firstOP)
+							.equals(secondOP)) { // not
 						// equal
 						return null;
 					}
@@ -177,7 +179,12 @@ public class Field extends TagHolder {
 						}
 					};
 					timer.start();
-					fieldValue = ((StateVariables) o).inputSim.OpenMic();
+					if (currentGrammar.mode != null
+							&& currentGrammar.mode.equals("dtmf")) {
+						fieldValue = ((StateVariables) o).inputSim.OpenKeyboard();
+					} else {
+						fieldValue = ((StateVariables) o).inputSim.OpenMic();
+					}
 					match = (boolean) currentGrammar.eval(fieldValue);
 					if (!match) {
 						fieldValue = null;
@@ -192,10 +199,9 @@ public class Field extends TagHolder {
 					// system.out.println(match + " " + noMatchExists);
 				} while (!match && noMatchExists);
 				// valid input
-				if(fieldValue != null && !fieldValue.equals(""))
-				{
-				((StateVariables) o).VariableHashMap.put(this.name,
-						this.fieldValue);
+				if (fieldValue != null && !fieldValue.equals("")) {
+					((StateVariables) o).VariableHashMap.put(this.name,
+							this.fieldValue);
 				}
 			}
 
@@ -245,6 +251,5 @@ public class Field extends TagHolder {
 			}
 		}
 	}
-	
 
 }

@@ -26,5 +26,11 @@ public class InputSimulator {
 
 		return s.nextLine();
 	}
+	public String OpenKeyboard()
+	{
+		s = new Scanner(new InputStreamReader(System.in));
+
+		return s.nextLine();
+	}
 
 }

@@ -32,7 +32,7 @@ public class Grammar extends TagHolder{
 		super();
 		this.fetchHint = fetchHint;
 		this.fetchtimeout = fetchtimeout;
-		this.mode = mode;
+		this.mode = "voice";
 		this.root = root;
 		this.scope = scope;
 		this.src = src;
