@@ -90,7 +90,7 @@ public class Prompt extends TagHolder {
 				String secondOP = condition.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if (((StateVariables)o).VariableHashMap.get(firstOP) != secondOP) { // not
+				if (!((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																	// equal
 					return null;
 				}
@@ -101,7 +101,7 @@ public class Prompt extends TagHolder {
 					String secondOP = condition.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (((StateVariables)o).VariableHashMap.get(firstOP) == secondOP) { // not
+					if (((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																		// equal
 						return null;
 					}
