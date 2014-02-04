@@ -20,7 +20,7 @@ public class Field extends TagHolder {
 	int countNoMatch;
 	int maxNoMatch;
 	int countNoInput;
-	boolean noMatchExists;
+	boolean noMatchExists = false;
 	Thread timer;
 
 	Grammar currentGrammar;
@@ -159,8 +159,10 @@ public class Field extends TagHolder {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								if (fieldValue == null)
+								if (fieldValue == null) {
 									noInputCase(o);
+								}
+								System.out.println("here");
 							}
 						}
 					};
@@ -172,6 +174,10 @@ public class Field extends TagHolder {
 						countNoMatch++;
 						noMatchCase(o);
 					}
+					if(!noMatchExists){
+						fieldValue = "";
+					}
+					System.out.println(match + " " + noMatchExists);
 				} while (!match && noMatchExists);
 			}
 		}
@@ -201,11 +207,6 @@ public class Field extends TagHolder {
 				noMatch.eval(input);
 
 			}
-		}
-		if (noMatch == null) {
-			countNoMatch--;
-			noMatchCase(o);
-
 		}
 	}
 
