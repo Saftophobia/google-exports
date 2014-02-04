@@ -43,18 +43,26 @@ public class Form extends TagHolder {
 	@Override
 	public Object eval(Object o) {
 		alreadyVisited = true;
-		((StateVariables)o).LastForm = this;
+		((StateVariables) o).LastForm = this;
 		for (Tag t : children) {
 			if (t instanceof Block) {
-				if (!((Block) t).alreadyVisited || !((Field) t).alreadyVisited)
+				if (!((Block) t).alreadyVisited)
 					t.eval(o);
 			} else {
-				t.eval(o);
+				if (t instanceof Field) {
+					if (!((Field) t).alreadyVisited) {
+						t.eval(o);
+					}
+
+				} else {
+					t.eval(o);
+				}
 			}
+
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Tag> getChildren() {
 		return children;
 	}

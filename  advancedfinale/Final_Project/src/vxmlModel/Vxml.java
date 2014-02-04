@@ -55,9 +55,9 @@ public class Vxml extends TagHolder {
 			if (t instanceof Form) {
 				if (!((Form) t).alreadyVisited)
 					t.eval(o);
-				else{
-					t.eval(o);
-				}
+
+			} else {
+				t.eval(o);
 			}
 		}
 		return children;

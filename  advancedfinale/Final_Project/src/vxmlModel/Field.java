@@ -103,10 +103,14 @@ public class Field extends TagHolder {
 				String secondOP = condition.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
+				if(((StateVariables) o).VariableHashMap.get(firstOP) == null){
+					return null;
+				}
 				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 					// equal
 					return null;
 				}
+			
 			} else {
 				if (condition.contains("!=")) {
 					String firstOP = condition.split("!=")[0].replace(" ", "")
@@ -114,6 +118,9 @@ public class Field extends TagHolder {
 					String secondOP = condition.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
+					if(((StateVariables) o).VariableHashMap.get(firstOP) == null){
+						return null;
+					}
 					if (((StateVariables) o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 						// equal
 						return null;
@@ -206,9 +213,7 @@ public class Field extends TagHolder {
 			}
 
 			if (tag instanceof Filled) {
-				System.out.println("mostafa");
 				Filled f = (Filled) tag;
-				System.out.println(f.nameList);
 				tag.eval(o);
 			}
 

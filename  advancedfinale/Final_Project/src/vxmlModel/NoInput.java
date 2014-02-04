@@ -57,7 +57,9 @@ public class NoInput extends TagHolder {
 						"\'", "");
 				String secondOP = cond.split("==")[1].replace(" ", "").replace(
 						"\'", "");
-
+				if(((StateVariables) o).VariableHashMap.get(firstOP) == null){
+					return null;
+				}
 				if (!((StateVariables) o).VariableHashMap.get(firstOP).equals(
 						secondOP)) { // not
 					// equal
@@ -69,7 +71,9 @@ public class NoInput extends TagHolder {
 							.replace("\'", "");
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
-
+					if(((StateVariables) o).VariableHashMap.get(firstOP) == null){
+						return null;
+					}
 					if (((StateVariables) o).VariableHashMap.get(firstOP)
 							.equals(secondOP)) { // not
 						// equal

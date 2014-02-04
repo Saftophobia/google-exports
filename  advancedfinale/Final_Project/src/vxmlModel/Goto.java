@@ -3,6 +3,7 @@ package vxmlModel;
 import java.util.ArrayList;
 
 import util.StateVariables;
+import util.StaticMethods;
 
 public class Goto extends DataHolder {
 
@@ -81,6 +82,8 @@ public class Goto extends DataHolder {
 			}
 		}
 		if (exprItem != null) {
+			System.out.println(((StateVariables)o).VariableHashMap.get("GotoVar"));
+			
 			Tag branch = searchDFS(
 					((StateVariables) o).VariableHashMap.get(exprItem),
 					((StateVariables) o).LastForm);
@@ -111,20 +114,23 @@ public class Goto extends DataHolder {
 
 	public Tag SearchHelper1(TagHolder root, String searchFor) {
 		ArrayList<Tag> children = root.getChildren();
-
 		for (Tag tag : children) {
 			if (tag instanceof Field) {
-				if (((Field) tag).name.equals(searchFor)) {
+				if (((Field) tag).name.equals(StaticMethods.Normalize(searchFor))) {
 					return tag;
 				}
 			}
 			if (tag instanceof Block) {
-				if (((Block) tag).name.equals(searchFor)) {
+				if (((Block) tag).name.equals(StaticMethods.Normalize(searchFor))) {
 					return tag;
 				}
 			}
 			if (tag instanceof TagHolder) {
-				return SearchHelper1((TagHolder) tag, searchFor);
+				Tag t = SearchHelper1((TagHolder) tag, searchFor);
+				if(t != null)
+				{
+					return t;
+				}
 			}
 		}
 		return null;
@@ -135,18 +141,23 @@ public class Goto extends DataHolder {
 
 		for (Tag tag : children) {
 			if (tag instanceof Form) {
-				if (((Form) tag).id.equals(searchFor)) {
+				if (((Form) tag).id.equals(StaticMethods.Normalize(searchFor))) {
 					return tag;
 				}
 			}
 			if (tag instanceof TagHolder) {
-				return SearchHelper1((TagHolder) tag, searchFor);
+				Tag t= SearchHelper1((TagHolder) tag, searchFor);
+				if(t != null)
+				{
+					return t;
+				}
 			}
 		}
 		return null;
 	}
 
 	public Tag searchDFS(String searchFor, Tag inWhat) {
+		
 		if (inWhat instanceof Vxml) {
 			return SearchHelper2((TagHolder) inWhat, searchFor);
 		} else {

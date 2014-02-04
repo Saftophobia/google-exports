@@ -63,7 +63,9 @@ public class NoMatch extends TagHolder {
 						"\'", "");
 				String secondOP = cond.split("==")[1].replace(" ", "").replace(
 						"\'", "");
-
+				if(s.VariableHashMap.get(firstOP) == null){
+					return null;
+				}
 				if (!s.VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																		// equal
 					return null;
@@ -74,7 +76,9 @@ public class NoMatch extends TagHolder {
 							.replace("\'", "");
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
-
+					if(s.VariableHashMap.get(firstOP) == null){
+						return null;
+					}
 					if (s.VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																			// equal
 						return null;
@@ -83,7 +87,7 @@ public class NoMatch extends TagHolder {
 			}
 		}
 
-		if (Integer.parseInt(this.count) != count) {
+		if (this.count != null && Integer.parseInt(this.count) != count) {
 			return null;
 		}
 

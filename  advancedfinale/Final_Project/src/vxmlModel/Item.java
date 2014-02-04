@@ -2,6 +2,7 @@ package vxmlModel;
 import java.util.ArrayList;
 
 import util.StateVariables;
+import util.StaticMethods;
 
 
 public class Item extends TagHolder{
@@ -70,7 +71,10 @@ public class Item extends TagHolder{
 	public Object eval(Object o) {
 		if(this.children.size() == 0)
 		{
-			return this.data.contains((String)o);
+			System.out.println(this.data.toString());
+			System.out.println(StaticMethods.Normalize((String)o));
+			
+			return StaticMethods.Normalize(this.data).equals(StaticMethods.Normalize((String)o));
 		}
 		for(Tag t:this.children)
 		{
@@ -88,7 +92,7 @@ public class Item extends TagHolder{
 						return true;
 					}
 				}else{
-					return this.data.contains((String)o);
+					return StaticMethods.Normalize(this.data).equals(StaticMethods.Normalize((String)o));
 				}
 			}
 		}
