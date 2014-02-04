@@ -5,11 +5,12 @@ import javax.script.ScriptEngineManager;
 
 import util.AudioPlayer;
 import util.FreeTTSListener;
+import util.HelpListener;
 import util.StateVariables;
 import vxmlModel.Vxml;
 import vxmlModel.VxmlParser;
 
-public class Engine {
+public class Engine implements HelpListener{
 	StateVariables stateVariables;
 	VxmlParser vxml;
 
@@ -17,6 +18,7 @@ public class Engine {
 		this.vxml = vxmlClass;
 		this.stateVariables = new StateVariables();
 		this.stateVariables.root = vxml.getVxml();
+		stateVariables.inputSim.addHelpListeners(this);
 	}
 
 	public void AddfreeTTsListener(FreeTTSListener s) {
@@ -28,5 +30,12 @@ public class Engine {
 	public void eval() {
 		
 		this.vxml.getVxml().eval(stateVariables);
+	}
+
+	@Override
+	public void HelpMe(Object o) {
+		// TODO Auto-generated method stub
+		stateVariables.currentHelpTag.HelpMe(stateVariables);
+		
 	}
 }

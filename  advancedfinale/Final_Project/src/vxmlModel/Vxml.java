@@ -2,9 +2,10 @@ package vxmlModel;
 
 import java.util.ArrayList;
 
+import util.HelpListener;
 import util.StateVariables;
 
-public class Vxml extends TagHolder {
+public class Vxml extends TagHolder implements HelpListener{
 
 	String application;
 	String version;
@@ -51,6 +52,7 @@ public class Vxml extends TagHolder {
 
 	@Override
 	public Object eval(Object o) {
+		((StateVariables)o).currentHelpTag= this;
 		for (Tag t : this.children) {
 			if (t instanceof Form) {
 				if (!((Form) t).alreadyVisited)
@@ -66,6 +68,18 @@ public class Vxml extends TagHolder {
 
 	public ArrayList<Tag> getChildren() {
 		return children;
+	}
+
+	@Override
+	public void HelpMe(Object o) {
+		// TODO Auto-generated method stub
+		for(Tag t:this.children)
+		{
+			if(t instanceof Help)
+			{
+				t.eval(o);
+			}
+		}
 	}
 
 }

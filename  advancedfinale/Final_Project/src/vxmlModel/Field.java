@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import javax.swing.text.FieldView;
 
 import util.FreeTTSListener;
+import util.HelpListener;
 import util.StateVariables;
 
-public class Field extends TagHolder {
+public class Field extends TagHolder implements HelpListener {
 
 	String condition;
 	String expr;
@@ -95,6 +96,7 @@ public class Field extends TagHolder {
 
 	@Override
 	public Object eval(final Object o) {
+		((StateVariables) o).currentHelpTag = this;
 		alreadyVisited = true;
 		if (condition != null) {
 			if (condition.contains("==")) {
@@ -179,23 +181,29 @@ public class Field extends TagHolder {
 						}
 					};
 					timer.start();
-					if (currentGrammar.mode != null
+					if (currentGrammar != null && currentGrammar.mode != null
 							&& currentGrammar.mode.equals("dtmf")) {
-						fieldValue = ((StateVariables) o).inputSim.OpenKeyboard();
+						fieldValue = ((StateVariables) o).inputSim
+								.OpenKeyboard();
 					} else {
 						fieldValue = ((StateVariables) o).inputSim.OpenMic();
 					}
 					match = (boolean) currentGrammar.eval(fieldValue);
 					if (!match) {
-						fieldValue = null;
-						countNoMatch++;
-						noMatchCase(o);
+						if (fieldValue.equals("help")) {
+							tag.eval(o);
+							
+						} else {
+							fieldValue = null;
+							countNoMatch++;
+							noMatchCase(o);
 
-						if (!noMatchExists) {
-							fieldValue = "";
+							if (!noMatchExists) {
+								fieldValue = "";
+							}
+
 						}
 					}
-
 					// system.out.println(match + " " + noMatchExists);
 				} while (!match && noMatchExists);
 				// valid input
@@ -250,6 +258,17 @@ public class Field extends TagHolder {
 
 			}
 		}
+	}
+
+	@Override
+	public void HelpMe(Object o) {
+		// TODO Auto-generated method stub
+		for (Tag t : this.children) {
+			if (t instanceof Help) {
+				t.eval(o);
+			}
+		}
+
 	}
 
 }

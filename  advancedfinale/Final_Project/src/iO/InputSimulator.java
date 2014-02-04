@@ -4,14 +4,21 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import util.HelpListener;
 import util.SphinxListener;
+import util.StaticMethods;
 
 public class InputSimulator {
 	Scanner s = new Scanner(new InputStreamReader(System.in));
 	ArrayList<SphinxListener> listeners = new ArrayList<SphinxListener>();
+	ArrayList<HelpListener> helperListeners = new ArrayList<HelpListener>();
 
 	public InputSimulator() {
 
+	}
+
+	public void addHelpListeners(HelpListener s) {
+		helperListeners.add(s);
 	}
 
 	public void AddListener(SphinxListener s) {
@@ -21,13 +28,26 @@ public class InputSimulator {
 	public String OpenMic() {
 		s = new Scanner(new InputStreamReader(System.in));
 
-		return s.nextLine();
+		String output = s.nextLine();
+		if (StaticMethods.Normalize(output).equals("help")) {
+			for (HelpListener hl : helperListeners) {
+				hl.HelpMe(null);
+			}
+		}
+
+		return output;
 	}
-	public String OpenKeyboard()
-	{
+
+	public String OpenKeyboard() {
 		s = new Scanner(new InputStreamReader(System.in));
 
-		return s.nextLine();
+		String output = s.nextLine();
+		if (StaticMethods.Normalize(output).equals("help")) {
+			for (HelpListener hl : helperListeners) {
+				hl.HelpMe(null);
+			}
+		}
+		return output;
 	}
 
 }

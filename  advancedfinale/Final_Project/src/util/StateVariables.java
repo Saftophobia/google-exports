@@ -12,6 +12,7 @@ import javax.script.ScriptException;
 import vxmlModel.Form;
 import vxmlModel.Grammar;
 import vxmlModel.Prompt;
+import vxmlModel.Tag;
 import vxmlModel.Vxml;
 
 public class StateVariables {
@@ -24,6 +25,7 @@ public class StateVariables {
 	public InputSimulator inputSim = new InputSimulator();
 	public Vxml root;
 	public Form LastForm;
+	public HelpListener currentHelpTag;
 	
 	public StateVariables() {
 	/*	try {

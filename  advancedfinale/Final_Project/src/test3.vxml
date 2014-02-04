@@ -32,6 +32,10 @@
       <prompt>
         Are you a "Carnivore" or "Vegetarian".
       </prompt>
+       <help count="1" cond="false">
+      <prompt> since the condition is set to false, this handler will be skipped</prompt>
+    </help>
+    
 
       <!-- Grammar for available responses for either "Carnivore" or "Vegetarian".-->
       <grammar xml:lang="en-US" root = "MEATPLANT">
@@ -113,6 +117,7 @@
       You must be a person of strong moral convictions, and weak bowel movements.
       If you wish to try again, please say "Main".
     </prompt>
+    
     </field>
         <filled >
         <!-- This will never get hit. -->
