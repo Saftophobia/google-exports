@@ -29,6 +29,8 @@ public class Field extends TagHolder implements HelpListener {
 
 	Grammar currentGrammar;
 	private String fieldValue;
+	int maxPrompt;
+	int PromptCounter =1;
 
 	public Field(String condition, String expr, String modal, String name,
 			String type, String slot) {
@@ -154,13 +156,29 @@ public class Field extends TagHolder implements HelpListener {
 				maxNoMatch++;
 			}
 		}
+		
+		for (Tag tag : children) {
+			if (tag instanceof Prompt) {
+				maxPrompt++;
+				if(maxPrompt>0){
+					PromptCounter = 1;
+				}
+				if(maxPrompt>1){
+					PromptCounter = 2;
+				}
+			}
+		}
 
 		// Got Grammar
 		for (Tag tag : children) {
 			if (tag instanceof Prompt) {
 				boolean match = false;
+				if(((Prompt)tag).count != null && Integer.parseInt(((Prompt)tag).count)>1){
+					continue;
+				}
 				tag.eval(o);
 				((StateVariables) o).LastPrompt = (Prompt) tag;
+				
 				do {
 					if (timer != null) {
 						timer.stop();
@@ -169,7 +187,7 @@ public class Field extends TagHolder implements HelpListener {
 						public void run() {
 							while (fieldValue == null) {
 								try {
-									sleep(5000);
+									sleep((Integer.parseInt(((StateVariables) o).LastPrompt.timeout))*1000);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -192,7 +210,7 @@ public class Field extends TagHolder implements HelpListener {
 					match = (boolean) currentGrammar.eval(fieldValue);
 					if (!match) {
 						if (fieldValue.equals("help")) {
-							tag.eval(o);
+						
 							
 						} else {
 							countNoMatch++;
@@ -236,6 +254,19 @@ public class Field extends TagHolder implements HelpListener {
 	}
 
 	public void noInputCase(Object o) {
+		int counter = 0;
+		for (Tag tag : children) {
+			if (tag instanceof Prompt) {
+				if(counter<PromptCounter){
+					counter++;
+					((StateVariables) o).LastPrompt = (Prompt) tag;
+				}
+			}
+		}
+		if(maxPrompt>0){
+			PromptCounter++;
+			PromptCounter = Math.min(PromptCounter, maxPrompt);
+		}
 		NoInput noInput = null;
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof NoInput) {
@@ -244,10 +275,24 @@ public class Field extends TagHolder implements HelpListener {
 			}
 
 		}
+		
 
 	}
 
 	public void noMatchCase(Object o) {
+		int counter = 0;
+		for (Tag tag : children) {
+			if (tag instanceof Prompt) {
+				if(counter<PromptCounter){
+					counter++;
+					((StateVariables) o).LastPrompt = (Prompt) tag;
+				}
+			}
+		}
+		if(maxPrompt>0){
+			PromptCounter++;
+			PromptCounter = Math.min(PromptCounter, maxPrompt);
+		}
 		NoMatch noMatch = null;
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof NoMatch) {
@@ -268,6 +313,7 @@ public class Field extends TagHolder implements HelpListener {
 				t.eval(o);
 			}
 		}
+		new Reprompt().eval(o);
 
 	}
 

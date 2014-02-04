@@ -26,7 +26,7 @@ public class InputSimulator {
 	}
 
 	public String OpenMic() {
-		System.out.println("MIC MIC MIC MIC MIC ");
+//		System.out.println("MIC MIC MIC MIC MIC ");
 		s = new Scanner(new InputStreamReader(System.in));
 
 		String output = s.nextLine();

@@ -1,86 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<vxml version = "2.1" xmlns="http://www.w3.org/2001/06/vxml">
 
-<meta name="copyright" content="2012 voxeo corporation"/>
-<meta name="maintainer" content="YOUR_EMAIL@HERE.COM"/>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml" xmlns:voxeo="http://community.voxeo.com/xmlns/vxml">
+
+<meta name="maintainer" content="YOUREMAILADDRESS@HERE.com"/>
 
 
-<form id="F1">
-	<script>
-        <![CDATA[
-          function sayasDigits(number)
-          {
-            var digitNumber = number.charAt(0);
-            for(var i = 1; i < number.length; i++)
-            {
-              digitNumber += ' ' + number.charAt(i);
-            }
-            return digitNumber;
-          }
-        ]]>
-      </script>
-  <var name="MyFavoriteActor"  expr="'Tony Danza'"/>
-  <var name="MyFavoriteTVShow" expr="'Who's the boss'"/>
-  <var name="TonysSATScore" expr="Mina"/>
-  <var name="MeatOrPlant" expr="plant"/>
-  
-  
-  <field name="F_1">
-   <grammar xml:lang="en-us" root="myrule">
-      <rule id="myrule">
-        <one-of>
-            <item> yes </item>
-            <item> <item repeat="0-1"> hell </item> no </item>
-            <item> ha ha ha </item>
-        </one-of>
-      </rule>
-    </grammar>
-    
-    <noinput>
-    	<reprompt/>
-    </noinput>
-    
-       <nomatch count="1">
-    	 <prompt> try again 1 </prompt>
-    </nomatch>
-    
-          <nomatch count="2">
-    	 <prompt> try again 2 </prompt>
-    </nomatch>
-   
-    <prompt> can anyone take john travolta seriously as an actor?</prompt>
-      <filled namelist="F_1">
-        <prompt> you must have filled but one field</prompt>
-      </filled>
-  </field>
+<link next="#MainMenu">
 
-  <field name="F_2">
-    <grammar xml:lang="en-us" root="myrule">
-        <rule id="myrule">
-            <one-of>
-                <item> yes </item>
-                <item> no </item>
-                <item> he should be </item>
-            </one-of>
+  <!-- The XML grammar for the main menu. -->
+  <grammar xml:lang="en-US" root ="LINKGRAM">
+     <rule id="LINKGRAM" scope="public">
+      <one-of>
+       <item>main</item>
+       <item>back</item>
+       <item>begin</item>
+      </one-of>
+     
+     </rule>
+    </grammar> 
+</link>
+
+  <form id="MainMenu">
+    <block>
+      <prompt bargein="false">
+        This is the Hello World Main Menu.
+      </prompt>
+    </block>
+
+    <field name="MeatOrPlant">
+      <prompt count="1">
+        Are you a "Carnivore" or "Vegetarian" 1.
+      </prompt>
+      
+       <prompt count="2">
+        Are you a "Carnivore" or "Vegetarian" 2.
+      </prompt>
+      
+      
+       <prompt count="3">
+        Are you a "Carnivore" or "Vegetarian" 3.
+      </prompt>
+
+
+	<help>
+	<prompt>
+	helpping !!!!
+	</prompt>
+	</help>
+      <!-- Grammar for available responses for either "Carnivore" or "Vegetarian".-->
+      <grammar xml:lang="en-US" root = "MEATPLANT">
+        <rule id="MEATPLANT" scope="public">
+         <one-of>
+      
+         <!-- If the user says any of the following choices, then the grammar assigns "meat" to -->
+         <!-- the MeatOrPlant variable. -->
+         <item>
+          <one-of>
+            <item>meat</item>
+            <item>carnivore</item>
+            <item>flesh</item>
+            <item>animal</item>
+            <item>brains</item>
+          </one-of>
+          <tag>out.MeatOrPlant ="meat";</tag>
+         </item>
+       
+         <!-- If the user says any of the following choices, then the grammar assigns "plant" to -->
+         <!-- the MeatOrPlant variable. -->
+         <item>
+          <one-of>
+            <item>vegetarian</item>
+            <item>plant</item>
+            <item>veggie</item>
+            <item>hummus</item>
+          </one-of>
+          <tag>out.MeatOrPlant ="plant";</tag>
+         </item>
+      
+         </one-of>        
         </rule>
-    </grammar>
-   
-    <prompt> do you think don king is ashamed of himself?  <value expr="MyFavoriteTVShow"/> YES INDEED</prompt>
-  </field>
+      </grammar>
+        
+      <noinput>
+        <prompt>
+          I did not hear anything. Please try again.
+        </prompt>
+       <reprompt/>
+      </noinput>
 
-  <filled namelist="F_1 F_2" mode="all">
-    <prompt>you must have filled both fields. </prompt>
-  </filled>
-	<block>
-        <if cond="MeatOrPlant != 'meat'">
-        	<prompt> SAFTY AND MINA ARE AWESOME! </prompt>
+      <nomatch>
+        <prompt>
+          I did not recognize that lifestyle choice.  Please try again.
+        </prompt>
+       <reprompt/>
+      </nomatch>
+
+    </field>
+    
+    
+    <filled>
+        <if cond="MeatOrPlant == 'meat'">
             <goto next="#Meat"/>
         <elseif cond="MeatOrPlant == 'plant'"/>
-       		 <prompt> SAFTY AND MINA ARE AWESOME! 222 </prompt>
             <goto next="#Plant"/>
         </if>
-    </block>
-</form>
+    </filled>
+  </form>
 
+  <!-- If the answer was "meat", it prompts the following statement. -->
+  <form id="Meat">
+    <field name="BackToMain">
+    <prompt>
+      PETA is coming for you, be afraid.
+      If you wish to try again, please say "Main".
+    </prompt>
+    </field>
+    <filled>
+    <!-- This will never get hit. -->
+    </filled>
+  </form>
+
+  <!-- If the answer was "plant", it prompts the following statement. -->
+  <form id="Plant">
+    <field name="BackToMain">
+    <prompt>
+      You must be a person of strong moral convictions, and weak bowel movements.
+      If you wish to try again, please say "Main".
+    </prompt>
+    </field>
+        <filled>
+        <!-- This will never get hit. -->
+        </filled>
+  </form>
 </vxml>
+
+
