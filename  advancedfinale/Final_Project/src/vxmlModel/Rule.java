@@ -50,21 +50,17 @@ public class Rule extends TagHolder{
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public boolean evalValue(String s) {
+	public Object eval(Object o) {
 		for(Tag t:this.children)
 		{
 			try{
-			if(((Item) t).evalValue(s))
+			if((boolean) t.eval(o))
 			{
 				return true;
 			}
 			}catch(Exception e)
 			{
-				if(((OneOf) t).evalValue(s))
+				if((boolean) t.eval(o))
 				{
 					return true;
 				}

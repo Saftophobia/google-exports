@@ -1,4 +1,5 @@
 package vxmlModel;
+
 import java.util.ArrayList;
 
 import util.StateVariables;
@@ -10,22 +11,21 @@ public class NoInput extends TagHolder {
 	ArrayList<Tag> children;
 
 	public NoInput(String cond, String count) {
-		this.cond =cond;
+		this.cond = cond;
 		this.count = count;
 		children = new ArrayList<Tag>();
 		identifier = 1;
 	}
 
-	
-	public String GetCondition(){
+	public String GetCondition() {
 		return cond;
-		
+
 	}
-	
-	public String GetCount(){
+
+	public String GetCount() {
 		return count;
 	}
-	
+
 	public void addChild(Tag child) {
 		child.parent = this;
 		children.add(child);
@@ -49,21 +49,17 @@ public class NoInput extends TagHolder {
 		return output;
 	}
 
-
 	@Override
-	public Object eval(StateVariables o) {
-		// TODO Auto-generated method stub
-		
-
+	public Object eval(Object o) {
 		if (cond != null) {
 			if (cond.contains("==")) {
-				String firstOP = cond.split("==")[0].replace(" ", "")
-						.replace("\'", "");
-				String secondOP = cond.split("==")[1].replace(" ", "")
-						.replace("\'", "");
+				String firstOP = cond.split("==")[0].replace(" ", "").replace(
+						"\'", "");
+				String secondOP = cond.split("==")[1].replace(" ", "").replace(
+						"\'", "");
 
-				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
-																			// equal
+				if (((StateVariables) o).VariableHashMap.get(firstOP) != secondOP) { // not
+					// equal
 					return null;
 				}
 			} else {
@@ -73,19 +69,19 @@ public class NoInput extends TagHolder {
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
-																				// equal
+					if (((StateVariables) o).VariableHashMap.get(firstOP) == secondOP) { // not
+						// equal
 						return null;
 					}
 				}
 			}
 		}
-		
-		for(Tag t: children)
-		{
-			t.eval(o);
+		for (Tag t : children) {
+			
+				t.eval(o);
+			
 		}
-		
+
 		return null;
 	}
 

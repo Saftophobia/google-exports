@@ -79,12 +79,12 @@ public class Script extends DataHolder {
 	}
 	
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		//ScriptEngine engine = (ScriptEngine) o;
 		if(src != null){
 			//load file TODO
 			try{
-			o.engine.eval(this.readFile(src));
+			((StateVariables)o).engine.eval(this.readFile(src));
 			}catch(Exception wtv)
 			{
 				
@@ -92,7 +92,7 @@ public class Script extends DataHolder {
 		}else{
 		try {
 			System.out.println(ScriptContent);
-			o.engine.eval(ScriptContent);
+			((StateVariables)o).engine.eval(ScriptContent);
 		} catch (ScriptException e) {
 			e.printStackTrace();
 			//System.exit(0);

@@ -1,7 +1,5 @@
 package vxmlModel;
 
-import iO.InputSimulator.Output;
-
 import java.util.ArrayList;
 
 import util.FreeTTSListener;
@@ -16,13 +14,17 @@ public class Field extends TagHolder {
 	String type;
 	String slot;
 
-	int atWhichPrompt;
-	int countNoMatch;
-	int countNoInput;
-
 	ArrayList<Tag> children;
 
 	Prompt currentPrompt;
+	int countNoMatch;
+	int maxNoMatch;
+	int countNoInput;
+	boolean noMatchExists;
+	Thread timer;
+
+	Grammar currentGrammar;
+	private String fieldValue;
 
 	public Field(String condition, String expr, String modal, String name,
 			String type, String slot) {
@@ -89,7 +91,7 @@ public class Field extends TagHolder {
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(final Object o) {
 		// TODO Auto-generated method stub
 		if (condition != null) {
 			if (condition.contains("==")) {
@@ -98,8 +100,8 @@ public class Field extends TagHolder {
 				String secondOP = condition.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
-																	// equal
+				if (((StateVariables) o).VariableHashMap.get(firstOP) != secondOP) { // not
+					// equal
 					return null;
 				}
 			} else {
@@ -109,8 +111,8 @@ public class Field extends TagHolder {
 					String secondOP = condition.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
-																		// equal
+					if (((StateVariables) o).VariableHashMap.get(firstOP) == secondOP) { // not
+						// equal
 						return null;
 					}
 				}
@@ -119,84 +121,95 @@ public class Field extends TagHolder {
 
 		if (expr != null && name != null) {
 			if (!expr.equalsIgnoreCase("undefined")) {
-				o.VariableHashMap.put(name, expr);
+				((StateVariables) o).VariableHashMap.put(name, expr);
 				return null;
 			}
 		}
 
 		// done with attributes
 
-		Grammar grammar = null;
-		// getGrammar
-		for (int i = 0; i < children.size(); i++) {
-			if (children.get(i) instanceof Grammar) {
-				grammar = (vxmlModel.Grammar) children.get(i);
-
+		for (Tag tag : children) {
+			if (tag instanceof Grammar) {
+				currentGrammar = (Grammar) tag;
 			}
 		}
 
-		for (int i = atWhichPrompt; i < children.size(); i++) {
-			if (children.get(i) instanceof Prompt) {
-				atWhichPrompt = i;
-				currentPrompt = (vxmlModel.Prompt) children.get(i);
-				currentPrompt.eval(o);
-				Output input = o.inputSim.OpenMic();
-				if (!input.timeout) {
-					boolean match = grammar.evalValue(input.value);
-					System.out.println("MATCH IS " + match);
+		for (Tag tag : children) {
+			if (tag instanceof NoMatch) {
+				noMatchExists = true;
+				maxNoMatch++;
+			}
+		}
+
+		// Got Grammar
+		for (Tag tag : children) {
+			if (tag instanceof Prompt) {
+				boolean match = false;
+				do {
+					tag.eval(o);
+					if (timer != null) {
+						timer.stop();
+					}
+					timer = new Thread() {
+						public void run() {
+							while (fieldValue == null) {
+								try {
+									sleep(5000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (fieldValue == null)
+									noInputCase(o);
+							}
+						}
+					};
+					timer.start();
+					fieldValue = ((StateVariables) o).inputSim.OpenMic();
+					match = (boolean) currentGrammar.eval(fieldValue);
 					if (!match) {
+						fieldValue = null;
+						countNoMatch++;
 						noMatchCase(o);
 					}
-				} else {
-					noInputCase(o);
-				}
-
-			}
-
-			if (children.get(i) instanceof Value) {
-				for (FreeTTSListener listener : o.Listerners) {
-					listener.Say((String) children.get(i).eval(o));
-				}
-			}
-			if (children.get(i) instanceof Text) {
-
-				children.get(i).eval(o);
+				} while (!match && noMatchExists);
 			}
 		}
-
-		filledCase(o);
 
 		return null;
 	}
 
-	public void noInputCase(StateVariables o) {
+	public void noInputCase(Object o) {
 		NoInput noInput = null;
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof NoInput) {
 				noInput = (vxmlModel.NoInput) children.get(i);
+				noInput.eval(o);
 			}
 
 		}
-		if (noInput != null)
-			noInput.eval(o);
+
 	}
 
-	public void noMatchCase(StateVariables o) {
+	public void noMatchCase(Object o) {
 		NoMatch noMatch = null;
-		for (int i = countNoMatch; i < children.size(); i++) {
+		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof NoMatch) {
 				noMatch = (vxmlModel.NoMatch) children.get(i);
+				Object[] input = new Object[] { o,
+						new Integer(Math.min(countNoMatch, (maxNoMatch))) };
+				noMatch.eval(input);
+
 			}
-
-			// neval we nshoof 3ayzeen ne3mel eih
-
-			countNoMatch++;
 		}
-		if (noMatch != null)
-			noMatch.eval(o);
+		if (noMatch == null) {
+			countNoMatch--;
+			noMatchCase(o);
+
+		}
 	}
 
-	public void filledCase(StateVariables o) {
+	public void filledCase(Object o) {
 		Filled filled = null;
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i) instanceof Filled) {

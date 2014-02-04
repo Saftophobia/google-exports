@@ -9,7 +9,7 @@ public class Else extends DataHolder{
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

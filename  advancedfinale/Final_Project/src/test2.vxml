@@ -34,6 +34,18 @@
         </one-of>
       </rule>
     </grammar>
+    
+    <noinput>
+    	<reprompt/>
+    </noinput>
+    
+       <nomatch count="1">
+    	 <prompt> try again 1 </prompt>
+    </nomatch>
+    
+          <nomatch count="2">
+    	 <prompt> try again 2 </prompt>
+    </nomatch>
    
     <prompt> can anyone take john travolta seriously as an actor?</prompt>
       <filled mode="any">

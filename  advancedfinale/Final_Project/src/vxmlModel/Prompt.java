@@ -81,7 +81,7 @@ public class Prompt extends TagHolder {
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 
 		if (condition != null) {
 			if (condition.contains("==")) {
@@ -90,7 +90,7 @@ public class Prompt extends TagHolder {
 				String secondOP = condition.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+				if (((StateVariables)o).VariableHashMap.get(firstOP) != secondOP) { // not
 																	// equal
 					return null;
 				}
@@ -101,7 +101,7 @@ public class Prompt extends TagHolder {
 					String secondOP = condition.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+					if (((StateVariables)o).VariableHashMap.get(firstOP) == secondOP) { // not
 																		// equal
 						return null;
 					}
@@ -123,11 +123,12 @@ public class Prompt extends TagHolder {
 			}
 		}
 
-		for (FreeTTSListener sListener : o.Listerners) {
+		for (FreeTTSListener sListener : ((StateVariables)o).Listerners) {
 			sListener.Say(s);
 		}
 
-		o.LastPrompt = s;
+		((StateVariables)o).LastPrompt = this;
+				
 		
 		return data;
 	}

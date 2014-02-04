@@ -43,7 +43,7 @@ public class If extends TagHolder {
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		// TODO Auto-generated method stub
 		boolean IfConditionisTrue = true;
 		boolean elseIfvisited = false;
@@ -54,7 +54,7 @@ public class If extends TagHolder {
 			String secondOP = cond.split("==")[1].replace(" ", "").replace(
 					"\'", "");
 
-			if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+			if (((StateVariables)o).VariableHashMap.get(firstOP) != secondOP) { // not
 																// equal
 				IfConditionisTrue = false;
 			}
@@ -65,7 +65,7 @@ public class If extends TagHolder {
 				String secondOP = cond.split("!=")[1].replace(" ", "").replace(
 						"\'", "");
 
-				if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+				if (((StateVariables)o).VariableHashMap.get(firstOP) == secondOP) { // not
 																	// equal
 					IfConditionisTrue = false;
 				}
@@ -76,7 +76,7 @@ public class If extends TagHolder {
 			if (IfConditionisTrue && !(t instanceof Elseif)
 					&& !(t instanceof Else)) {
 				if (t instanceof Value) {
-					for (FreeTTSListener listener : o.Listerners) {
+					for (FreeTTSListener listener : ((StateVariables)o).Listerners) {
 						listener.Say((String) t.eval(o));
 					}
 				} else {
@@ -91,7 +91,7 @@ public class If extends TagHolder {
 					String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
 							.replace(" ", "").replace("\'", "");
 
-					if (o.VariableHashMap.get(elseiffirstOP) == elseifsecondOP) { // condition
+					if (((StateVariables)o).VariableHashMap.get(elseiffirstOP) == elseifsecondOP) { // condition
 																					// satisfied
 						IfConditionisTrue = true;
 						elseIfvisited = true;

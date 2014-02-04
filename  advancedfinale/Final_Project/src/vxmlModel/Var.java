@@ -24,9 +24,9 @@ public class Var extends DataHolder{
 
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		if(name != null && expr != null){
-			o.VariableHashMap.put(name, expr);
+			((StateVariables)o).VariableHashMap.put(name, expr);
 		}
 		return null;
 	}

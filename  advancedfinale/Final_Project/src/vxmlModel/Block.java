@@ -51,7 +51,7 @@ public class Block extends TagHolder {
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		// TODO Auto-generated method stub
 
 		if (cond != null) {
@@ -61,7 +61,7 @@ public class Block extends TagHolder {
 				String secondOP = cond.split("==")[1].replace(" ", "").replace(
 						"\'", "");
 
-				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+				if (((StateVariables) o).VariableHashMap.get(firstOP) != secondOP) { // not
 																	// equal
 					return null;
 				}
@@ -72,7 +72,7 @@ public class Block extends TagHolder {
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+					if (((StateVariables) o).VariableHashMap.get(firstOP) == secondOP) { // not
 																		// equal
 						return null;
 					}
@@ -82,14 +82,14 @@ public class Block extends TagHolder {
 
 		if (expr != null && name != null) {
 			if (!expr.equalsIgnoreCase("undefined")) {
-				o.VariableHashMap.put(name, expr);
+				((StateVariables) o).VariableHashMap.put(name, expr);
 				return null;
 			}
 		}
 		for (Tag t : children) {
 			if(t instanceof Value)
 			{
-				for (FreeTTSListener listener : o.Listerners) {
+				for (FreeTTSListener listener : ((StateVariables) o).Listerners) {
 					listener.Say((String)t.eval(o));
 				}
 			}else{

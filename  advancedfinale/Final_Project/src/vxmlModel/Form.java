@@ -40,7 +40,7 @@ public class Form extends TagHolder{
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		// TODO Auto-generated method stub
 		for(Tag t:children)
 		{

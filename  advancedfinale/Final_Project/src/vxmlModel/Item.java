@@ -67,36 +67,33 @@ public class Item extends TagHolder{
 
 
 	@Override
-	public Object eval(StateVariables o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public boolean evalValue(String s) {
+	public Object eval(Object o) {
 		if(this.children.size() == 0)
 		{
-			return this.data.replace(" ", "").equalsIgnoreCase(s);
+			return this.data.replace(" ", "").equalsIgnoreCase((String)o);
 		}
 		for(Tag t:this.children)
 		{
 			if(t instanceof Item)
 			{
-				if(((Item) t).evalValue(s))
+				if((boolean) t.eval((String)o))
 				{
 					return true;
 				}
 			}else{
 				if(t instanceof OneOf)
 				{
-					if(((OneOf) t).evalValue(s))
+					if((boolean) t.eval((String)o))
 					{
 						return true;
 					}
 				}else{
-					return this.data.replace(" ", "").equalsIgnoreCase(s);
+					return this.data.replace(" ", "").equalsIgnoreCase((String)o);
 				}
 			}
 		}
 		return false;
 	}
+
 	
 }

@@ -10,9 +10,8 @@ public class Reprompt extends DataHolder{
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
-		// TODO Auto-generated method stub
-		return o.LastPrompt;
+	public Object eval(Object o) {
+		return ((StateVariables)o).LastPrompt.eval(o);
 	}
 	
 }

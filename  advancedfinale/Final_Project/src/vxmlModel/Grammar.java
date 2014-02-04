@@ -46,6 +46,7 @@ public class Grammar extends TagHolder{
 		this.xml_lang = xml_lang;
 		this.xmlns = xmlns;
 		this.rules = new ArrayList<Rule>();
+		this.identifier = 10;
 	}
 	
 	public void addChild(Rule child){
@@ -62,22 +63,15 @@ public class Grammar extends TagHolder{
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean evalValue(String s) {
+	public Object eval(Object o) {
 		for(Tag t:this.rules)
 		{
-			if(((Rule) t).evalValue(s))
+			if((boolean) t.eval((String)o))
 			{
 				return true;
 			}
 		}
 		return false;
-	}
-
-	
+	}	
 	
 }

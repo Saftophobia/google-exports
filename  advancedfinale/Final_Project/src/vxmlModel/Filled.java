@@ -47,14 +47,14 @@ public class Filled extends TagHolder{
 		return output;
 	}
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		if(nameList != null)
 		{
 			String[] fieldvars = nameList.split(" ");
 			if(mode.equalsIgnoreCase("all"))
 			{
 				for (int i = 0; i < fieldvars.length; i++) {
-					if (o.VariableHashMap.get(fieldvars[i]) == null)
+					if (((StateVariables) o).VariableHashMap.get(fieldvars[i]) == null)
 						return null;
 				}
 			}else{
@@ -62,7 +62,7 @@ public class Filled extends TagHolder{
 				{
 					boolean found = false;
 					for (int i = 0; i < fieldvars.length; i++) {
-						if (o.VariableHashMap.get(fieldvars[i]) != null)
+						if (((StateVariables) o).VariableHashMap.get(fieldvars[i]) != null)
 							found = true;
 					}
 					if (!found) {
@@ -73,7 +73,7 @@ public class Filled extends TagHolder{
 			for (Tag t : children) {
 				if(t instanceof Value)
 				{
-					for (FreeTTSListener listener : o.Listerners) {
+					for (FreeTTSListener listener : ((StateVariables) o).Listerners) {
 						listener.Say((String)t.eval(o));
 					}
 				}else{

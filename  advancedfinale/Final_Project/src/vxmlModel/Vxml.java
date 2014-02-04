@@ -48,13 +48,18 @@ public class Vxml extends TagHolder{
 		return output;
 	}
 	
-	public Object eval(StateVariables o){
+	@Override
+	public Object eval(Object o){
 		for(Tag t:this.children )
 		{
 			t.eval(o);
 		}
 		return children;
 		
+	}
+
+	public ArrayList<Tag> getChildren() {
+		return children;
 	}
 	
 

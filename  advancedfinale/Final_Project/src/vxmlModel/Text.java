@@ -12,8 +12,8 @@ public class Text extends DataHolder {
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
-		for (FreeTTSListener listener : o.Listerners) {
+	public Object eval(Object o) {
+		for (FreeTTSListener listener : ((StateVariables)o).Listerners) {
 			listener.Say(this.valueText);
 		}
 		return null;

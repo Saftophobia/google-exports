@@ -1,7 +1,5 @@
 package vxmlEngine;
 
-import java.util.HashMap;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
@@ -28,6 +26,5 @@ public class Engine {
 
 	public void eval() {
 		this.vxml.getVxml().eval(stateVariables);
-		
 	}
 }

@@ -51,8 +51,12 @@ public class NoMatch extends TagHolder {
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 
+		Object[] input = (Object[]) o;
+		StateVariables s = (StateVariables) input[0];
+		int count = (Integer) input[1];
+		
 		if (cond != null) {
 			if (cond.contains("==")) {
 				String firstOP = cond.split("==")[0].replace(" ", "")
@@ -60,7 +64,7 @@ public class NoMatch extends TagHolder {
 				String secondOP = cond.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+				if (s.VariableHashMap.get(firstOP) != secondOP) { // not
 																			// equal
 					return null;
 				}
@@ -71,7 +75,7 @@ public class NoMatch extends TagHolder {
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+					if (s.VariableHashMap.get(firstOP) == secondOP) { // not
 																				// equal
 						return null;
 					}
@@ -79,14 +83,18 @@ public class NoMatch extends TagHolder {
 			}
 		}
 		
+		if(Integer.parseInt(this.count) != count){
+			return null;
+		}
+		
 		for (Tag t : children) {
 			if(t instanceof Value)
 			{
-				for (FreeTTSListener listener : o.Listerners) {
+				for (FreeTTSListener listener : ((StateVariables)o).Listerners) {
 					listener.Say((String)t.eval(o));
 				}
 			}else{
-			t.eval(o);
+			t.eval(s);
 			}
 		}
 		

@@ -21,18 +21,10 @@ public class InputSimulator {
 		listeners.add(s);
 	}
 
-	public Output OpenMic() {
+	public String OpenMic() {
 		s = new Scanner(new InputStreamReader(System.in));
-		final Output o = new Output();
-		o.value = s.nextLine();
-		o.timeout = false;
 
-		return o;
-	}
-
-	public class Output {
-		public boolean timeout;
-		public String value;
+		return s.nextLine();
 	}
 
 }

@@ -20,7 +20,7 @@ public class Value extends DataHolder{
 	}
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		if(expr != null)
 		{
 			if (expr.endsWith(")")) // a function
@@ -30,11 +30,11 @@ public class Value extends DataHolder{
 				String[] FunctionArgument = expr.substring(expr.indexOf("("),
 						expr.indexOf(")")).split(",");
 				for (int i = 0; i < FunctionArgument.length; i++) {
-					FunctionArgument[i] = o.VariableHashMap.get(FunctionArgument[i]);
+					FunctionArgument[i] = ((StateVariables)o).VariableHashMap.get(FunctionArgument[i]);
 				}
 				
 				try {
-					Invocable inv = (Invocable) o.engine;
+					Invocable inv = (Invocable) ((StateVariables)o).engine;
 
 					String Output = inv.invokeFunction(FunctionName,
 							FunctionArgument) + "";
@@ -47,7 +47,7 @@ public class Value extends DataHolder{
 				// }
 			} else { //not a function
 				
-				return o.VariableHashMap.get(expr);
+				return ((StateVariables)o).VariableHashMap.get(expr);
 			}
 		}
 		

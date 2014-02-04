@@ -10,13 +10,14 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import vxmlModel.Grammar;
+import vxmlModel.Prompt;
 
 public class StateVariables {
 	public ScriptEngineManager manager = new ScriptEngineManager();
 	public ScriptEngine engine = manager.getEngineByName("javascript");
 	public HashMap<String, String> VariableHashMap = new HashMap<String, String>();
 	public AudioPlayer audioPlayer = new AudioPlayer();
-	public String LastPrompt = "";
+	public Prompt LastPrompt;
 	public ArrayList<FreeTTSListener> Listerners = new ArrayList<FreeTTSListener>();
 	public InputSimulator inputSim = new InputSimulator();
 	

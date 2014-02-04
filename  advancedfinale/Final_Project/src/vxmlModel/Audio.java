@@ -46,8 +46,8 @@ public class Audio extends DataHolder{
 
 
 	@Override
-	public Object eval(StateVariables o) {
-		o.audioPlayer.playSound(src, 0);
+	public Object eval(Object o) {
+		((StateVariables) o).audioPlayer.playSound(src, 0);
 		return null;
 	}
 	

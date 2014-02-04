@@ -51,7 +51,7 @@ public class Help extends TagHolder {
 
 
 	@Override
-	public Object eval(StateVariables o) {
+	public Object eval(Object o) {
 		// TODO Auto-generated method stub
 		
 		if (cond != null) {
@@ -61,7 +61,7 @@ public class Help extends TagHolder {
 				String secondOP = cond.split("==")[1].replace(" ", "")
 						.replace("\'", "");
 
-				if (o.VariableHashMap.get(firstOP) != secondOP) { // not
+				if (((StateVariables)o).VariableHashMap.get(firstOP) != secondOP) { // not
 																			// equal
 					return null;
 				}
@@ -72,7 +72,7 @@ public class Help extends TagHolder {
 					String secondOP = cond.split("!=")[1].replace(" ", "")
 							.replace("\'", "");
 
-					if (o.VariableHashMap.get(firstOP) == secondOP) { // not
+					if (((StateVariables)o).VariableHashMap.get(firstOP) == secondOP) { // not
 																				// equal
 						return null;
 					}
