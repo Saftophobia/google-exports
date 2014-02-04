@@ -54,8 +54,6 @@ public class If extends TagHolder {
 			String secondOP = cond.split("==")[1].replace(" ", "").replace(
 					"\'", "");
 
-			System.out.println("firstOP "+ firstOP + ", secondOP " + secondOP);
-
 			if (!((StateVariables)o).VariableHashMap.get(firstOP).equals(secondOP)) { // not
 																// equal
 				IfConditionisTrue = false;
@@ -88,6 +86,7 @@ public class If extends TagHolder {
 			}
 			if (!IfConditionisTrue && !elseIfvisited) {
 				if (t instanceof Elseif) {
+					if(cond.contains("==")){
 					String elseiffirstOP = ((Elseif) t).cond.split("==")[0]
 							.replace(" ", "").replace("\'", "");
 					String elseifsecondOP = ((Elseif) t).cond.split("==")[1]
@@ -99,6 +98,22 @@ public class If extends TagHolder {
 						elseIfvisited = true;
 
 					}
+				}else{
+					if(cond.contains("!="))
+					{
+						String elseiffirstOP = ((Elseif) t).cond.split("!=")[0]
+								.replace(" ", "").replace("\'", "");
+						String elseifsecondOP = ((Elseif) t).cond.split("!=")[1]
+								.replace(" ", "").replace("\'", "");
+						
+						if (!((StateVariables)o).VariableHashMap.get(elseiffirstOP).equals(elseifsecondOP)) { // condition
+																						// satisfied
+							IfConditionisTrue = true;
+							elseIfvisited = true;
+
+						}
+					}
+				}
 				}
 				if (t instanceof Else) {
 					IfConditionisTrue = true;

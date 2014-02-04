@@ -23,7 +23,7 @@
   <var name="MyFavoriteActor"  expr="'Tony Danza'"/>
   <var name="MyFavoriteTVShow" expr="'Who's the boss'"/>
   <var name="TonysSATScore" expr="Mina"/>
-  <var name="MeatOrPlant" expr="'meat'"/>
+  <var name="MeatOrPlant" expr="plant"/>
   
   
   <field name="F_1">
@@ -73,7 +73,7 @@
     <prompt>you must have filled both fields. </prompt>
   </filled>
 	<block>
-        <if cond="MeatOrPlant == 'meat'">
+        <if cond="MeatOrPlant != 'meat'">
         	<prompt> SAFTY AND MINA ARE AWESOME! </prompt>
             <goto next="#Meat"/>
         <elseif cond="MeatOrPlant == 'plant'"/>
