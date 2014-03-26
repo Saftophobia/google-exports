@@ -207,7 +207,8 @@ public class CodeGenerator {
 			ArrayList<HashSet<State>> set = getSubsets(states, i);
 			System.out.println(set);
 			for (HashSet<State> s : set) {
-				boolean allthere = false;
+			
+				boolean allthere = true;
 				for (State cls : classesWithOnlyOne) {
 					if (s.contains(cls)) {
 						allthere = true;
@@ -217,9 +218,11 @@ public class CodeGenerator {
 					}
 				}
 				if (allthere) {
+					if(s.size()>0)
 					filtered.add(s);
 				}
-			}
+				}
+			
 			System.out.println(filtered);
 
 		}
