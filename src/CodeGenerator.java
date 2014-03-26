@@ -144,6 +144,7 @@ public class CodeGenerator {
 		String[] Keywords = normalized.split("\\|");
 		for (int i = 0; i < Keywords.length; i++) {
 			writer.println("\t\tcase \"" + Keywords[i] + "\" : return true;");
+			
 		}
 		writer.println("\t\tdefault : return false;");
 		writer.println("\t}");
