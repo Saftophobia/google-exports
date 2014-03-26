@@ -86,6 +86,9 @@ public class CodeGenerator {
 			case "CompilationUnit":
 				variableCase(writer, line.split("::=")[1]);
 				break;
+			case "TypeImportOnDemandDeclaration":
+				variableCase(writer, line.split("::=")[1]);
+				break;
 			}
 
 			writer.println("}");
@@ -195,65 +198,53 @@ public class CodeGenerator {
 				classesWithOnlyOne.add(t);
 			}
 		}
-
+		ArrayList<HashSet<State>> filtered = new ArrayList<HashSet<State>>();
 		for (int i = classesWithOnlyOne.size(); i <= states.size(); i++) {
 			ArrayList<HashSet<State>> set = getSubsets(states, i);
 			System.out.println(set);
-			ArrayList<HashSet<State>> filtered = new ArrayList<HashSet<State>>();
 			for (HashSet<State> s : set) {
 				boolean allthere = false;
 				for (State cls : classesWithOnlyOne) {
-					if(s.contains(cls)){
+					if (s.contains(cls)) {
 						allthere = true;
-					}else{
+					} else {
 						allthere = false;
 						break;
 					}
 				}
-				if(allthere){
+				if (allthere) {
 					filtered.add(s);
 				}
 			}
 			System.out.println(filtered);
-			
-			
-			
+
 		}
-		// String condition = "  ";
-		// for (int i = 0; i <= classesWithOneOrZero.size(); i++) {
-		// ArrayList<HashSet<State>> set = getSubsets(classesWithOneOrZero, i);
-		// if (set.get(0).size() > 0) {
-		// for (HashSet<State> s : set) {
-		// condition += " (";
-		// for (State cls : classesWithOneOrZero) {
-		// if (s.contains(cls)) {
-		// condition += " " + ((ClassHolder) cls).name
-		// + ".eval(o)" + " &&";
-		// }
-		// }
-		// if (classesWithOnlyOne.size() > 0) {
-		// for (State cls : classesWithOnlyOne) {
-		// condition += " " + ((ClassHolder) cls).name
-		// + ".eval(o)" + " &&";
-		// }
-		// }
-		// condition = condition.substring(0, condition.length() - 2);
-		// condition += ") ";
-		// condition += "||\n";
-		//
-		// }
-		// }
-		//
-		// }
-		// condition = condition.substring(0, condition.length() - 3);
-		// System.out.println(condition);
-		// writer.println();
-		// writer.println("\tif(" + condition + "){");
-		// writer.println("\t\treturn true;");
-		// writer.println("\t}");
-		// writer.println();
-		// writer.println("\treturn false;");
-		// writer.println();
+
+		for (HashSet<State> set : filtered) {
+			String condition = "";
+			for (State sorted : states) {
+				if (set.contains(sorted)) {
+					if (sorted instanceof Token) {
+						condition += " \"" + ((Token) sorted).token + "\""
+								+ ".equals((String)o)" + " &&";
+					} else {
+						condition += " " + ((ClassHolder) sorted).name
+								+ ".eval(o)" + " &&";
+					}
+				}
+			}
+			condition = condition.substring(0,condition.length()-2);
+			 System.out.println(condition);
+			 writer.println();
+			 writer.println("\tif(" + condition + "){");
+			 writer.println("\t\treturn true;");
+			 writer.println("\t}");
+			 writer.println();
+		}
+
+		writer.println("return false;");
+		writer.println();
+
 
 	}
 
