@@ -129,6 +129,8 @@ public class CodeGenerator {
 		} else {
 			writer.println("public Object eval(Object o ){");
 			concatinationCase(writer, line);
+			writer.println("\treturn false;");
+			writer.println();
 			writer.println("}");
 		}
 	}
@@ -165,7 +167,9 @@ public class CodeGenerator {
 			}
 
 			currentToken += s.charAt(i);
-
+		}
+		if (currentToken.length() > 0) {
+			tokens.add(currentToken);
 		}
 		return tokens;
 	}
@@ -225,26 +229,22 @@ public class CodeGenerator {
 			for (State sorted : states) {
 				if (set.contains(sorted)) {
 					if (sorted instanceof Token) {
-						condition += " \"" + ((Token) sorted).token + "\""
-								+ ".equals((String)o)" + " &&";
+						condition += " \t\"" + ((Token) sorted).token + "\""
+								+ ".equals((String)o)" + " &&\n";
 					} else {
-						condition += " " + ((ClassHolder) sorted).name
-								+ ".eval(o)" + " &&";
+						condition += " \t" + ((ClassHolder) sorted).name
+								+ ".eval(o)" + " &&\n";
 					}
 				}
 			}
-			condition = condition.substring(0,condition.length()-2);
-			 System.out.println(condition);
-			 writer.println();
-			 writer.println("\tif(" + condition + "){");
-			 writer.println("\t\treturn true;");
-			 writer.println("\t}");
-			 writer.println();
+			condition = condition.substring(0, condition.length() - 3);
+			System.out.println(condition);
+			writer.println();
+			writer.println("\tif(" + condition + "){");
+			writer.println("\t\treturn true;");
+			writer.println("\t}");
+			writer.println();
 		}
-
-		writer.println("return false;");
-		writer.println();
-
 
 	}
 
