@@ -118,8 +118,8 @@
 <exclusive or expression> ::= <and expression> | <exclusive or expression> ^ <and expression>
 <and expression> ::= <equality expression> | <and expression> & <equality expression>
 <equality expression> ::= <relational expression> | <equality expression> == <relational expression> | <equality expression> != <relational expression>
-<relational expression> ::= <shift expression> | <relational expression> < <shift expression> | <relational expression> > <shift expression> | <relational expression> <= <shift expression> | <relational expression> >= <shift expression> | <relational expression> instanceof <reference type>
-<shift expression> ::= <additive expression> | <shift expression> << <additive expression> | <shift expression> >> <additive expression> | <shift expression> >>> <additive expression>
+<relational expression> ::= <shift expression> | <relational expression> @ <shift expression> | <relational expression> # <shift expression> | <relational expression> @= <shift expression> | <relational expression> #= <shift expression> | <relational expression> instanceof <reference type>
+<shift expression> ::= <additive expression> | <shift expression> @@ <additive expression> | <shift expression> ## <additive expression> | <shift expression> ### <additive expression>
 <additive expression> ::= <multiplicative expression> | <additive expression> + <multiplicative expression> | <additive expression> - <multiplicative expression>
 <multiplicative expression> ::= <unary expression> | <multiplicative expression> * <unary expression> | <multiplicative expression> / <unary expression> | <multiplicative expression> % <unary expression>
 <cast expression> ::= ( <primitive type> ) <unary expression> | ( <reference type> ) <unary expression not plus minus>
