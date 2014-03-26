@@ -86,7 +86,7 @@ public class CodeGenerator {
 			case "CompilationUnit":
 				variableCase(writer, line.split("::=")[1]);
 				break;
-			case "TypeImportOnDemandDeclaration":
+			case "ImportDeclarations":
 				variableCase(writer, line.split("::=")[1]);
 				break;
 			}
@@ -100,7 +100,7 @@ public class CodeGenerator {
 
 	public static void terminalCase(PrintWriter writer, String line) {
 		String normalized = line.replace(' ', '\0');
-		writer.println("public Object eval(Object o ){");
+		writer.println("public static Object eval(Object o ){");
 		writer.println("\tString keyword = (String) o;");
 		writer.println("\tswitch(keyword){");
 		String[] Keywords = normalized.split("\\|");
@@ -114,20 +114,23 @@ public class CodeGenerator {
 
 	public static void variableCase(PrintWriter writer, String line) {
 		if (line.contains("|")) {
-			String normalized = line.replace(' ', '\0');
-			writer.println("public Object eval(Object o ){");
-			writer.println("\tString keyword = (String) o;");
-			writer.println("\tswitch(keyword){");
-			String[] Keywords = normalized.split("\\|");
+			//String normalized = line.replace(' ', '\0');
+			writer.println("public static Object eval(Object o ){");
+			
+			
+			//writer.println("\tString keyword = (String) o;");
+			//writer.println("\tswitch(keyword){");
+			String[] Keywords = line.split("\\|");
+			
 			for (int i = 0; i < Keywords.length; i++) {
-				writer.println("\t\tcase \"" + Keywords[i]
-						+ "\" : return true;");
+				concatinationCase(writer,Keywords[i]);
 			}
-			writer.println("\t\tdefault : return false;");
-			writer.println("\t}");
+			
+			//writer.println("\t\tdefault : return false;");
+			writer.println("\treturn false;");
 			writer.println("}");
 		} else {
-			writer.println("public Object eval(Object o ){");
+			writer.println("public static Object eval(Object o ){");
 			concatinationCase(writer, line);
 			writer.println("\treturn false;");
 			writer.println();
@@ -174,6 +177,9 @@ public class CodeGenerator {
 		return tokens;
 	}
 
+	
+	
+	
 	public static void concatinationCase(PrintWriter writer, String line) {
 		ArrayList<String> tokens = tokenize(line);
 		ArrayList<State> states = new ArrayList<State>();
@@ -224,7 +230,8 @@ public class CodeGenerator {
 				}
 			
 			System.out.println(filtered);
-
+			
+			
 		}
 
 		for (HashSet<State> set : filtered) {
@@ -250,6 +257,8 @@ public class CodeGenerator {
 		}
 
 	}
+	
+	
 
 	private static void getSubsets(ArrayList<State> superSet, int k, int idx,
 			HashSet<State> current, ArrayList<HashSet<State>> solution) {
