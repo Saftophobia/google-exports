@@ -83,10 +83,8 @@ public class CodeGenerator {
 			case "Sign":
 				terminalCase(writer, line.split("::=")[1]);
 				break;
-			case "CompilationUnit":
-				variableCase(writer, line.split("::=")[1]);
-				break;
-			case "ImportDeclarations":
+			default:
+				System.out.println(fileName);
 				variableCase(writer, line.split("::=")[1]);
 				break;
 			}
@@ -94,6 +92,14 @@ public class CodeGenerator {
 			writer.println("}");
 			writer.close();
 		}
+		PrintWriter writer = new PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
+		writer.println("package syntaxAnalyzer;");
+		writer.println();
+		writer.println("public class Identifier {");
+		writer.println();
+		writer.println("public static Object eval(Object o){return null;}");
+		writer.println("}");
+		writer.close();
 		grammarReader.close();
 		grammar.close();
 	}
@@ -145,6 +151,8 @@ public class CodeGenerator {
 		for (int i = 0; i < s.length(); i++) {
 			if (s.charAt(i) == ' ' && !seenAngluarBracket) {
 				if (currentToken.length() > 0) {
+					s = s.replace("@", "<");
+					s = s.replace("#", ">");
 					tokens.add(currentToken);
 					currentToken = "";
 					continue;
@@ -168,7 +176,7 @@ public class CodeGenerator {
 				currentToken = "";
 				continue;
 			}
-
+			
 			currentToken += s.charAt(i);
 		}
 		if (currentToken.length() > 0) {
@@ -211,9 +219,9 @@ public class CodeGenerator {
 		ArrayList<HashSet<State>> filtered = new ArrayList<HashSet<State>>();
 		for (int i = classesWithOnlyOne.size(); i <= states.size(); i++) {
 			ArrayList<HashSet<State>> set = getSubsets(states, i);
-			System.out.println(set);
+			//System.out.println(set);
 			for (HashSet<State> s : set) {
-			
+
 				boolean allthere = true;
 				for (State cls : classesWithOnlyOne) {
 					if (s.contains(cls)) {
@@ -224,12 +232,12 @@ public class CodeGenerator {
 					}
 				}
 				if (allthere) {
-					if(s.size()>0)
-					filtered.add(s);
+					if (s.size() > 0)
+						filtered.add(s);
 				}
-				}
-			
-			System.out.println(filtered);
+			}
+
+			//System.out.println(filtered);
 			
 			
 		}
@@ -242,13 +250,13 @@ public class CodeGenerator {
 						condition += " \t\"" + ((Token) sorted).token + "\""
 								+ ".equals((String)o)" + " &&\n";
 					} else {
-						condition += " \t" + ((ClassHolder) sorted).name
-								+ ".eval(o)" + " &&\n";
+						condition += " \t((Boolean)" + ((ClassHolder) sorted).name
+								+ ".eval(o))" + " &&\n";
 					}
 				}
 			}
 			condition = condition.substring(0, condition.length() - 3);
-			System.out.println(condition);
+			//System.out.println(condition);
 			writer.println();
 			writer.println("\tif(" + condition + "){");
 			writer.println("\t\treturn true;");
