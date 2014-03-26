@@ -2,44 +2,44 @@ package syntaxAnalyzer;
 
 public class CompilationUnit{
 
-public Object eval(Object o ){
+public static Object eval(Object o ){
 
-	if( 	PackageDeclaration.eval(o) ){
+	if( 	((Boolean)PackageDeclaration.eval(o)) ){
 		return true;
 	}
 
 
-	if( 	ImportDeclarations.eval(o) ){
+	if( 	((Boolean)ImportDeclarations.eval(o)) ){
 		return true;
 	}
 
 
-	if( 	TypeDeclarations.eval(o) ){
+	if( 	((Boolean)TypeDeclarations.eval(o)) ){
 		return true;
 	}
 
 
-	if( 	PackageDeclaration.eval(o) &&
- 	ImportDeclarations.eval(o) ){
+	if( 	((Boolean)PackageDeclaration.eval(o)) &&
+ 	((Boolean)ImportDeclarations.eval(o)) ){
 		return true;
 	}
 
 
-	if( 	PackageDeclaration.eval(o) &&
- 	TypeDeclarations.eval(o) ){
+	if( 	((Boolean)PackageDeclaration.eval(o)) &&
+ 	((Boolean)TypeDeclarations.eval(o)) ){
 		return true;
 	}
 
 
-	if( 	ImportDeclarations.eval(o) &&
- 	TypeDeclarations.eval(o) ){
+	if( 	((Boolean)ImportDeclarations.eval(o)) &&
+ 	((Boolean)TypeDeclarations.eval(o)) ){
 		return true;
 	}
 
 
-	if( 	PackageDeclaration.eval(o) &&
- 	ImportDeclarations.eval(o) &&
- 	TypeDeclarations.eval(o) ){
+	if( 	((Boolean)PackageDeclaration.eval(o)) &&
+ 	((Boolean)ImportDeclarations.eval(o)) &&
+ 	((Boolean)TypeDeclarations.eval(o)) ){
 		return true;
 	}
 

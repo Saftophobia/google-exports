@@ -83,6 +83,28 @@ public class CodeGenerator {
 			case "Sign":
 				terminalCase(writer, line.split("::=")[1]);
 				break;
+			case "SingleCharacter":
+				//terminalCase(writer, line.split("::=")[1]);
+				//PrintWriter writer = new PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
+				//writer.println("package syntaxAnalyzer;");
+				//writer.println();
+				//writer.println("public class SingleCharacter {");
+				writer.println();
+				writer.println("public static Object eval(Object o){return null;}");
+				//writer.println("}");
+				//writer.close();
+				break;
+			case "StringCharacter":
+				//terminalCase(writer, line.split("::=")[1]);
+				//PrintWriter writer = new PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
+				//writer.println("package syntaxAnalyzer;");
+//				writer.println();
+//				writer.println("public class StringCharacter {");
+//				writer.println();
+				writer.println("public static Object eval(Object o){return null;}");
+//				writer.println("}");
+				//writer.close();
+				break;
 			default:
 				System.out.println(fileName);
 				variableCase(writer, line.split("::=")[1]);
@@ -100,6 +122,16 @@ public class CodeGenerator {
 		writer.println("public static Object eval(Object o){return null;}");
 		writer.println("}");
 		writer.close();
+		
+		writer = new PrintWriter("src/syntaxAnalyzer/EscapeSequence.java", "UTF-8");
+		writer.println("package syntaxAnalyzer;");
+		writer.println();
+		writer.println("public class EscapeSequence {");
+		writer.println();
+		writer.println("public static Object eval(Object o){return null;}");
+		writer.println("}");
+		writer.close();
+		
 		grammarReader.close();
 		grammar.close();
 	}
@@ -148,11 +180,15 @@ public class CodeGenerator {
 		boolean seenAngluarBracket = false;
 		ArrayList<String> tokens = new ArrayList<String>();
 		String currentToken = "";
+		
 		for (int i = 0; i < s.length(); i++) {
 			if (s.charAt(i) == ' ' && !seenAngluarBracket) {
 				if (currentToken.length() > 0) {
-					s = s.replace("@", "<");
-					s = s.replace("#", ">");
+					//s = s.replace("@", "<");
+					//s = s.replace("#", ">");
+					
+					currentToken = currentToken.replace("$", "\\\"");
+					
 					tokens.add(currentToken);
 					currentToken = "";
 					continue;
@@ -194,7 +230,7 @@ public class CodeGenerator {
 		ArrayList<State> classesWithOneOrZero = new ArrayList<State>();
 		ArrayList<State> classesWithOnlyOne = new ArrayList<State>();
 		for (String s : tokens) {
-			if (s.startsWith("<")) {
+			if (s.startsWith("<") && s.length() > 1) {
 				if (s.endsWith("?")) {
 					String normalized = s.substring(0, s.length() - 1);
 					ClassHolder cls = new ClassHolder();
@@ -247,6 +283,9 @@ public class CodeGenerator {
 			for (State sorted : states) {
 				if (set.contains(sorted)) {
 					if (sorted instanceof Token) {
+						((Token) sorted).token = ((Token) sorted).token.replace("@", "<");
+						((Token) sorted).token = ((Token) sorted).token.replace("#", ">");
+						
 						condition += " \t\"" + ((Token) sorted).token + "\""
 								+ ".equals((String)o)" + " &&\n";
 					} else {

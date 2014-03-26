@@ -1,6 +1,6 @@
 package syntaxAnalyzer;
 
-public class StringCharacter{
+public class Identifier {
 
 public static Object eval(Object o){return null;}
 }

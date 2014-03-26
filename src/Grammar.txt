@@ -73,7 +73,7 @@
 <local variable declaration> ::= <type> <variable declarators>
 <statement> ::= <statement without trailing substatement> | <labeled statement> | <if then statement> | <if then else statement> | <while statement> | <for statement>
 <statement no short if> ::= <statement without trailing substatement> | <labeled statement no short if> | <if then else statement no short if> | <while statement no short if> | <for statement no short if>
-<statement without trailing substatement> ::= <block> | <empty statement> | <expression statement> | <switch statement> | <do statement> | <break statement> | <continue statement> | <return statement> | <synchronized statement> | <throws statements> | <try statement>
+<statement without trailing substatement> ::= <block> | <empty statement> | <expression statement> | <switch statement> | <do statement> | <break statement> | <continue statement> | <return statement> | <synchronized statement> | <throws statement> | <try statement>
 <empty statement> ::= ;
 <labeled statement> ::= <identifier> : <statement>
 <labeled statement no short if> ::= <identifier> : <statement no short if>
@@ -169,8 +169,8 @@
 <float type suffix> ::= f | F | d | D
 <boolean literal> ::= true | false
 <character literal> ::= ' <single character> ' | ' <escape sequence> '
-<single character> ::= <input character> except ' and \
-<string literal> ::= " <string characters>?"
+<single character> ::= <input character> except \ and '
+<string literal> ::= $ <string characters>? $ 
 <string characters> ::= <string character> | <string characters> <string character>
 <string character> ::= <input character> except " and \ | <escape character>
 <null literal> ::= null
