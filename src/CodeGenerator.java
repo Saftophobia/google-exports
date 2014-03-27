@@ -24,6 +24,7 @@ public class CodeGenerator {
 			writer.println("package syntaxAnalyzer;");
 			writer.println();
 			writer.println("public class " + fileName + "{");
+			writer.println("public static int input_index = 0;");
 			writer.println();
 			switch (fileName) {
 			case "Keyword":
@@ -84,26 +85,28 @@ public class CodeGenerator {
 				terminalCase(writer, line.split("::=")[1]);
 				break;
 			case "SingleCharacter":
-				//terminalCase(writer, line.split("::=")[1]);
-				//PrintWriter writer = new PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
-				//writer.println("package syntaxAnalyzer;");
-				//writer.println();
-				//writer.println("public class SingleCharacter {");
+				// terminalCase(writer, line.split("::=")[1]);
+				// PrintWriter writer = new
+				// PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
+				// writer.println("package syntaxAnalyzer;");
+				// writer.println();
+				// writer.println("public class SingleCharacter {");
 				writer.println();
 				writer.println("public static Object eval(Object o){return null;}");
-				//writer.println("}");
-				//writer.close();
+				// writer.println("}");
+				// writer.close();
 				break;
 			case "StringCharacter":
-				//terminalCase(writer, line.split("::=")[1]);
-				//PrintWriter writer = new PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
-				//writer.println("package syntaxAnalyzer;");
-//				writer.println();
-//				writer.println("public class StringCharacter {");
-//				writer.println();
+				// terminalCase(writer, line.split("::=")[1]);
+				// PrintWriter writer = new
+				// PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
+				// writer.println("package syntaxAnalyzer;");
+				// writer.println();
+				// writer.println("public class StringCharacter {");
+				// writer.println();
 				writer.println("public static Object eval(Object o){return null;}");
-//				writer.println("}");
-				//writer.close();
+				// writer.println("}");
+				// writer.close();
 				break;
 			default:
 				System.out.println(fileName);
@@ -114,16 +117,18 @@ public class CodeGenerator {
 			writer.println("}");
 			writer.close();
 		}
-		PrintWriter writer = new PrintWriter("src/syntaxAnalyzer/Identifier.java", "UTF-8");
+		PrintWriter writer = new PrintWriter(
+				"src/syntaxAnalyzer/Identifier.java", "UTF-8");
 		writer.println("package syntaxAnalyzer;");
 		writer.println();
 		writer.println("public class Identifier {");
 		writer.println();
-		writer.println("public static Object eval(Object o){return null;}");
+		writer.println("public static Object eval(Object o){return true;}");
 		writer.println("}");
 		writer.close();
-		
-		writer = new PrintWriter("src/syntaxAnalyzer/EscapeSequence.java", "UTF-8");
+
+		writer = new PrintWriter("src/syntaxAnalyzer/EscapeSequence.java",
+				"UTF-8");
 		writer.println("package syntaxAnalyzer;");
 		writer.println();
 		writer.println("public class EscapeSequence {");
@@ -131,7 +136,25 @@ public class CodeGenerator {
 		writer.println("public static Object eval(Object o){return null;}");
 		writer.println("}");
 		writer.close();
-		
+
+		writer = new PrintWriter("src/syntaxAnalyzer/Lexer.java", "UTF-8");
+		writer.println("package syntaxAnalyzer;");
+		writer.println();
+		writer.println("import java.util.ArrayList;");
+		writer.println();
+		writer.println("public class Lexer {");
+		writer.println();
+		writer.println("public static ArrayList<String> lexems = new ArrayList<String>();\n"
+				+ "public static int index = 0;\n"
+				+ "public static int EOF = 0;");
+
+		writer.println("public static String getNextToken() {\n"
+				+ "String s = lexems.get(index);\n" + "index++;\n"
+				+ "return s;\n" + "}");
+		writer.println("}");
+
+		writer.close();
+
 		grammarReader.close();
 		grammar.close();
 	}
@@ -144,7 +167,6 @@ public class CodeGenerator {
 		String[] Keywords = normalized.split("\\|");
 		for (int i = 0; i < Keywords.length; i++) {
 			writer.println("\t\tcase \"" + Keywords[i] + "\" : return true;");
-			
 		}
 		writer.println("\t\tdefault : return false;");
 		writer.println("\t}");
@@ -153,23 +175,23 @@ public class CodeGenerator {
 
 	public static void variableCase(PrintWriter writer, String line) {
 		if (line.contains("|")) {
-			//String normalized = line.replace(' ', '\0');
+			// String normalized = line.replace(' ', '\0');
 			writer.println("public static Object eval(Object o ){");
-			
-			
-			//writer.println("\tString keyword = (String) o;");
-			//writer.println("\tswitch(keyword){");
+			writer.println("input_index = Lexer.index;");
+			// writer.println("\tString keyword = (String) o;");
+			// writer.println("\tswitch(keyword){");
 			String[] Keywords = line.split("\\|");
-			
+
 			for (int i = 0; i < Keywords.length; i++) {
-				concatinationCase(writer,Keywords[i]);
+				concatinationCase(writer, Keywords[i]);
 			}
-			
-			//writer.println("\t\tdefault : return false;");
+
+			// writer.println("\t\tdefault : return false;");
 			writer.println("\treturn false;");
 			writer.println("}");
 		} else {
 			writer.println("public static Object eval(Object o ){");
+			writer.println("input_index = Lexer.index;");
 			concatinationCase(writer, line);
 			writer.println("\treturn false;");
 			writer.println();
@@ -181,15 +203,15 @@ public class CodeGenerator {
 		boolean seenAngluarBracket = false;
 		ArrayList<String> tokens = new ArrayList<String>();
 		String currentToken = "";
-		
+
 		for (int i = 0; i < s.length(); i++) {
 			if (s.charAt(i) == ' ' && !seenAngluarBracket) {
 				if (currentToken.length() > 0) {
-					//s = s.replace("@", "<");
-					//s = s.replace("#", ">");
-					
+					// s = s.replace("@", "<");
+					// s = s.replace("#", ">");
+
 					currentToken = currentToken.replace("$", "\\\"");
-					
+
 					tokens.add(currentToken);
 					currentToken = "";
 					continue;
@@ -213,7 +235,7 @@ public class CodeGenerator {
 				currentToken = "";
 				continue;
 			}
-			
+
 			currentToken += s.charAt(i);
 		}
 		if (currentToken.length() > 0) {
@@ -222,9 +244,6 @@ public class CodeGenerator {
 		return tokens;
 	}
 
-	
-	
-	
 	public static void concatinationCase(PrintWriter writer, String line) {
 		ArrayList<String> tokens = tokenize(line);
 		ArrayList<State> states = new ArrayList<State>();
@@ -247,16 +266,27 @@ public class CodeGenerator {
 					classesWithOnlyOne.add(cls);
 				}
 			} else {
-				Token t = new Token();
-				t.token = s;
-				states.add(t);
-				classesWithOnlyOne.add(t);
+				if (s.endsWith("?")) {
+					String normalized = s.substring(0, s.length() - 1);
+					Token t = new Token();
+					t.token = normalized;
+					t.oneOrzero = true;
+					states.add(t);
+					classesWithOneOrZero.add(t);
+				} else {
+					Token t = new Token();
+					t.token = s;
+					t.oneOrzero = false;
+					states.add(t);
+					classesWithOnlyOne.add(t);
+				}
+
 			}
 		}
 		ArrayList<HashSet<State>> filtered = new ArrayList<HashSet<State>>();
 		for (int i = classesWithOnlyOne.size(); i <= states.size(); i++) {
 			ArrayList<HashSet<State>> set = getSubsets(states, i);
-			//System.out.println(set);
+			// System.out.println(set);
 			for (HashSet<State> s : set) {
 
 				boolean allthere = true;
@@ -274,9 +304,8 @@ public class CodeGenerator {
 				}
 			}
 
-			//System.out.println(filtered);
-			
-			
+			// System.out.println(filtered);
+
 		}
 
 		for (HashSet<State> set : filtered) {
@@ -284,29 +313,35 @@ public class CodeGenerator {
 			for (State sorted : states) {
 				if (set.contains(sorted)) {
 					if (sorted instanceof Token) {
-						((Token) sorted).token = ((Token) sorted).token.replace("@", "<");
-						((Token) sorted).token = ((Token) sorted).token.replace("#", ">");
-						
-						condition += " \t\"" + ((Token) sorted).token + "\""
-								+ ".equals((String)o)" + " &&\n";
+						((Token) sorted).token = ((Token) sorted).token
+								.replace("@", "<");
+						((Token) sorted).token = ((Token) sorted).token
+								.replace("#", ">");
+
+						condition += " \t\""
+								+ ((Token) sorted).token
+								+ "\""
+								+ ".equals(Lexer.getNextToken())" + " &&\n";
 					} else {
-						condition += " \t((Boolean)" + ((ClassHolder) sorted).name
-								+ ".eval(o))" + " &&\n";
+						condition += " \t((Boolean)"
+								+ ((ClassHolder) sorted).name + ".eval(o))"
+								+ " &&\n";
 					}
 				}
 			}
 			condition = condition.substring(0, condition.length() - 3);
-			//System.out.println(condition);
+			// System.out.println(condition);
 			writer.println();
 			writer.println("\tif(" + condition + "){");
+			//writer.println("\t\tif(Lexer.index == Lexer.EOF)");
 			writer.println("\t\treturn true;");
 			writer.println("\t}");
+			writer.println();
+			writer.println("Lexer.index =input_index;");
 			writer.println();
 		}
 
 	}
-	
-	
 
 	private static void getSubsets(ArrayList<State> superSet, int k, int idx,
 			HashSet<State> current, ArrayList<HashSet<State>> solution) {
@@ -374,6 +409,7 @@ public class CodeGenerator {
 
 	static class Token extends State {
 		public String token;
+		public boolean oneOrzero;
 
 		public String toString() {
 			return token;

@@ -1,6 +1,6 @@
 package syntaxAnalyzer;
 
 public class Token {
-	public String category;
+	public String type;
 	public String value;
 }

@@ -85,29 +85,178 @@ public class RealCodeGenerator {
 				terminalCase(writer, line.split("::=")[1]);
 				break;
 			case "SingleTypeImportDeclaration":
-				sequencing(writer, line.split("::=")[1],false,false);
-				break;	
+				write(writer, line.split("::=")[1]);
+				break;
 			case "PackageDeclaration":
-				sequencing(writer, line.split("::=")[1],false,false);
+				write(writer, line.split("::=")[1]);
 				break;
 			case "TypeImportOnDemandDeclaration":
-				sequencing(writer, line.split("::=")[1],false,false);
+				write(writer, line.split("::=")[1]);
 				break;
 			case "Super":
-				sequencing(writer, line.split("::=")[1],false,false);
+				write(writer, line.split("::=")[1]);
 				break;
 			case "Interfaces":
-				sequencing(writer, line.split("::=")[1],false,false);
+				write(writer, line.split("::=")[1]);
+				break;
+			case "StaticInitializer":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "FormalParameter":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "Throws":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "MethodDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ConstantDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ClassType":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "InterfaceType":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ArrayType":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "LocalVariableDeclarationStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "LocalVariableDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "LabeledStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "LabeledStatementNoShortIf":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ExpressionStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "IfThenStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "IfThenElseStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "IfThenElseStatementNoShortIf":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "SwitchStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "SwitchBlockStatementGroup":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "WhileStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "WhileStatementNoShortIf":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "DoStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ForUpdate":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ThrowsStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "SynchronizedStatement":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "CatchClause":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "Finally":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ConstantExpression":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "Experssion":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "Assignment":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "PredecrementExpression":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "PreincrementExpression":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "PostdecrementExpression":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "PostincrementExpression":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "DimExpr":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ExponentPart":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "CompilationUnit":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ClassBody":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ClassInstanceCreationExpression":
+				write(writer, line.split("::=")[1]);
+				break;	
+			case "ClassDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ConstructorDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ConstructorDeclarator":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "ConstructorBody":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "FieldDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "MethodHeader":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "MethodDeclarator":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "InterfaceDeclaration":
+				write(writer, line.split("::=")[1]);
+				break;
+			case "InterfaceBody":
+				write(writer, line.split("::=")[1]);
 				break;
 			default:
 				writer.println("\treturn false;");
 			}
+
 			writer.println("\t}");
 		}
+		addIdentifier(writer);
 		writer.println("}");
 		writer.close();
 		grammarReader.close();
 		grammar.close();
+	}
+
+	private static void addIdentifier(PrintWriter writer) {
+		writer.println("\tpublic static boolean Identifier(Token tok){");
+		writer.println("\t\treturn tok.type.equals(\"Identifier\");");
+		writer.println("\t}");
 	}
 
 	public static void terminalCase(PrintWriter writer, String line) {
@@ -125,22 +274,21 @@ public class RealCodeGenerator {
 	public static void variableCase(PrintWriter writer, String line) {
 		writer.println("int oldTokenCount = tokenizer.index;");
 		if (line.contains("|")) {
-		//	String[] Keywords = line.split("\\|");
+			// String[] Keywords = line.split("\\|");
 
-			//for (int i = 0; i < Keywords.length; i++) {
-//				if(i+1 == Keywords.length)
-//				sequencing(writer, Keywords[i],true,true);
-//				else
-//				sequencing(writer, Keywords[i],true,false);	
-			//}
+			// for (int i = 0; i < Keywords.length; i++) {
+			// if(i+1 == Keywords.length)
+			// sequencing(writer, Keywords[i],true,true);
+			// else
+			// sequencing(writer, Keywords[i],true,false);
+			// }
 
 		} else {
-		//	sequencing(writer, line,false,false);
+			// sequencing(writer, line,false,false);
 		}
 	}
 
-	public static void sequencing(PrintWriter writer, String line,boolean isAlternating,boolean lastAlternating) {
-
+	public static void write(PrintWriter writer, String line) {
 		ArrayList<String> tokens = tokenize(line);
 		ArrayList<State> states = new ArrayList<State>();
 		ArrayList<State> classesWithOneOrZero = new ArrayList<State>();
@@ -165,13 +313,13 @@ public class RealCodeGenerator {
 				if (s.endsWith("?")) {
 					String normalized = s.substring(0, s.length() - 1);
 					Token t = new Token();
-					t.token = normalized;
+					t.name = normalized;
 					t.oneOrzero = true;
 					states.add(t);
 					classesWithOneOrZero.add(t);
 				} else {
 					Token t = new Token();
-					t.token = s;
+					t.name = s;
 					t.oneOrzero = false;
 					states.add(t);
 					classesWithOnlyOne.add(t);
@@ -180,72 +328,89 @@ public class RealCodeGenerator {
 			}
 		}
 
-		int lastInteration = states.size() - 1;
+		int lastIteration = states.size() - 1;
 		for (int i = 0; i < states.size(); i++) {
-			if (i == 0 || i == lastInteration) {
-				if (states.get(i) instanceof ClassHolder) {
-					writer.println("if (" + states.get(i) + "(tok)) {");
-					if (i != lastInteration) {
-						writer.println("tok = tokenizer.getNextToken();");
-						writer.println("} else {");
-						writer.println("return false;");
-						writer.println("}");
-					} else {
-						if (i != 0 || lastAlternating) {
-							writer.println("return true;");
-						} else {
-							writer.println("tok = tokenizer.getNextToken();");
-						}
-						writer.println("} else {");
-						if (i != 0) {
-							writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
-						} else {
-							writer.println("return false;");
-						}
-						writer.println("}");
-					}
+			if (!states.get(i).oneOrzero) {
+				if (lastIteration == i && i == 0)
+					sequencing(writer, states.get(i), true, true);
+				if (lastIteration != i && i == 0)
+					sequencing(writer, states.get(i), true, false);
+				if (lastIteration == i && i != 0)
+					sequencing(writer, states.get(i), false, true);
+				if (lastIteration != i && i != 0)
+					sequencing(writer, states.get(i), false, false);
+			} else {
+				if (lastIteration == i && i == 0)
+					optional(writer, states.get(i), true, true);
+				if (lastIteration != i && i == 0)
+					optional(writer, states.get(i), true, false);
+				if (lastIteration == i && i != 0)
+					optional(writer, states.get(i), false, true);
+				if (lastIteration != i && i != 0)
+					optional(writer, states.get(i), false, false);
+			}
+		}
 
+	}
+
+	public static void sequencing(PrintWriter writer, State state,
+			boolean firstIteration, boolean lastIteration) {
+		if (firstIteration || lastIteration) {
+			if (state instanceof ClassHolder) {
+				writer.println("if (" + state + "(tok)) {");
+				if (!lastIteration) {
+					writer.println("tok = tokenizer.getNextToken();");
+					writer.println("} else {");
+					writer.println("return false;");
+					writer.println("}");
 				} else {
-					writer.println("if (tok.value.equals((\"" + states.get(i)
-							+ "\"))) {");
-					if (i != lastInteration) {
-						writer.println("tok = tokenizer.getNextToken();");
-						writer.println("} else {");
-						writer.println("return false;");
-						writer.println("}");
+					writer.println("return true;");
+					writer.println("} else {");
+					if (!firstIteration) {
+						writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
 					} else {
-						if (i != 0 || lastAlternating) {
-							writer.println("return true;");
-						} else {
-							writer.println("tok = tokenizer.getNextToken();");
-						}
-						writer.println("} else {");
-						if (i != 0) {
-							writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
-						} else {
-							writer.println("return false;");
-						}
-						writer.println("}");
+						writer.println("return false;");
 					}
+					writer.println("}");
 				}
 
 			} else {
-				if (states.get(i) instanceof ClassHolder) {
-					writer.println("if (" + states.get(i) + "(tok)) {");
+				writer.println("if (tok.value.equals((\"" + state + "\"))) {");
+				if (!lastIteration) {
 					writer.println("tok = tokenizer.getNextToken();");
 					writer.println("} else {");
-					writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
+					writer.println("return false;");
 					writer.println("}");
 				} else {
-					writer.println("if (tok.value.equals((\"" + states.get(i)
-							+ "\"))) {");
-					writer.println("tok = tokenizer.getNextToken();");
+
+					writer.println("return true;");
+
 					writer.println("} else {");
-					writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
+					if (!firstIteration) {
+						writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
+					} else {
+						writer.println("return false;");
+					}
 					writer.println("}");
 				}
 			}
+
+		} else {
+			if (state instanceof ClassHolder) {
+				writer.println("if (" + state + "(tok)) {");
+				writer.println("tok = tokenizer.getNextToken();");
+				writer.println("} else {");
+				writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
+				writer.println("}");
+			} else {
+				writer.println("if (tok.value.equals((\"" + state + "\"))) {");
+				writer.println("tok = tokenizer.getNextToken();");
+				writer.println("} else {");
+				writer.println("return tokenizer.pushBack(tokenizer.index - oldTokenCount );");
+				writer.println("}");
+			}
 		}
+
 	}
 
 	public static ArrayList<String> tokenize(String s) {
@@ -319,22 +484,40 @@ public class RealCodeGenerator {
 		return s;
 	}
 
-	static abstract class State {
+	public static void alternatingSquencing(PrintWriter writer, String line) {
 
 	}
 
-	static class Token extends State {
-		public String token;
+	public static void optional(PrintWriter writer, State state,
+			boolean firstIteration, boolean lastIteration) {
+
+		if (firstIteration && lastIteration) {
+			writer.println("return " + state + "(tok);");
+		} else {
+			if (lastIteration) {
+				writer.println(state + "(tok);");
+				writer.println("return true;");
+			} else {
+				writer.println(state + "(tok);");
+				writer.println("tok = tokenizer.getCurrentToken();");
+			}
+		}
+
+	}
+
+	static abstract class State {
+		public String name;
 		public boolean oneOrzero;
+	}
+
+	static class Token extends State {
 
 		public String toString() {
-			return token;
+			return name;
 		}
 	}
 
 	static class ClassHolder extends State {
-		public String name;
-		public boolean oneOrzero;
 
 		public String toString() {
 			return name;
