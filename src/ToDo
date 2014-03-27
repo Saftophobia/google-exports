@@ -1,12 +1,12 @@
-<package declaration> ::= package <package name> ;
+<compilation unit> ::= <package declaration>? <import declarations>? <type declarations>?>
 <import declarations> ::= <import declaration> | <import declarations> <import declaration>
 <import declaration> ::= <single type import declaration> | <type import on demand declaration>
-<single type import declaration> ::= import <type name> ;
 <type import on demand declaration> ::= import <package name> . * ;
 <type declarations> ::= <type declaration> | <type declarations> <type declaration>
 <type declaration> ::= <class declaration> | <interface declaration> | ;
 <class declaration> ::= <class modifiers>? class <identifier> <super>? <interfaces>? <class body>
 <class modifiers> ::= <class modifier> | <class modifiers> <class modifier>
+<class modifier> ::= public | abstract | final
 <super> ::= extends <class type>
 <interfaces> ::= implements <interface type list>
 <interface type list> ::= <interface type> | <interface type list> , <interface type>
@@ -17,6 +17,7 @@
 <static initializer> ::= static <block>
 <constructor declaration> ::= <constructor modifiers>? <constructor declarator> <throws>? <constructor body>
 <constructor modifiers> ::= <constructor modifier> | <constructor modifiers> <constructor modifier>
+<constructor modifier> ::= public | protected | private
 <constructor declarator> ::= <simple type name> ( <formal parameter list>? )
 <formal parameter list> ::= <formal parameter> | <formal parameter list> , <formal parameter>
 <formal parameter> ::= <type> <variable declarator id>
@@ -26,18 +27,20 @@
 <explicit constructor invocation>::= this ( <argument list>? ) | super ( <argument list>? )
 <field declaration> ::= <field modifiers>? <type> <variable declarators> ;
 <field modifiers> ::= <field modifier> | <field modifiers> <field modifier>
+<field modifier> ::= public | protected | private | static | final | transient | volatile
 <variable declarators> ::= <variable declarator> | <variable declarators> , <variable declarator>
 <variable declarator> ::= <variable declarator id> | <variable declarator id> = <variable initializer>
 <variable declarator id> ::= <identifier> | <variable declarator id> [ ]
-<variable initializer> ::= <expression> | <array initializer>
 <method declaration> ::= <method header> <method body>
 <method header> ::= <method modifiers>? <result type> <method declarator> <throws>?
 <result type> ::= <type> | void
 <method modifiers> ::= <method modifier> | <method modifiers> <method modifier>
+<method modifier> ::= public | protected | private | static | abstract | final | synchronized | native
 <method declarator> ::= <identifier> ( <formal parameter list>? )
 <method body> ::= <block> | ;
 <interface declaration> ::= <interface modifiers>? interface <identifier> <extends interfaces>? <interface body>
 <interface modifiers> ::= <interface modifier> | <interface modifiers> <interface modifier>
+<interface modifier> ::= public | abstract
 <extends interfaces> ::= extends <interface type> | <extends interfaces> , <interface type>
 <interface body> ::= { <interface member declarations>? }
 <interface member declarations> ::= <interface member declaration> | <interface member declarations> <interface member declaration>
@@ -47,12 +50,14 @@
 <abstract method declaration>::= <abstract method modifiers>? <result type> <method declarator> <throws>? ;
 <abstract method modifiers> ::= <abstract method modifier> | <abstract method modifiers> <abstract method modifier>
 <abstract method modifier> ::= public | abstract
-<array initializer> ::= { <variable initializers>? , ? }
+<array initializer> ::= { <variable initializers>? ,? }
 <variable initializers> ::= <variable initializer> | <variable initializers> , <variable initializer>
 <variable initializer> ::= <expression> | <array initializer>
 <type> ::= <primitive type> | <reference type>
 <primitive type> ::= <numeric type> | boolean
 <numeric type> ::= <integral type> | <floating-point type>
+<integral type> ::= byte | short | int | long | char
+<floating-point type> ::= float | double
 <reference type> ::= <class or interface type> | <array type>
 <class or interface type> ::= <class type> | <interface type>
 <class type> ::= <type name>
@@ -65,7 +70,8 @@
 <local variable declaration> ::= <type> <variable declarators>
 <statement> ::= <statement without trailing substatement> | <labeled statement> | <if then statement> | <if then else statement> | <while statement> | <for statement>
 <statement no short if> ::= <statement without trailing substatement> | <labeled statement no short if> | <if then else statement no short if> | <while statement no short if> | <for statement no short if>
-<statement without trailing substatement> ::= <block> | <empty statement> | <expression statement> | <switch statement> | <do statement> | <break statement> | <continue statement> | <return statement> | <synchronized statement> | <throws statements> | <try statement>
+<statement without trailing substatement> ::= <block> | <empty statement> | <expression statement> | <switch statement> | <do statement> | <break statement> | <continue statement> | <return statement> | <synchronized statement> | <throws statement> | <try statement>
+<empty statement> ::= ;
 <labeled statement> ::= <identifier> : <statement>
 <labeled statement no short if> ::= <identifier> : <statement no short if>
 <expression statement> ::= <statement expression> ;
@@ -101,6 +107,7 @@
 <assignment expression> ::= <conditional expression> | <assignment>
 <assignment> ::= <left hand side> <assignment operator> <assignment expression>
 <left hand side> ::= <expression name> | <field access> | <array access>
+<assignment operator> ::= = | *= | /= | %= | += | -= | <<= | >>= | >>>= | &= | ^= | |=
 <conditional expression> ::= <conditional or expression> | <conditional or expression> ? <expression> : <conditional expression>
 <conditional or expression> ::= <conditional and expression> | <conditional or expression> || <conditional and expression>
 <conditional and expression> ::= <inclusive or expression> | <conditional and expression> && <inclusive or expression>
@@ -108,8 +115,8 @@
 <exclusive or expression> ::= <and expression> | <exclusive or expression> ^ <and expression>
 <and expression> ::= <equality expression> | <and expression> & <equality expression>
 <equality expression> ::= <relational expression> | <equality expression> == <relational expression> | <equality expression> != <relational expression>
-<relational expression> ::= <shift expression> | <relational expression> < <shift expression> | <relational expression> > <shift expression> | <relational expression> <= <shift expression> | <relational expression> >= <shift expression> | <relational expression> instanceof <reference type>
-<shift expression> ::= <additive expression> | <shift expression> << <additive expression> | <shift expression> >> <additive expression> | <shift expression> >>> <additive expression>
+<relational expression> ::= <shift expression> | <relational expression> @ <shift expression> | <relational expression> # <shift expression> | <relational expression> @= <shift expression> | <relational expression> #= <shift expression> | <relational expression> instanceof <reference type>
+<shift expression> ::= <additive expression> | <shift expression> @@ <additive expression> | <shift expression> ## <additive expression> | <shift expression> ### <additive expression>
 <additive expression> ::= <multiplicative expression> | <additive expression> + <multiplicative expression> | <additive expression> - <multiplicative expression>
 <multiplicative expression> ::= <unary expression> | <multiplicative expression> * <unary expression> | <multiplicative expression> / <unary expression> | <multiplicative expression> % <unary expression>
 <cast expression> ::= ( <primitive type> ) <unary expression> | ( <reference type> ) <unary expression not plus minus>
@@ -142,17 +149,26 @@
 <decimal integer literal> ::= <decimal numeral> <integer type suffix>?
 <hex integer literal> ::= <hex numeral> <integer type suffix>?
 <octal integer literal> ::= <octal numeral> <integer type suffix>?
+<integer type suffix> ::= l | L
 <decimal numeral> ::= 0 | <non zero digit> <digits>?
 <digits> ::= <digit> | <digits> <digit>
 <digit> ::= 0 | <non zero digit>
+<non zero digit> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 <hex numeral> ::= 0 x <hex digit> | 0 X <hex digit> | <hex numeral> <hex digit>
+<hex digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | a | b | c | d | e | f | A | B | C | D | E | F
 <octal numeral> ::= 0 <octal digit> | <octal numeral> <octal digit>
-<floating-point literal> ::= <digits> . <digits>? <exponent part>? <float type suffix>?
-<digits> <exponent part>? <float type suffix>?
+<octal digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+<floating-point literal> ::= <digits> . <digits>? <exponent part>? <float type suffix>? <digits> <exponent part>? <float type suffix>?
 <exponent part> ::= <exponent indicator> <signed integer>
+<exponent indicator> ::= e | E
 <signed integer> ::= <sign>? <digits>
+<sign> ::= + | -
+<float type suffix> ::= f | F | d | D
+<boolean literal> ::= true | false
 <character literal> ::= ' <single character> ' | ' <escape sequence> '
-<single character> ::= <input character> except ' and \
-<string literal> ::= " <string characters>?"
+<single character> ::= <input character> except \ and '
+<string literal> ::= $ <string characters>? $ 
 <string characters> ::= <string character> | <string characters> <string character>
 <string character> ::= <input character> except " and \ | <escape character>
+<null literal> ::= null
+<keyword> ::= abstract | boolean | break | byte | case | catch | char | class | const | continue | default | do | double | else | extends | final | finally | float | for | goto | if | implements | import | instanceof | int | interface | long | native | new | package | private | protected | public | return | short | static | super | switch | synchronized | this | throw | throws | transient | try | void | volatile | while

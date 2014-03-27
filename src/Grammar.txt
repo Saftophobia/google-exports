@@ -33,7 +33,6 @@
 <variable declarators> ::= <variable declarator> | <variable declarators> , <variable declarator>
 <variable declarator> ::= <variable declarator id> | <variable declarator id> = <variable initializer>
 <variable declarator id> ::= <identifier> | <variable declarator id> [ ]
-<variable initializer> ::= <expression> | <array initializer>
 <method declaration> ::= <method header> <method body>
 <method header> ::= <method modifiers>? <result type> <method declarator> <throws>?
 <result type> ::= <type> | void
@@ -53,7 +52,7 @@
 <abstract method declaration>::= <abstract method modifiers>? <result type> <method declarator> <throws>? ;
 <abstract method modifiers> ::= <abstract method modifier> | <abstract method modifiers> <abstract method modifier>
 <abstract method modifier> ::= public | abstract
-<array initializer> ::= { <variable initializers>? , ? }
+<array initializer> ::= { <variable initializers>? ,? }
 <variable initializers> ::= <variable initializer> | <variable initializers> , <variable initializer>
 <variable initializer> ::= <expression> | <array initializer>
 <type> ::= <primitive type> | <reference type>
