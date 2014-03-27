@@ -1,14 +1,10 @@
 <compilation unit> ::= <package declaration>? <import declarations>? <type declarations>?>
 <import declarations> ::= <import declaration> | <import declarations> <import declaration>
 <import declaration> ::= <single type import declaration> | <type import on demand declaration>
-<type import on demand declaration> ::= import <package name> . * ;
 <type declarations> ::= <type declaration> | <type declarations> <type declaration>
 <type declaration> ::= <class declaration> | <interface declaration> | ;
 <class declaration> ::= <class modifiers>? class <identifier> <super>? <interfaces>? <class body>
 <class modifiers> ::= <class modifier> | <class modifiers> <class modifier>
-<class modifier> ::= public | abstract | final
-<super> ::= extends <class type>
-<interfaces> ::= implements <interface type list>
 <interface type list> ::= <interface type> | <interface type list> , <interface type>
 <class body> ::= { <class body declarations>? }
 <class body declarations> ::= <class body declaration> | <class body declarations> <class body declaration>

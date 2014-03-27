@@ -90,6 +90,15 @@ public class RealCodeGenerator {
 			case "PackageDeclaration":
 				sequencing(writer, line.split("::=")[1],false,false);
 				break;
+			case "TypeImportOnDemandDeclaration":
+				sequencing(writer, line.split("::=")[1],false,false);
+				break;
+			case "Super":
+				sequencing(writer, line.split("::=")[1],false,false);
+				break;
+			case "Interfaces":
+				sequencing(writer, line.split("::=")[1],false,false);
+				break;
 			default:
 				writer.println("\treturn false;");
 			}
